@@ -1,10 +1,17 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import { sprinkles } from "@/app/sprinkles.css";
 
 export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
+        <div
+          className={sprinkles({
+            background: "blue-200",
+            padding: "medium",
+          })}
+        />
         <Image
           className={styles.logo}
           src="/next.svg"

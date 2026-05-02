@@ -5,6 +5,6 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 builder
   .AddJavaScriptApp("web", "./web")
-  .WithHttpEndpoint(env: "PORT");
+  .WithHttpEndpoint(port: 3000, env: "PORT");
 
 builder.Build().Run();

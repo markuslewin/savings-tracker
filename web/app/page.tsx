@@ -1,8 +1,11 @@
+import { getGoals } from "@/app/data/data";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import Link from "next/link";
 import styles from "./page.module.css";
 
-export default function Home() {
+const Home = async () => {
+  const goals = await getGoals();
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -14,7 +17,18 @@ export default function Home() {
           })}
         />
         <Link href={"/signin"}>Sign in</Link>
+        <ul>
+          {goals.map((goal) => {
+            return (
+              <li key={goal.id}>
+                <Link href={`/goal/${goal.id}`}>{goal.name}</Link>
+              </li>
+            );
+          })}
+        </ul>
       </main>
     </div>
   );
-}
+};
+
+export default Home;

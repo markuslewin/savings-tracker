@@ -8,7 +8,7 @@ const withVanillaExtract = createVanillaExtractPlugin({
 });
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  typedRoutes: true,
 };
 
 export default withVanillaExtract(nextConfig);

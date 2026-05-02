@@ -1,6 +1,7 @@
+import { sprinkles } from "@/app/styles/sprinkles.css";
+import { textPreset1, textPreset2 } from "@/app/styles/text.css";
 import Image from "next/image";
 import styles from "./page.module.css";
-import { sprinkles } from "@/app/sprinkles.css";
 
 export default function Home() {
   return (
@@ -8,8 +9,9 @@ export default function Home() {
       <main className={styles.main}>
         <div
           className={sprinkles({
-            background: "blue-200",
-            padding: "medium",
+            background: "orange-400",
+            padding: "spacing-100",
+            borderRadius: "radius-4",
           })}
         />
         <Image
@@ -21,8 +23,10 @@ export default function Home() {
           priority
         />
         <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
+          <h1 className={textPreset1}>
+            The quick brown fox jumps over the lazy dog.
+          </h1>
+          <p className={textPreset2}>
             Looking for a starting point or more instructions? Head over to{" "}
             <a
               href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"

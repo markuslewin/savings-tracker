@@ -1,3 +1,4 @@
+import { breakpoints } from "@/app/styles/media";
 import { rem } from "@/app/styles/utils";
 import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
 
@@ -62,12 +63,14 @@ const radius = {
 const responsiveProperties = defineProperties({
   conditions: {
     mobile: {},
-    tablet: { "@media": "screen and (min-width: 768px)" },
-    desktop: { "@media": "screen and (min-width: 1024px)" },
+    tablet: { "@media": breakpoints.tablet },
+    desktop: { "@media": breakpoints.desktop },
   },
   defaultCondition: "mobile",
   properties: {
+    boxSizing: ["border-box", "content-box"],
     border: ["0.0625rem solid transparent"],
+    borderBottom: ["0.0625rem solid transparent"],
     display: [
       "none",
       "inline-flex",
@@ -78,6 +81,7 @@ const responsiveProperties = defineProperties({
       "inline",
     ],
     flexDirection: ["row", "column"],
+    flexWrap: ["wrap", "nowrap"],
     gridTemplateColumns: ["auto 1fr"],
     justifyContent: [
       "stretch",
@@ -90,6 +94,7 @@ const responsiveProperties = defineProperties({
     alignItems: ["stretch", "flex-start", "center", "flex-end"],
     alignSelf: ["stretch", "flex-start", "center", "flex-end"],
     flexShrink: [0],
+    marginInline: { ...space, auto: "auto" },
     marginInlineStart: space,
     paddingBlock: space,
     paddingBlockStart: space,
@@ -99,6 +104,7 @@ const responsiveProperties = defineProperties({
     paddingInlineEnd: space,
     gap: space,
     width: size,
+    maxWidth: { container: rem(1280) },
     height: size,
     borderRadius: radius,
     pointerEvents: ["none"],

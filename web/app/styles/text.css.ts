@@ -1,3 +1,4 @@
+import { breakpoints } from "@/app/styles/media";
 import { rem } from "@/app/styles/utils";
 import { StyleRule } from "@vanilla-extract/css";
 
@@ -24,7 +25,7 @@ export const textPreset1: StyleRule = {
   letterSpacing: rem(-2),
   lineHeight: "100%",
   "@media": {
-    "(min-width: 40em)": {
+    [breakpoints.tablet]: {
       fontSize: rem(64),
     },
   },

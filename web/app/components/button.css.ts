@@ -1,17 +1,21 @@
 import { transition } from "@/app/styles/animation.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { textPreset5 } from "@/app/styles/text.css";
+import { rem } from "@/app/styles/utils";
 import { style, styleVariants } from "@vanilla-extract/css";
 
 const base = style([
   sprinkles({
+    border: "0.0625rem solid transparent",
     borderRadius: "radius-full",
-    paddingX: "space-0250",
-    paddingY: "space-0150",
     display: "inline-flex",
     alignItems: "center",
     gap: "space-0125",
   }),
+  {
+    paddingInline: rem(19),
+    paddingBlock: rem(11),
+  },
   textPreset5,
   transition,
 ]);
@@ -30,6 +34,7 @@ export const variants = styleVariants({
   secondary: [
     base,
     sprinkles({
+      borderColor: "neutral-600",
       background: {
         default: "neutral-800",
         hover: "neutral-900",

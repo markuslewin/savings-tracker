@@ -2,6 +2,10 @@ import { colors } from "@/app/styles/sprinkles.css";
 import { rem } from "@/app/styles/utils";
 import { globalStyle } from "@vanilla-extract/css";
 
+globalStyle(":root", {
+  colorScheme: "dark",
+});
+
 globalStyle("button", {
   border: "none",
 });

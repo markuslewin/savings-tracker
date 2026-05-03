@@ -1,5 +1,5 @@
 import { transition } from "@/app/styles/animation.css";
-import { size, sprinkles } from "@/app/styles/sprinkles.css";
+import { sprinkles } from "@/app/styles/sprinkles.css";
 import { textPreset5 } from "@/app/styles/text.css";
 import { style, styleVariants } from "@vanilla-extract/css";
 
@@ -49,10 +49,8 @@ export const variants = styleVariants({
   ],
 });
 
-export const icon = styleVariants(size, (size) => {
-  return {
-    width: "auto",
-    height: size,
-    flexShrink: 0,
-  };
+export const icon = sprinkles({
+  width: "auto",
+  height: "size-0250",
+  flexShrink: 0,
 });

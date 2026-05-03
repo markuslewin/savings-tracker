@@ -1,5 +1,5 @@
-import { Button } from "@/app/components/button";
-import { icon } from "@/app/components/button.css";
+import * as Button from "@/app/components/button";
+import * as Input from "@/app/components/input";
 import { getGoals } from "@/app/data/data";
 import FilterIcon from "@/app/icons/icon-filter.svg";
 import Link from "next/link";
@@ -12,12 +12,19 @@ const Home = async () => {
     <div className={styles.page}>
       <main className={styles.main}>
         <Link href={"/signin"}>Sign in</Link>
-        <Button>
-          <FilterIcon className={icon["size-0250"]} />
+        <Button.Root>
+          <Button.Icon icon={FilterIcon} />
           Button
-        </Button>
-        <Button variant="secondary">Button</Button>
-        <Button variant="tertiary">Button</Button>
+        </Button.Root>
+        <Button.Root variant="secondary">Button</Button.Root>
+        <Button.Root variant="tertiary">Button</Button.Root>
+        <Input.Root>
+          <Input.Field placeholder="Placeholder" />
+        </Input.Root>
+        <Input.Root>
+          <Input.Field placeholder="Placeholder" />
+          <Input.Icon icon={FilterIcon} />
+        </Input.Root>
         <ul>
           {goals.map((goal) => {
             return (

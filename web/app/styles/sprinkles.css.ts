@@ -47,10 +47,10 @@ export const size = {
 };
 
 const radius = {
-  "radius-0": rem(0),
-  "radius-4": rem(4),
-  "radius-6": rem(6),
-  "radius-8": rem(8),
+  "radius-00": rem(0),
+  "radius-04": rem(4),
+  "radius-06": rem(6),
+  "radius-08": rem(8),
   "radius-10": rem(10),
   "radius-12": rem(12),
   "radius-16": rem(16),
@@ -67,8 +67,18 @@ const responsiveProperties = defineProperties({
   },
   defaultCondition: "mobile",
   properties: {
-    display: ["none", "inline-flex", "flex", "block", "inline"],
+    border: ["0.0625rem solid transparent"],
+    display: [
+      "none",
+      "inline-flex",
+      "flex",
+      "inline-grid",
+      "grid",
+      "block",
+      "inline",
+    ],
     flexDirection: ["row", "column"],
+    gridTemplateColumns: ["auto 1fr"],
     justifyContent: [
       "stretch",
       "flex-start",
@@ -78,7 +88,9 @@ const responsiveProperties = defineProperties({
       "space-between",
     ],
     alignItems: ["stretch", "flex-start", "center", "flex-end"],
+    alignSelf: ["stretch", "flex-start", "center", "flex-end"],
     flexShrink: [0],
+    marginInlineStart: space,
     paddingTop: space,
     paddingBottom: space,
     paddingLeft: space,
@@ -87,6 +99,7 @@ const responsiveProperties = defineProperties({
     width: size,
     height: size,
     borderRadius: radius,
+    pointerEvents: ["none"],
   },
   shorthands: {
     padding: ["paddingTop", "paddingBottom", "paddingLeft", "paddingRight"],
@@ -98,6 +111,7 @@ const responsiveProperties = defineProperties({
 
 export const colors = {
   transparent: "transparent",
+  inherit: "inherit",
   "neutral-900": "hsl(0 0% 6%)",
   "neutral-800": "hsl(0 0% 12%)",
   "neutral-700": "hsl(0 0% 19%)",
@@ -122,9 +136,13 @@ const colorProperties = defineProperties({
       "@media": "(hover: hover)",
       selector: "&:hover",
     },
+    placeholder: {
+      selector: "&:placeholder",
+    },
   },
   defaultCondition: "default",
   properties: {
+    borderColor: colors,
     color: colors,
     background: colors,
   },

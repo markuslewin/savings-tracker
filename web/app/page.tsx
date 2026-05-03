@@ -1,5 +1,7 @@
+import { Button } from "@/app/components/button";
+import { icon } from "@/app/components/button.css";
 import { getGoals } from "@/app/data/data";
-import { sprinkles } from "@/app/styles/sprinkles.css";
+import FilterIcon from "@/app/icons/icon-filter.svg";
 import Link from "next/link";
 import styles from "./page.module.css";
 
@@ -9,14 +11,13 @@ const Home = async () => {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <div
-          className={sprinkles({
-            background: "orange-400",
-            padding: "spacing-100",
-            borderRadius: "radius-4",
-          })}
-        />
         <Link href={"/signin"}>Sign in</Link>
+        <Button>
+          <FilterIcon className={icon["size-0250"]} />
+          Button
+        </Button>
+        <Button variant="secondary">Button</Button>
+        <Button variant="tertiary">Button</Button>
         <ul>
           {goals.map((goal) => {
             return (

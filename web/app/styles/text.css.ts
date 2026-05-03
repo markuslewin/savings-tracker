@@ -1,5 +1,5 @@
 import { rem } from "@/app/styles/utils";
-import { style } from "@vanilla-extract/css";
+import { StyleRule } from "@vanilla-extract/css";
 
 const fonts = {
   bricolageGrotesque: "var(--font-bricolage-grotesque)",
@@ -17,7 +17,7 @@ const weights = {
   bold: 700,
 };
 
-export const textPreset1 = style({
+export const textPreset1: StyleRule = {
   fontFamily: fonts.bricolageGrotesque,
   fontSize: rem(44),
   fontWeight: weights.semiBold,
@@ -28,60 +28,60 @@ export const textPreset1 = style({
       fontSize: rem(64),
     },
   },
-});
+};
 
-export const textPreset2 = style({
+export const textPreset2: StyleRule = {
   fontFamily: fonts.inter,
   fontSize: rem(32),
   fontWeight: weights.bold,
   letterSpacing: rem(0),
   lineHeight: "120%",
-});
+};
 
-export const textPreset3 = style({
+export const textPreset3: StyleRule = {
   fontFamily: fonts.inter,
   fontSize: rem(20),
   fontWeight: weights.bold,
   letterSpacing: rem(-0.3),
   lineHeight: "120%",
-});
+};
 
-export const textPreset4 = style({
+export const textPreset4: StyleRule = {
   fontFamily: fonts.inter,
   fontSize: rem(20),
   fontWeight: weights.semiBold,
   letterSpacing: rem(-0.3),
   lineHeight: "120%",
-});
+};
 
-export const textPreset5 = style({
+export const textPreset5: StyleRule = {
   fontFamily: fonts.inter,
   fontSize: rem(16),
   fontWeight: weights.medium,
   letterSpacing: rem(-0.3),
   lineHeight: "150%",
-});
+};
 
-export const textPreset5SemiBold = style({
+export const textPreset5SemiBold: StyleRule = {
   fontFamily: fonts.inter,
   fontSize: rem(16),
   fontWeight: weights.semiBold,
   letterSpacing: rem(-0.3),
   lineHeight: "140%",
-});
+};
 
-export const textPreset6 = style({
+export const textPreset6: StyleRule = {
   fontFamily: fonts.inter,
   fontSize: rem(14),
   fontWeight: weights.semiBold,
   letterSpacing: rem(-0.3),
   lineHeight: "140%",
-});
+};
 
-export const textPreset7 = style({
+export const textPreset7: StyleRule = {
   fontFamily: fonts.inter,
   fontSize: rem(11),
   fontWeight: weights.semiBold,
   letterSpacing: rem(0),
   lineHeight: "120%",
-});
+};

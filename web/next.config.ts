@@ -9,6 +9,14 @@ const withVanillaExtract = createVanillaExtractPlugin({
 
 const nextConfig: NextConfig = {
   typedRoutes: true,
+  turbopack: {
+    rules: {
+      "*.svg": {
+        loaders: ["@svgr/webpack"],
+        as: "*.js",
+      },
+    },
+  },
 };
 
 export default withVanillaExtract(nextConfig);

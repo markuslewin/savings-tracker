@@ -1,7 +1,8 @@
+import "@/app/reset.css";
+import "@/app/styles/base.css";
 import type { FontVariable } from "@/app/styles/text.css";
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
-import "./globals.css";
 
 const bricolageGrotesque = Bricolage_Grotesque({
   variable: "--font-bricolage-grotesque" satisfies FontVariable,

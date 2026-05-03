@@ -2,25 +2,48 @@ import { rem } from "@/app/styles/utils";
 import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
 
 const space = {
-  "spacing-0": rem(0),
-  "spacing-025": rem(2),
-  "spacing-050": rem(4),
-  "spacing-075": rem(6),
-  "spacing-100": rem(8),
-  "spacing-125": rem(10),
-  "spacing-150": rem(12),
-  "spacing-200": rem(16),
-  "spacing-250": rem(20),
-  "spacing-300": rem(24),
-  "spacing-400": rem(32),
-  "spacing-500": rem(40),
-  "spacing-600": rem(48),
-  "spacing-800": rem(64),
-  "spacing-1000": rem(80),
-  "spacing-1200": rem(96),
-  "spacing-1400": rem(112),
-  "spacing-1600": rem(128),
-  "spacing-1800": rem(140),
+  "space-0": rem(0),
+  "space-0025": rem(2),
+  "space-0050": rem(4),
+  "space-0075": rem(6),
+  "space-0100": rem(8),
+  "space-0125": rem(10),
+  "space-0150": rem(12),
+  "space-0200": rem(16),
+  "space-0250": rem(20),
+  "space-0300": rem(24),
+  "space-0400": rem(32),
+  "space-0500": rem(40),
+  "space-0600": rem(48),
+  "space-0800": rem(64),
+  "space-1000": rem(80),
+  "space-1200": rem(96),
+  "space-1400": rem(112),
+  "space-1600": rem(128),
+  "space-1800": rem(140),
+};
+
+export const size = {
+  "size-0": rem(0),
+  "size-0025": rem(2),
+  "size-0050": rem(4),
+  "size-0075": rem(6),
+  "size-0100": rem(8),
+  "size-0125": rem(10),
+  "size-0150": rem(12),
+  "size-0200": rem(16),
+  "size-0250": rem(20),
+  "size-0300": rem(24),
+  "size-0400": rem(32),
+  "size-0500": rem(40),
+  "size-0600": rem(48),
+  "size-0800": rem(64),
+  "size-1000": rem(80),
+  "size-1200": rem(96),
+  "size-1400": rem(112),
+  "size-1600": rem(128),
+  "size-1800": rem(140),
+  auto: "auto",
 };
 
 const radius = {
@@ -44,7 +67,7 @@ const responsiveProperties = defineProperties({
   },
   defaultCondition: "mobile",
   properties: {
-    display: ["none", "flex", "block", "inline"],
+    display: ["none", "inline-flex", "flex", "block", "inline"],
     flexDirection: ["row", "column"],
     justifyContent: [
       "stretch",
@@ -55,10 +78,14 @@ const responsiveProperties = defineProperties({
       "space-between",
     ],
     alignItems: ["stretch", "flex-start", "center", "flex-end"],
+    flexShrink: [0],
     paddingTop: space,
     paddingBottom: space,
     paddingLeft: space,
     paddingRight: space,
+    gap: space,
+    width: size,
+    height: size,
     borderRadius: radius,
   },
   shorthands: {
@@ -69,7 +96,8 @@ const responsiveProperties = defineProperties({
   },
 });
 
-const colors = {
+export const colors = {
+  transparent: "transparent",
   "neutral-900": "hsl(0 0% 6%)",
   "neutral-800": "hsl(0 0% 12%)",
   "neutral-700": "hsl(0 0% 19%)",
@@ -88,6 +116,14 @@ const colors = {
 };
 
 const colorProperties = defineProperties({
+  conditions: {
+    default: {},
+    hover: {
+      "@media": "(hover: hover)",
+      selector: "&:hover",
+    },
+  },
+  defaultCondition: "default",
   properties: {
     color: colors,
     background: colors,

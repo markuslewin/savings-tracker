@@ -44,7 +44,7 @@ export const field = style([
     paddingInlineStart: fallbackVar(fieldPaddingInlineStart, rem(15)),
   },
   sprinkles({
-    border: "0.0625rem solid transparent",
+    border: "default",
     borderColor: "neutral-500",
     borderRadius: "radius-08",
     background: "neutral-700",

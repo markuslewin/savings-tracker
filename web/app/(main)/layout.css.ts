@@ -5,7 +5,7 @@ import { style } from "@vanilla-extract/css";
 
 export const header = style([
   sprinkles({
-    borderBottom: "0.0625rem solid transparent",
+    borderBottom: "default",
     borderColor: "neutral-800",
   }),
   {

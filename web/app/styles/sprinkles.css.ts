@@ -60,6 +60,10 @@ const radius = {
   "radius-full": rem(999),
 };
 
+const border = {
+  default: `${rem(1)} solid transparent`,
+};
+
 const responsiveProperties = defineProperties({
   conditions: {
     mobile: {},
@@ -69,8 +73,8 @@ const responsiveProperties = defineProperties({
   defaultCondition: "mobile",
   properties: {
     boxSizing: ["border-box", "content-box"],
-    border: ["0.0625rem solid transparent"],
-    borderBottom: ["0.0625rem solid transparent"],
+    border: border,
+    borderBottom: border,
     display: [
       "none",
       "inline-flex",

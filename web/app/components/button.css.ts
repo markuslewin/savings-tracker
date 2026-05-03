@@ -6,7 +6,7 @@ import { style, styleVariants } from "@vanilla-extract/css";
 
 const base = style([
   sprinkles({
-    border: "0.0625rem solid transparent",
+    border: "default",
     borderRadius: "radius-full",
     display: "inline-flex",
     alignItems: "center",

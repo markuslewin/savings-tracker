@@ -2,7 +2,7 @@ import { breakpoints } from "@/app/styles/media";
 import { rem } from "@/app/styles/utils";
 import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
 
-const space = {
+export const space = {
   "space-0": rem(0),
   "space-0025": rem(2),
   "space-0050": rem(4),
@@ -45,6 +45,7 @@ export const size = {
   "size-1600": rem(128),
   "size-1800": rem(140),
   auto: "auto",
+  full: "100%",
 };
 
 const radius = {
@@ -62,6 +63,7 @@ const radius = {
 
 const border = {
   default: `${rem(1)} solid transparent`,
+  dashed: `${rem(1)} dashed transparent`,
 };
 
 const responsiveProperties = defineProperties({
@@ -69,6 +71,9 @@ const responsiveProperties = defineProperties({
     mobile: {},
     tablet: { "@media": breakpoints.tablet },
     desktop: { "@media": breakpoints.desktop },
+    forcedColors: {
+      "@media": "(forced-colors: active)",
+    },
   },
   defaultCondition: "mobile",
   properties: {
@@ -100,6 +105,7 @@ const responsiveProperties = defineProperties({
     flexShrink: [0],
     marginInline: { ...space, auto: "auto" },
     marginInlineStart: space,
+    marginBlockStart: space,
     paddingBlock: space,
     paddingBlockStart: space,
     paddingBlockEnd: space,
@@ -108,10 +114,11 @@ const responsiveProperties = defineProperties({
     paddingInlineEnd: space,
     gap: space,
     width: size,
-    maxWidth: { container: rem(1280) },
+    maxWidth: { paragraph: rem(512), container: rem(1280) },
     height: size,
     borderRadius: radius,
     pointerEvents: ["none"],
+    textAlign: ["center"],
   },
 });
 
@@ -156,5 +163,4 @@ const colorProperties = defineProperties({
 
 export const sprinkles = createSprinkles(responsiveProperties, colorProperties);
 
-// It's a good idea to export the Sprinkles type too
 export type Sprinkles = Parameters<typeof sprinkles>[0];

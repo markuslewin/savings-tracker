@@ -5,8 +5,14 @@ type RootProps = ComponentProps<"button"> & {
   variant?: keyof typeof variants;
 };
 
-export const Root = ({ variant = "primary", ...props }: RootProps) => {
-  return <button className={variants[variant]} {...props} />;
+export const Root = ({
+  variant = "primary",
+  className,
+  ...props
+}: RootProps) => {
+  return (
+    <button {...props} className={[variants[variant], className].join(" ")} />
+  );
 };
 
 type IconProps = ComponentProps<"svg"> & {

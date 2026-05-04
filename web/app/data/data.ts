@@ -7,6 +7,11 @@ export const getGoals = async () => {
       name: goal.name,
       target: goal.target,
       deadline: goal.deadline === null ? null : new Date(goal.deadline),
+      deposits: goal.deposits.map((deposit) => {
+        return {
+          amount: deposit.amount,
+        };
+      }),
     };
   });
 };

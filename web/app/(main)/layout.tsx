@@ -46,7 +46,9 @@ const MainLayout = ({ children }: MainLayoutProps) => {
           </div>
         </div>
       </header>
-      <main>{children}</main>
+      <main>
+        <div className={container}>{children}</div>
+      </main>
     </>
   );
 };

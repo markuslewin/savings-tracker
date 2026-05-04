@@ -1,5 +1,7 @@
+import { html } from "@/app/layout.css";
 import "@/app/reset.css";
 import "@/app/styles/base.css";
+import { sprinkles } from "@/app/styles/sprinkles.css";
 import type { FontVariable } from "@/app/styles/text.css";
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
@@ -27,9 +29,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${bricolageGrotesque.variable} ${inter.variable}`}
+      className={[bricolageGrotesque.variable, inter.variable, html].join(" ")}
     >
-      <body>{children}</body>
+      <body
+        className={sprinkles({
+          background: "neutral-900",
+          color: "neutral-0",
+        })}
+      >
+        {children}
+      </body>
     </html>
   );
 }

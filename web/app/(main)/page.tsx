@@ -5,11 +5,13 @@ import {
   goalCards,
   goalsContainer,
   goalsHeading,
-  monthlyContainer,
+  monthlyCard,
   monthlyHeading,
   noGoalsBorder,
   noGoalsContainer,
   noGoalsHeading,
+  orangeCardTheme,
+  summaryCard,
   summaryCards,
   summaryDesc,
   summaryTerm,
@@ -23,6 +25,7 @@ import SortIcon from "@/app/icons/icon-sort.svg";
 import TargetIcon from "@/app/icons/icon-target.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
+import clsx from "clsx";
 import Link from "next/link";
 
 const Home = async () => {
@@ -37,7 +40,7 @@ const Home = async () => {
       <h1 className={srOnly}>Dashboard</h1>
       <h2 className={srOnly}>Summary</h2>
       <dl className={summaryCards}>
-        <div className={card}>
+        <div className={clsx(card, orangeCardTheme, summaryCard)}>
           <dt className={summaryTerm}>Total savings</dt>
           <dd className={summaryDesc}>
             {goals
@@ -49,9 +52,16 @@ const Home = async () => {
               }, 0)}
           </dd>
         </div>
-        <div className={card}>
+        <div className={clsx(card, summaryCard)}>
           <dt className={summaryTerm}>Active goals</dt>
-          <dd className={summaryDesc}>
+          <dd
+            className={clsx(
+              summaryDesc,
+              sprinkles({
+                color: "orange-400",
+              }),
+            )}
+          >
             {
               goals.filter((goal) => {
                 return (
@@ -63,9 +73,16 @@ const Home = async () => {
             }
           </dd>
         </div>
-        <div className={card}>
+        <div className={clsx(card, summaryCard)}>
           <dt className={summaryTerm}>Goals completed</dt>
-          <dd className={summaryDesc}>
+          <dd
+            className={clsx(
+              summaryDesc,
+              sprinkles({
+                color: "green-500",
+              }),
+            )}
+          >
             {
               goals.filter((goal) => {
                 return (
@@ -78,7 +95,7 @@ const Home = async () => {
           </dd>
         </div>
       </dl>
-      <div className={monthlyContainer}>
+      <div className={monthlyCard}>
         <h2 className={monthlyHeading}>Monthly deposits</h2>
         <div className={bars}></div>
       </div>
@@ -155,7 +172,10 @@ const Home = async () => {
             <ul className={goalCards} role="list">
               {goals.map((goal, i) => {
                 return (
-                  <li key={goal.id} className={goalCard}>
+                  <li
+                    key={goal.id}
+                    className={clsx(goalCard, i === 0 ? orangeCardTheme : null)}
+                  >
                     <h3>
                       <Link href={`/goal/${goal.id}`}>{goal.name}</Link>
                     </h3>

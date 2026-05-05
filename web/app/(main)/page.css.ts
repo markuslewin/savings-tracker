@@ -7,18 +7,37 @@ import {
   textPreset5SemiBold,
 } from "@/app/styles/text.css";
 import { rem } from "@/app/styles/utils";
-import { createThemeContract, style } from "@vanilla-extract/css";
+import {
+  createTheme,
+  createThemeContract,
+  fallbackVar,
+  style,
+} from "@vanilla-extract/css";
 import { calc } from "@vanilla-extract/css-utils";
+
+const cardVars = createThemeContract({
+  background: null,
+  color: null,
+  border: null,
+});
 
 export const card = style([
   sprinkles({
     border: "default",
-    borderColor: "neutral-600",
     borderRadius: "radius-16",
-    background: "neutral-800",
-    color: "neutral-0",
   }),
+  {
+    borderColor: fallbackVar(cardVars.border, colors["neutral-600"]),
+    background: fallbackVar(cardVars.background, colors["neutral-800"]),
+    color: fallbackVar(cardVars.color, colors["neutral-0"]),
+  },
 ]);
+
+export const orangeCardTheme = createTheme(cardVars, {
+  background: `linear-gradient(to right, ${colors["orange-700"]}, ${colors["orange-400"]})`,
+  color: colors["neutral-0"],
+  border: "hsl(0 0% 0% / 30%)",
+});
 
 export const summaryCards = style({
   display: "grid",
@@ -34,6 +53,18 @@ export const summaryCards = style({
   },
 });
 
+export const summaryCard = style({
+  padding: rem(15),
+  "@media": {
+    [breakpoints.tablet]: {
+      paddingInline: rem(19),
+    },
+    [breakpoints.desktop]: {
+      paddingBlock: rem(19),
+    },
+  },
+});
+
 export const summaryTerm = style([textPreset5SemiBold]);
 
 export const summaryDesc = style([
@@ -43,7 +74,7 @@ export const summaryDesc = style([
   textPreset1,
 ]);
 
-export const monthlyContainer = style([
+export const monthlyCard = style([
   card,
   sprinkles({
     marginBlockStart: {
@@ -51,6 +82,14 @@ export const monthlyContainer = style([
       tablet: "space-0300",
     },
   }),
+  {
+    padding: rem(15),
+    "@media": {
+      [breakpoints.tablet]: {
+        padding: rem(19),
+      },
+    },
+  },
 ]);
 
 export const monthlyHeading = style([textPreset4]);
@@ -134,35 +173,10 @@ export const goalCards = style([
   }),
 ]);
 
-const goalCardVars = createThemeContract({
-  background: null,
-  color: null,
-  border: null,
-});
-
 export const goalCard = style([
-  sprinkles({
-    border: "default",
-    borderRadius: "radius-16",
-  }),
+  card,
   {
-    borderColor: goalCardVars.border,
     padding: rem(15),
-    background: goalCardVars.background,
-    vars: {
-      [goalCardVars.background]: colors["neutral-800"],
-      [goalCardVars.color]: colors["neutral-0"],
-      [goalCardVars.border]: colors["neutral-600"],
-    },
-    selectors: {
-      "&:nth-child(4n - 3)": {
-        vars: {
-          [goalCardVars.background]: `linear-gradient(to right, ${colors["orange-700"]}, ${colors["orange-400"]})`,
-          [goalCardVars.color]: colors["neutral-0"],
-          [goalCardVars.border]: "hsl(0 0% 0% / 30%)",
-        },
-      },
-    },
     "@media": {
       [breakpoints.tablet]: {
         padding: rem(23),

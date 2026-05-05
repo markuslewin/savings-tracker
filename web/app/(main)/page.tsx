@@ -1,5 +1,10 @@
 import {
+  bar,
+  barAmount,
   bars,
+  barsAmounts,
+  barsGrid,
+  barsGridItem,
   card,
   goalCard,
   goalCards,
@@ -25,11 +30,27 @@ import SortIcon from "@/app/icons/icon-sort.svg";
 import TargetIcon from "@/app/icons/icon-target.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
+import { assignInlineVars } from "@vanilla-extract/dynamic";
 import clsx from "clsx";
 import Link from "next/link";
 
 const Home = async () => {
   const goals = await getGoals();
+
+  const monthlyDeposits = [
+    { month: "Apr", amount: 0 },
+    { month: "May", amount: 0 },
+    { month: "Jun", amount: 500 },
+    { month: "Jul", amount: 400 },
+    { month: "Aug", amount: 400 },
+    { month: "Sep", amount: 1150 },
+    { month: "Oct", amount: 1149 },
+    { month: "Nov", amount: 1550 },
+    { month: "Dec", amount: 2350 },
+    { month: "Jan", amount: 1025 },
+    { month: "Feb", amount: 1550 },
+    { month: "Mar", amount: 1550 },
+  ];
 
   return (
     <div
@@ -97,7 +118,82 @@ const Home = async () => {
       </dl>
       <div className={monthlyCard}>
         <h2 className={monthlyHeading}>Monthly deposits</h2>
-        <div className={bars}></div>
+        <ol
+          className={bars}
+          style={{
+            ...assignInlineVars({
+              [barsAmounts]: monthlyDeposits
+                .map((deposit) => {
+                  return deposit.amount;
+                })
+                .join(", "),
+            }),
+          }}
+          role="list"
+        >
+          {monthlyDeposits.map((deposit, i) => {
+            return (
+              <li
+                key={i}
+                className={clsx(
+                  barsGridItem,
+                  bar,
+                  deposit.amount > 0
+                    ? sprinkles({
+                        border: "default",
+                        borderColor: "white-alpha-30",
+                        borderRadius: "radius-08",
+                        background: "orange-400",
+                      })
+                    : null,
+                )}
+                style={{
+                  ...assignInlineVars({
+                    [barAmount]: deposit.amount.toString(),
+                  }),
+                }}
+              >
+                <span className={srOnly}>
+                  {deposit.month}: ${i}
+                </span>
+              </li>
+            );
+          })}
+        </ol>
+        <div
+          className={clsx(
+            barsGrid,
+            sprinkles({
+              marginBlockStart: "space-0125",
+            }),
+          )}
+          aria-hidden="true"
+        >
+          {monthlyDeposits.map((deposit, i) => {
+            return (
+              <div
+                key={i}
+                className={clsx(
+                  barsGridItem,
+                  sprinkles({
+                    display: "grid",
+                    gap: "space-0050",
+                    textAlign: "center",
+                  }),
+                )}
+              >
+                <div
+                  className={sprinkles({
+                    color: "neutral-300",
+                  })}
+                >
+                  {deposit.amount}
+                </div>
+                <div>{deposit.month}</div>
+              </div>
+            );
+          })}
+        </div>
       </div>
       <section className={goalsContainer}>
         <header

@@ -10,6 +10,7 @@ import { rem } from "@/app/styles/utils";
 import {
   createTheme,
   createThemeContract,
+  createVar,
   fallbackVar,
   style,
 } from "@vanilla-extract/css";
@@ -94,15 +95,53 @@ export const monthlyCard = style([
 
 export const monthlyHeading = style([textPreset4]);
 
-export const bars = style([
+export const barsGrid = style([
   sprinkles({
-    marginBlockStart: "space-0250",
-    display: "flex",
     gap: {
       mobile: "space-0100",
       tablet: "space-0200",
       desktop: "space-0250",
     },
+  }),
+  {
+    display: "grid",
+    gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
+    "@media": {
+      [breakpoints.desktop]: {
+        gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
+      },
+    },
+  },
+]);
+
+const mobileAmount = 6;
+const desktopAmount = 12;
+export const barsGridItem = style([
+  {
+    display: "none",
+    selectors: {
+      [`&:nth-last-child(-n + ${mobileAmount})`]: {
+        display: "block",
+      },
+    },
+    "@media": {
+      [breakpoints.desktop]: {
+        selectors: {
+          [`&:nth-last-child(-n + ${desktopAmount})`]: {
+            display: "block",
+          },
+        },
+      },
+    },
+  },
+]);
+
+export const bars = style([
+  barsGrid,
+  sprinkles({
+    marginBlockStart: "space-0250",
+    display: "grid",
+    alignItems: "end",
   }),
   {
     height: rem(184),
@@ -111,6 +150,18 @@ export const bars = style([
         height: rem(202),
       },
     },
+  },
+]);
+
+export const barsAmounts = createVar();
+export const barAmount = createVar();
+
+export const bar = style([
+  {
+    height: calc.multiply(
+      calc.divide(barAmount, `max(${barsAmounts})`),
+      "100%",
+    ),
   },
 ]);
 

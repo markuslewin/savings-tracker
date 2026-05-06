@@ -2,6 +2,29 @@ import { breakpoints } from "@/app/styles/media";
 import { rem } from "@/app/styles/utils";
 import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
 
+export const colors = {
+  transparent: "transparent",
+  inherit: "inherit",
+  "white-alpha-30": "hsl(0 100% 100% / 30%)",
+  "neutral-900": "hsl(0 0% 6%)",
+  "neutral-800": "hsl(0 0% 12%)",
+  "neutral-700": "hsl(0 0% 19%)",
+  "neutral-600": "hsl(255 4% 24%)",
+  "neutral-500": "hsl(0 0% 40%)",
+  "neutral-400": "hsl(210 1% 54%)",
+  // Error in design system
+  // "neutral-300": "hsl(168 21% 93%)",
+  "neutral-300": "hsl(0 0% 72%)",
+  "neutral-0": "hsl(0 0% 100%)",
+  "orange-400": "hsl(14 100% 57%)",
+  "orange-500": "hsl(15 89% 49%)",
+  "orange-700": "hsl(13 91% 38%)",
+  "orange-800": "hsl(15 76% 32%)",
+  "green-500": "hsl(142 69% 58%)",
+  "green-900": "hsl(148 40% 17%)",
+  "red-500": "hsl(0 83% 60%)",
+};
+
 export const space = {
   "space-0": rem(0),
   "space-0025": rem(2),
@@ -62,8 +85,16 @@ const radius = {
 };
 
 const border = {
-  default: `${rem(1)} solid transparent`,
+  solid: `${rem(1)} solid transparent`,
   dashed: `${rem(1)} dashed transparent`,
+};
+
+export const outline = {
+  none: "none",
+  default: `${rem(2)} solid ${colors["orange-400"]}`,
+};
+export const outlineOffset = {
+  default: rem(2),
 };
 
 const responsiveProperties = defineProperties({
@@ -74,18 +105,24 @@ const responsiveProperties = defineProperties({
     forcedColors: {
       "@media": "(forced-colors: active)",
     },
+    focusVisible: {
+      selector: "&:focus-visible",
+    },
   },
   defaultCondition: "mobile",
   properties: {
     boxSizing: ["border-box", "content-box"],
     border: border,
     borderBottom: border,
+    outline: outline,
+    outlineOffset: outlineOffset,
     display: [
       "none",
       "inline-flex",
       "flex",
       "inline-grid",
       "grid",
+      "inline-block",
       "block",
       "inline",
     ],
@@ -106,8 +143,9 @@ const responsiveProperties = defineProperties({
     flexShrink: [0],
     gridColumn: ["span 2"],
     marginInline: { ...space, auto: "auto" },
-    marginInlineStart: space,
-    marginBlockStart: space,
+    marginInlineStart: { ...space, auto: "auto" },
+    marginBlockStart: { ...space, auto: "auto" },
+    marginBlockEnd: { ...space, auto: "auto" },
     paddingBlock: space,
     paddingBlockStart: space,
     paddingBlockEnd: space,
@@ -121,32 +159,14 @@ const responsiveProperties = defineProperties({
     borderRadius: radius,
     pointerEvents: ["none"],
     textAlign: ["center"],
+    textTransform: ["uppercase"],
+    textDecoration: ["none"],
     overflow: ["hidden"],
+    translate: {
+      down: "0 1px",
+    },
   },
 });
-
-export const colors = {
-  transparent: "transparent",
-  inherit: "inherit",
-  "white-alpha-30": "hsl(0 100% 100% / 30%)",
-  "neutral-900": "hsl(0 0% 6%)",
-  "neutral-800": "hsl(0 0% 12%)",
-  "neutral-700": "hsl(0 0% 19%)",
-  "neutral-600": "hsl(255 4% 24%)",
-  "neutral-500": "hsl(0 0% 40%)",
-  "neutral-400": "hsl(210 1% 54%)",
-  // Error in design system
-  // "neutral-300": "hsl(168 21% 93%)",
-  "neutral-300": "hsl(0 0% 72%)",
-  "neutral-0": "hsl(0 0% 100%)",
-  "orange-400": "hsl(14 100% 57%)",
-  "orange-500": "hsl(15 89% 49%)",
-  "orange-700": "hsl(13 91% 38%)",
-  "orange-800": "hsl(15 76% 32%)",
-  "green-500": "hsl(142 69% 58%)",
-  "green-900": "hsl(148 40% 17%)",
-  "red-500": "hsl(0 83% 60%)",
-};
 
 const colorProperties = defineProperties({
   conditions: {

@@ -6,6 +6,9 @@ import {
   barsGrid,
   barsGridItem,
   card,
+  clickableContainer,
+  clickableContainerItem,
+  dot,
   goalCard,
   goalCards,
   goalsContainer,
@@ -21,6 +24,7 @@ import {
   summaryCards,
   summaryDesc,
   summaryTerm,
+  tag,
 } from "@/app/(main)/page.css";
 import * as Button from "@/app/components/button";
 import { DashedRect } from "@/app/components/dashed";
@@ -31,6 +35,7 @@ import SortIcon from "@/app/icons/icon-sort.svg";
 import TargetIcon from "@/app/icons/icon-target.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
+import { textPreset1, textPreset4, textPreset7 } from "@/app/styles/text.css";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import clsx from "clsx";
 import Link from "next/link";
@@ -152,7 +157,7 @@ const Home = async () => {
                   bar,
                   deposit.amount > 0
                     ? sprinkles({
-                        border: "default",
+                        border: "solid",
                         borderColor: "white-alpha-30",
                         borderRadius: "radius-08",
                         background: "orange-400",
@@ -279,24 +284,93 @@ const Home = async () => {
           ) : (
             <ul className={goalCards} role="list">
               {goals.map((goal, i) => {
-                const progress =
-                  goal.deposits.reduce((sum, deposit) => {
-                    return sum + deposit.amount;
-                  }, 0) / goal.target;
+                const sum = goal.deposits.reduce((sum, deposit) => {
+                  return sum + deposit.amount;
+                }, 0);
+                const progress = sum / goal.target;
 
                 return (
                   <li
                     key={goal.id}
-                    className={clsx(goalCard, i === 0 ? orangeCardTheme : null)}
+                    className={clsx(
+                      goalCard,
+                      i === 0 ? orangeCardTheme : null,
+                      clickableContainer,
+                    )}
                   >
-                    <h3>
-                      <Link href={`/goal/${goal.id}`}>{goal.name}</Link>
-                    </h3>
-                    <p>{Math.round(progress * 100)}%</p>
                     <div
                       className={sprinkles({
+                        marginBlockEnd: "auto",
+                        display: "flex",
+                        flexWrap: "wrap",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        gap: "space-0200",
+                      })}
+                    >
+                      <h3 className={textPreset4}>
+                        <Link
+                          className={clsx(
+                            clickableContainerItem,
+                            sprinkles({
+                              textDecoration: "none",
+                              color: "inherit",
+                            }),
+                          )}
+                          href={`/goal/${goal.id}`}
+                        >
+                          {goal.name}
+                        </Link>
+                      </h3>
+                      {progress >= 1 ? (
+                        <p
+                          className={clsx(
+                            sprinkles({
+                              border: "solid",
+                              borderColor: "green-500",
+                              borderRadius: "radius-full",
+                              textTransform: "uppercase",
+                              background: "green-900",
+                              color: "green-500",
+                            }),
+                            tag,
+                            textPreset7,
+                          )}
+                        >
+                          <span
+                            className={sprinkles({
+                              display: "inline-block",
+                              translate: "down",
+                            })}
+                          >
+                            Complete
+                          </span>
+                        </p>
+                      ) : null}
+                    </div>
+                    <p
+                      className={clsx(
+                        sprinkles({
+                          marginBlockStart: "space-0400",
+                          color:
+                            i === 0
+                              ? "neutral-0"
+                              : progress >= 1
+                                ? "green-500"
+                                : progress <= 0
+                                  ? "neutral-400"
+                                  : "orange-400",
+                        }),
+                        textPreset1,
+                      )}
+                    >
+                      {Math.round(progress * 100)}%
+                    </p>
+                    <div
+                      className={sprinkles({
+                        marginBlockStart: "space-0200",
                         border: {
-                          forcedColors: "default",
+                          forcedColors: "solid",
                         },
                         borderRadius: "radius-full",
                         height: "size-0150",
@@ -310,7 +384,7 @@ const Home = async () => {
                           className={clsx(
                             progressFill,
                             sprinkles({
-                              border: "default",
+                              border: "solid",
                               borderColor: "white-alpha-30",
                               borderRadius: "radius-full",
                               display: "grid",
@@ -328,24 +402,36 @@ const Home = async () => {
                         />
                       )}
                     </div>
-                    <p>
-                      <span>
-                        {0} of {goal.target}
-                      </span>
-                      <span
-                        className={sprinkles({
-                          width: "size-0050",
-                          height: "size-0050",
-                          borderRadius: "radius-full",
-                          background: "neutral-900",
-                        })}
+                    <div
+                      className={sprinkles({
+                        marginBlockStart: {
+                          mobile: "space-0200",
+                          tablet: "space-0300",
+                        },
+                        display: "flex",
+                        flexWrap: "wrap",
+                        alignItems: "center",
+                        gap: "space-0100",
+                      })}
+                    >
+                      <p>
+                        {sum} of {goal.target}
+                      </p>
+                      <div
+                        className={clsx(
+                          dot,
+                          sprinkles({
+                            color: i === 0 ? "white-alpha-30" : "neutral-300",
+                          }),
+                        )}
                       />
-                      <span>
+                      <p>
                         {goal.deadline === null
                           ? "No deadline"
-                          : `Due ${goal.deadline}`}
-                      </span>
-                    </p>
+                          : // todo: Server/client
+                            `Due ${Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(goal.deadline)}`}
+                      </p>
+                    </div>
                   </li>
                 );
               })}

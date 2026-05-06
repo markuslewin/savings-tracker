@@ -1,5 +1,11 @@
 import { breakpoints } from "@/app/styles/media";
-import { colors, space, sprinkles } from "@/app/styles/sprinkles.css";
+import {
+  colors,
+  outline,
+  outlineOffset,
+  space,
+  sprinkles,
+} from "@/app/styles/sprinkles.css";
 import {
   textPreset1,
   textPreset2,
@@ -24,7 +30,7 @@ const cardVars = createThemeContract({
 
 export const card = style([
   sprinkles({
-    border: "default",
+    border: "solid",
     borderRadius: "radius-16",
   }),
   {
@@ -217,7 +223,14 @@ export const noGoalsHeading = style([
 export const goalCards = style([
   {
     display: "grid",
-    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+    "@media": {
+      [breakpoints.tablet]: {
+        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+      },
+      [breakpoints.desktop]: {
+        gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+      },
+    },
   },
   sprinkles({
     gap: "space-0300",
@@ -227,6 +240,8 @@ export const goalCards = style([
 export const goalCard = style([
   card,
   {
+    display: "flex",
+    flexDirection: "column",
     padding: rem(15),
     "@media": {
       [breakpoints.tablet]: {
@@ -236,10 +251,48 @@ export const goalCard = style([
   },
 ]);
 
+export const clickableContainerItem = style([
+  {
+    selectors: {
+      "&:focus-visible": {
+        outline: "none",
+      },
+      "&::before": {
+        content: "",
+        position: "absolute",
+        inset: 0,
+      },
+    },
+  },
+]);
+export const clickableContainer = style([
+  {
+    position: "relative",
+    isolation: "isolate",
+    selectors: {
+      [`&:has(${clickableContainerItem}:focus-visible)`]: {
+        outline: outline.default,
+        outlineOffset: outlineOffset.default,
+      },
+    },
+  },
+]);
+
+export const tag = style([{ paddingBlock: rem(3), paddingInline: rem(9) }]);
+
 export const progressFill = style([
   {
     backgroundColor: "currentColor",
     backgroundImage: `repeating-linear-gradient(-60deg, hsl(0 0% 6% / 10%), hsl(0 0% 6% / 10%) ${rem(2)}, transparent ${rem(2)}, transparent ${rem(7.75)})`,
     backgroundOrigin: "border-box",
+  },
+]);
+
+export const dot = style([
+  {
+    borderTop: `${rem(4)} solid currentColor`,
+    width: rem(4),
+    height: rem(4),
+    borderRadius: 9999,
   },
 ]);

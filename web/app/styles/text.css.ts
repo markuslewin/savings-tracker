@@ -1,6 +1,6 @@
 import { breakpoints } from "@/app/styles/media";
 import { rem } from "@/app/styles/utils";
-import { StyleRule } from "@vanilla-extract/css";
+import { style } from "@vanilla-extract/css";
 
 const fonts = {
   bricolageGrotesque: "var(--font-bricolage-grotesque)",
@@ -18,7 +18,7 @@ const weights = {
   bold: 700,
 };
 
-export const textPreset1: StyleRule = {
+export const textPreset1 = style({
   fontFamily: fonts.bricolageGrotesque,
   fontSize: rem(44),
   fontWeight: weights.semiBold,
@@ -29,60 +29,60 @@ export const textPreset1: StyleRule = {
       fontSize: rem(64),
     },
   },
-};
+});
 
-export const textPreset2: StyleRule = {
+export const textPreset2 = style({
   fontFamily: fonts.inter,
   fontSize: rem(32),
   fontWeight: weights.bold,
   letterSpacing: rem(0),
   lineHeight: "120%",
-};
+});
 
-export const textPreset3: StyleRule = {
+export const textPreset3 = style({
   fontFamily: fonts.inter,
   fontSize: rem(20),
   fontWeight: weights.bold,
   letterSpacing: rem(-0.3),
   lineHeight: "120%",
-};
+});
 
-export const textPreset4: StyleRule = {
+export const textPreset4 = style({
   fontFamily: fonts.inter,
   fontSize: rem(20),
   fontWeight: weights.semiBold,
   letterSpacing: rem(-0.3),
   lineHeight: "120%",
-};
+});
 
-export const textPreset5: StyleRule = {
+export const textPreset5 = style({
   fontFamily: fonts.inter,
   fontSize: rem(16),
   fontWeight: weights.medium,
   letterSpacing: rem(-0.3),
   lineHeight: "150%",
-};
+});
 
-export const textPreset5SemiBold: StyleRule = {
+export const textPreset5SemiBold = style({
   fontFamily: fonts.inter,
   fontSize: rem(16),
   fontWeight: weights.semiBold,
   letterSpacing: rem(-0.3),
   lineHeight: "140%",
-};
+});
 
-export const textPreset6: StyleRule = {
+export const textPreset6 = style({
   fontFamily: fonts.inter,
   fontSize: rem(14),
   fontWeight: weights.semiBold,
   letterSpacing: rem(-0.3),
   lineHeight: "140%",
-};
+});
 
-export const textPreset7: StyleRule = {
+export const textPreset7 = style({
   fontFamily: fonts.inter,
   fontSize: rem(11),
   fontWeight: weights.semiBold,
   letterSpacing: rem(0),
   lineHeight: "120%",
-};
+});

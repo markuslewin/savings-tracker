@@ -16,6 +16,7 @@ import {
   noGoalsContainer,
   noGoalsHeading,
   orangeCardTheme,
+  progressFill,
   summaryCard,
   summaryCards,
   summaryDesc,
@@ -278,6 +279,11 @@ const Home = async () => {
           ) : (
             <ul className={goalCards} role="list">
               {goals.map((goal, i) => {
+                const progress =
+                  goal.deposits.reduce((sum, deposit) => {
+                    return sum + deposit.amount;
+                  }, 0) / goal.target;
+
                 return (
                   <li
                     key={goal.id}
@@ -286,8 +292,42 @@ const Home = async () => {
                     <h3>
                       <Link href={`/goal/${goal.id}`}>{goal.name}</Link>
                     </h3>
-                    <p>76%</p>
-                    <div />
+                    <p>{Math.round(progress * 100)}%</p>
+                    <div
+                      className={sprinkles({
+                        border: {
+                          forcedColors: "default",
+                        },
+                        borderRadius: "radius-full",
+                        height: "size-0150",
+                        display: "grid",
+                        overflow: "hidden",
+                        background: i === 0 ? "orange-800" : "neutral-700",
+                      })}
+                    >
+                      {progress <= 0 ? null : (
+                        <div
+                          className={clsx(
+                            progressFill,
+                            sprinkles({
+                              border: "default",
+                              borderColor: "white-alpha-30",
+                              borderRadius: "radius-full",
+                              display: "grid",
+                              color:
+                                i === 0
+                                  ? "neutral-0"
+                                  : progress >= 1
+                                    ? "green-500"
+                                    : "orange-400",
+                            }),
+                          )}
+                          style={{
+                            width: `${progress * 100}%`,
+                          }}
+                        />
+                      )}
+                    </div>
                     <p>
                       <span>
                         {0} of {goal.target}

@@ -235,3 +235,11 @@ export const goalCard = style([
     },
   },
 ]);
+
+export const progressFill = style([
+  {
+    backgroundColor: "currentColor",
+    backgroundImage: `repeating-linear-gradient(-60deg, hsl(0 0% 6% / 10%), hsl(0 0% 6% / 10%) ${rem(2)}, transparent ${rem(2)}, transparent ${rem(7.75)})`,
+    backgroundOrigin: "border-box",
+  },
+]);

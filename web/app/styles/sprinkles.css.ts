@@ -121,6 +121,7 @@ const responsiveProperties = defineProperties({
     borderRadius: radius,
     pointerEvents: ["none"],
     textAlign: ["center"],
+    overflow: ["hidden"],
   },
 });
 

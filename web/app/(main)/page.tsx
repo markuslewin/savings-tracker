@@ -61,7 +61,18 @@ const Home = async () => {
       <h1 className={srOnly}>Dashboard</h1>
       <h2 className={srOnly}>Summary</h2>
       <dl className={summaryCards}>
-        <div className={clsx(card, orangeCardTheme, summaryCard)}>
+        <div
+          className={clsx(
+            card,
+            orangeCardTheme,
+            summaryCard,
+            sprinkles({
+              gridColumn: {
+                tablet: "span 2",
+              },
+            }),
+          )}
+        >
           <dt className={summaryTerm}>Total savings</dt>
           <dd className={summaryDesc}>
             {goals

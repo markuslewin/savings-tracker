@@ -104,6 +104,7 @@ const responsiveProperties = defineProperties({
     alignSelf: ["stretch", "start", "center", "end"],
     flexGrow: [1],
     flexShrink: [0],
+    gridColumn: ["span 2"],
     marginInline: { ...space, auto: "auto" },
     marginInlineStart: space,
     marginBlockStart: space,

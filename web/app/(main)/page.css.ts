@@ -45,11 +45,11 @@ export const summaryCards = style({
   gap: space["space-0200"],
   "@media": {
     [breakpoints.tablet]: {
-      gridTemplateColumns: "1fr 1fr",
+      gridTemplateColumns: "repeat(2, 1fr)",
       gap: space["space-0300"],
     },
     [breakpoints.desktop]: {
-      gridTemplateColumns: "624fr 304fr 304fr",
+      gridTemplateColumns: "repeat(4, 1fr)",
     },
   },
 });

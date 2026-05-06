@@ -158,6 +158,7 @@ const responsiveProperties = defineProperties({
     height: size,
     borderRadius: radius,
     pointerEvents: ["none"],
+    isolation: ["isolate"],
     textAlign: ["center"],
     textTransform: ["uppercase"],
     textDecoration: ["none"],

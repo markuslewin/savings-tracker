@@ -261,6 +261,7 @@ export const clickableContainerItem = style([
         content: "",
         position: "absolute",
         inset: 0,
+        zIndex: 1,
       },
     },
   },

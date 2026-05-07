@@ -229,6 +229,7 @@ export const goalCards = style([
       },
       [breakpoints.desktop]: {
         gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+        gridAutoFlow: "dense",
       },
     },
   },
@@ -243,9 +244,61 @@ export const goalCard = style([
     display: "flex",
     flexDirection: "column",
     padding: rem(15),
+    selectors: {
+      "&:nth-child(4n - 3)": {
+        minHeight: rem(260),
+      },
+      "&:nth-child(4n)": {
+        minHeight: rem(260),
+      },
+    },
     "@media": {
       [breakpoints.tablet]: {
         padding: rem(23),
+        selectors: {
+          "&:nth-child(4n - 3)": {
+            gridColumn: "span 2",
+            minHeight: "auto",
+          },
+          "&:nth-child(4n)": {
+            gridColumn: "span 2",
+            minHeight: "auto",
+          },
+        },
+      },
+      [breakpoints.desktop]: {
+        selectors: {
+          "&:nth-child(4n - 3)": {
+            gridColumn: "auto",
+          },
+          "&:nth-child(4n)": {
+            gridColumn: "auto",
+          },
+          "&:nth-child(8n - 7)": {
+            gridColumn: "span 2",
+          },
+          "&:nth-child(8n - 6)": {
+            gridColumn: 1,
+          },
+          "&:nth-child(8n - 5)": {
+            gridColumn: 2,
+          },
+          "&:nth-child(8n - 4)": {
+            gridRow: "span 2",
+          },
+          "&:nth-child(8n - 3)": {
+            gridColumn: "2 / span 2",
+          },
+          "&:nth-child(8n - 2)": {
+            gridColumn: 2,
+          },
+          "&:nth-child(8n - 1)": {
+            gridColumn: 3,
+          },
+          "&:nth-child(8n)": {
+            gridRow: "span 2",
+          },
+        },
       },
     },
   },

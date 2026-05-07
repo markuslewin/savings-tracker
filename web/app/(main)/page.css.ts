@@ -238,6 +238,34 @@ export const goalCards = style([
   }),
 ]);
 
+export const clickableContainerItem = style([
+  {
+    selectors: {
+      "&:focus-visible": {
+        outline: "none",
+      },
+      "&::before": {
+        content: "",
+        position: "absolute",
+        inset: 0,
+        zIndex: 1,
+      },
+    },
+  },
+]);
+export const clickableContainer = style([
+  {
+    position: "relative",
+    isolation: "isolate",
+    selectors: {
+      [`&:has(${clickableContainerItem}:focus-visible)`]: {
+        outline: outline.default,
+        outlineOffset: outlineOffset.default,
+      },
+    },
+  },
+]);
+
 export const goalCard = style([
   card,
   {
@@ -250,6 +278,10 @@ export const goalCard = style([
       },
       "&:nth-child(4n)": {
         minHeight: rem(260),
+      },
+      [`&:has(${clickableContainerItem}:focus-visible)`]: {
+        outline: outline[4],
+        outlineOffset: outlineOffset[4],
       },
     },
     "@media": {
@@ -299,34 +331,6 @@ export const goalCard = style([
             gridRow: "span 2",
           },
         },
-      },
-    },
-  },
-]);
-
-export const clickableContainerItem = style([
-  {
-    selectors: {
-      "&:focus-visible": {
-        outline: "none",
-      },
-      "&::before": {
-        content: "",
-        position: "absolute",
-        inset: 0,
-        zIndex: 1,
-      },
-    },
-  },
-]);
-export const clickableContainer = style([
-  {
-    position: "relative",
-    isolation: "isolate",
-    selectors: {
-      [`&:has(${clickableContainerItem}:focus-visible)`]: {
-        outline: outline.default,
-        outlineOffset: outlineOffset.default,
       },
     },
   },

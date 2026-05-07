@@ -92,9 +92,11 @@ const border = {
 export const outline = {
   none: "none",
   default: `${rem(2)} solid ${colors["orange-400"]}`,
+  4: `${rem(4)} solid ${colors["orange-400"]}`,
 };
 export const outlineOffset = {
   default: rem(2),
+  4: rem(4),
 };
 
 const responsiveProperties = defineProperties({

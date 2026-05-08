@@ -36,6 +36,7 @@ import TargetIcon from "@/app/icons/icon-target.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
 import { textPreset1, textPreset4, textPreset7 } from "@/app/styles/text.css";
+import { formatDate, formatPercent, formatUsd } from "@/app/utils/locale";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import clsx from "clsx";
 import Link from "next/link";
@@ -81,13 +82,15 @@ const Home = async () => {
         >
           <dt className={summaryTerm}>Total savings</dt>
           <dd className={summaryDesc}>
-            {goals
-              .flatMap((goal) => {
-                return goal.deposits;
-              })
-              .reduce((sum, deposit) => {
-                return sum + deposit.amount;
-              }, 0)}
+            {formatUsd(
+              goals
+                .flatMap((goal) => {
+                  return goal.deposits;
+                })
+                .reduce((sum, deposit) => {
+                  return sum + deposit.amount;
+                }, 0),
+            )}
           </dd>
         </div>
         <div className={clsx(card, summaryCard)}>
@@ -171,7 +174,7 @@ const Home = async () => {
                 }}
               >
                 <span className={srOnly}>
-                  {deposit.month}: ${i}
+                  {deposit.month}: {formatUsd(deposit.amount)}
                 </span>
               </li>
             );
@@ -204,7 +207,8 @@ const Home = async () => {
                     color: "neutral-300",
                   })}
                 >
-                  {deposit.amount}
+                  {/* todo: Mobile text preset 7 */}
+                  {formatUsd(deposit.amount)}
                 </div>
                 <div>{deposit.month}</div>
               </div>
@@ -364,7 +368,7 @@ const Home = async () => {
                         textPreset1,
                       )}
                     >
-                      {Math.round(progress * 100)}%
+                      {formatPercent(progress)}
                     </p>
                     <div
                       className={sprinkles({
@@ -415,7 +419,7 @@ const Home = async () => {
                       })}
                     >
                       <p>
-                        {sum} of {goal.target}
+                        {formatUsd(sum)} of {formatUsd(goal.target)}
                       </p>
                       <div
                         className={clsx(
@@ -428,8 +432,7 @@ const Home = async () => {
                       <p>
                         {goal.deadline === null
                           ? "No deadline"
-                          : // todo: Server/client
-                            `Due ${Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(goal.deadline)}`}
+                          : `Due ${formatDate(goal.deadline)}`}
                       </p>
                     </div>
                   </li>

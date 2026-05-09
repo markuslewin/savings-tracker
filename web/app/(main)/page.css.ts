@@ -266,6 +266,50 @@ export const clickableContainer = style([
   },
 ]);
 
+const goalCardVars = createThemeContract({
+  accent: null,
+  track: null,
+  dot: null,
+  deadline: null,
+});
+
+export const noProgress = style([
+  createTheme(goalCardVars, {
+    accent: colors["neutral-400"],
+    track: colors["neutral-700"],
+    dot: colors["neutral-300"],
+    deadline: colors["white-alpha-70"],
+  }),
+]);
+
+export const inProgress = style([
+  createTheme(goalCardVars, {
+    accent: colors["orange-400"],
+    track: colors["neutral-700"],
+    dot: colors["neutral-300"],
+    deadline: colors["white-alpha-70"],
+  }),
+]);
+
+export const inProgressClose = style([
+  orangeCardTheme,
+  createTheme(goalCardVars, {
+    accent: colors["neutral-0"],
+    track: colors["orange-800"],
+    dot: colors["white-alpha-30"],
+    deadline: colors["neutral-0"],
+  }),
+]);
+
+export const complete = style([
+  createTheme(goalCardVars, {
+    accent: colors["green-500"],
+    track: colors["neutral-700"],
+    dot: colors["neutral-300"],
+    deadline: colors["white-alpha-70"],
+  }),
+]);
+
 export const goalCard = style([
   card,
   {
@@ -338,9 +382,13 @@ export const goalCard = style([
 
 export const tag = style([{ paddingBlock: rem(3), paddingInline: rem(9) }]);
 
+export const goalCardPercent = style([{ color: goalCardVars.accent }]);
+
+export const progressTrack = style([{ background: goalCardVars.track }]);
+
 export const progressFill = style([
   {
-    backgroundColor: "currentColor",
+    backgroundColor: goalCardVars.accent,
     backgroundImage: `repeating-linear-gradient(-60deg, hsl(0 0% 6% / 10%), hsl(0 0% 6% / 10%) ${rem(2)}, transparent ${rem(2)}, transparent ${rem(7.75)})`,
     backgroundOrigin: "border-box",
   },
@@ -348,9 +396,12 @@ export const progressFill = style([
 
 export const dot = style([
   {
-    borderTop: `${rem(4)} solid currentColor`,
+    borderTop: `${rem(4)} solid`,
+    borderColor: goalCardVars.dot,
     width: rem(4),
     height: rem(4),
     borderRadius: 9999,
   },
 ]);
+
+export const goalCardDeadline = style([{ color: goalCardVars.deadline }]);

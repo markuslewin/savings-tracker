@@ -8,18 +8,25 @@ import {
   card,
   clickableContainer,
   clickableContainerItem,
+  complete,
   dot,
   goalCard,
+  goalCardDeadline,
+  goalCardPercent,
   goalCards,
   goalsContainer,
   goalsHeading,
+  inProgress,
+  inProgressClose,
   monthlyCard,
   monthlyHeading,
   noGoalsBorder,
   noGoalsContainer,
   noGoalsHeading,
+  noProgress,
   orangeCardTheme,
   progressFill,
+  progressTrack,
   summaryCard,
   summaryCards,
   summaryDesc,
@@ -298,7 +305,13 @@ const Home = async () => {
                     key={goal.id}
                     className={clsx(
                       goalCard,
-                      i === 0 ? orangeCardTheme : null,
+                      progress <= 0
+                        ? noProgress
+                        : progress < 0.76
+                          ? inProgress
+                          : progress < 1
+                            ? inProgressClose
+                            : complete,
                       clickableContainer,
                     )}
                   >
@@ -354,16 +367,9 @@ const Home = async () => {
                     </div>
                     <p
                       className={clsx(
+                        goalCardPercent,
                         sprinkles({
                           marginBlockStart: "space-0400",
-                          color:
-                            i === 0
-                              ? "neutral-0"
-                              : progress >= 1
-                                ? "green-500"
-                                : progress <= 0
-                                  ? "neutral-400"
-                                  : "orange-400",
                         }),
                         textPreset1,
                       )}
@@ -371,17 +377,19 @@ const Home = async () => {
                       {formatPercent(progress)}
                     </p>
                     <div
-                      className={sprinkles({
-                        marginBlockStart: "space-0200",
-                        border: {
-                          forcedColors: "solid",
-                        },
-                        borderRadius: "radius-full",
-                        height: "size-0150",
-                        display: "grid",
-                        overflow: "hidden",
-                        background: i === 0 ? "orange-800" : "neutral-700",
-                      })}
+                      className={clsx(
+                        progressTrack,
+                        sprinkles({
+                          marginBlockStart: "space-0200",
+                          border: {
+                            forcedColors: "solid",
+                          },
+                          borderRadius: "radius-full",
+                          height: "size-0150",
+                          display: "grid",
+                          overflow: "hidden",
+                        }),
+                      )}
                     >
                       {progress <= 0 ? null : (
                         <div
@@ -392,12 +400,6 @@ const Home = async () => {
                               borderColor: "white-alpha-30",
                               borderRadius: "radius-full",
                               display: "grid",
-                              color:
-                                i === 0
-                                  ? "neutral-0"
-                                  : progress >= 1
-                                    ? "green-500"
-                                    : "orange-400",
                             }),
                           )}
                           style={{
@@ -421,15 +423,8 @@ const Home = async () => {
                       <p>
                         {formatUsd(sum)} of {formatUsd(goal.target)}
                       </p>
-                      <div
-                        className={clsx(
-                          dot,
-                          sprinkles({
-                            color: i === 0 ? "white-alpha-30" : "neutral-300",
-                          }),
-                        )}
-                      />
-                      <p>
+                      <div className={dot} />
+                      <p className={goalCardDeadline}>
                         {goal.deadline === null
                           ? "No deadline"
                           : `Due ${formatDate(goal.deadline)}`}

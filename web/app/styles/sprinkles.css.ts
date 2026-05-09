@@ -6,6 +6,7 @@ export const colors = {
   transparent: "transparent",
   inherit: "inherit",
   "white-alpha-30": "hsl(0 100% 100% / 30%)",
+  "white-alpha-70": "hsl(0 100% 100% / 70%)",
   "neutral-900": "hsl(0 0% 6%)",
   "neutral-800": "hsl(0 0% 12%)",
   "neutral-700": "hsl(0 0% 19%)",

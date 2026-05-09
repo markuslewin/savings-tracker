@@ -13,11 +13,19 @@ export const sortSchema = z.enum(sorts);
 
 export type Sort = (typeof sorts)[number];
 
-// [
-//   "Recently added",
-//   "Deadline (soonest first)",
-//   "Progress (highest first)",
-//   "Progress (lowest first)",
-//   "Amount saved (highest first)",
-//   "Alphabetical (A–Z)",
-// ];
+export const getSortLabel = (sort: Sort) => {
+  switch (sort) {
+    case "recently-added":
+      return "Recently added";
+    case "deadline-asc":
+      return "Deadline (soonest first)";
+    case "progress-desc":
+      return "Progress (highest first)";
+    case "progress-asc":
+      return "Progress (lowest first)";
+    case "amount-desc":
+      return "Amount saved (highest first)";
+    case "alphabetical-asc":
+      return "Alphabetical (A–Z)";
+  }
+};

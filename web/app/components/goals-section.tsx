@@ -39,9 +39,14 @@ import SortIcon from "@/app/icons/icon-sort.svg";
 import TargetIcon from "@/app/icons/icon-target.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { textPreset1, textPreset4, textPreset7 } from "@/app/styles/text.css";
-import { Filter, filters, filterSchema } from "@/app/utils/filter";
+import {
+  Filter,
+  filters,
+  filterSchema,
+  getFilterLabel,
+} from "@/app/utils/filter";
 import { formatDate, formatPercent, formatUsd } from "@/app/utils/locale";
-import { Sort, sorts, sortSchema } from "@/app/utils/sort";
+import { getSortLabel, Sort, sorts, sortSchema } from "@/app/utils/sort";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useCallback, useOptimistic, useTransition } from "react";
@@ -139,7 +144,9 @@ export const GoalsSection = ({ filter, sort, goals }: GoalsSectionProps) => {
                                   <div className={radioDot} />
                                 ) : null}
                               </div>
-                              <span className={radioLabel}>{filter}</span>
+                              <span className={radioLabel}>
+                                {getFilterLabel(filter)}
+                              </span>
                             </>
                           );
                         }}
@@ -179,7 +186,9 @@ export const GoalsSection = ({ filter, sort, goals }: GoalsSectionProps) => {
                                   <div className={radioDot} />
                                 ) : null}
                               </div>
-                              <span className={radioLabel}>{sort}</span>
+                              <span className={radioLabel}>
+                                {getSortLabel(sort)}
+                              </span>
                             </>
                           );
                         }}

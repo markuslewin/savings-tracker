@@ -11,12 +11,10 @@ test.each([
   expect(formatPercent(value)).toBe(expected);
 });
 
-// Design doesn't display cents, but app allows cents as input
-// Display cents for consistency
 test.each([
-  [0, "$0.00"],
-  [350, "$350.00"],
-  [1900, "$1,900.00"],
+  [0, "$0"],
+  [350, "$350"],
+  [1900, "$1,900"],
   [0.1, "$0.10"],
 ])("formatUsd(%d) -> %s", (value, expected) => {
   expect(formatUsd(value)).toBe(expected);

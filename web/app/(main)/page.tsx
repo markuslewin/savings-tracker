@@ -331,11 +331,11 @@ const Home = async () => {
                           className={clsx(
                             sprinkles({
                               border: "solid",
-                              borderColor: i === 0 ? "neutral-0" : "green-500",
+                              borderColor: "green-500",
                               borderRadius: "radius-full",
                               textTransform: "uppercase",
-                              background: i === 0 ? "orange-700" : "green-900",
-                              color: i === 0 ? "neutral-0" : "green-500",
+                              background: "green-900",
+                              color: "green-500",
                             }),
                             tag,
                             textPreset7,

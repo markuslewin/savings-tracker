@@ -21,6 +21,7 @@ const usdFormatter = Intl.NumberFormat(locale, {
   style: "currency",
   currency: "USD",
   currencyDisplay: "narrowSymbol",
+  trailingZeroDisplay: "stripIfInteger",
 });
 
 export const formatUsd = (value: number) => {

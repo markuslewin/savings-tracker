@@ -33,8 +33,10 @@ import {
   summaryTerm,
   tag,
 } from "@/app/(main)/page.css";
-import * as Button from "@/app/components/button";
+import { Button } from "@/app/components/button";
+import * as buttonStyles from "@/app/components/button.css";
 import { DashedRect } from "@/app/components/dashed";
+import { DialogTrigger, Popover } from "@/app/components/popover";
 import { getGoals } from "@/app/data/data";
 import FilterIcon from "@/app/icons/icon-filter.svg";
 import PlusIcon from "@/app/icons/icon-plus.svg";
@@ -241,14 +243,18 @@ const Home = async () => {
               gap: "space-0200",
             })}
           >
-            <Button.Root variant="secondary">
-              <Button.Icon icon={FilterIcon} />
-              Filters
-            </Button.Root>
-            <Button.Root variant="secondary">
-              <Button.Icon icon={SortIcon} />
-              Sort by
-            </Button.Root>
+            <DialogTrigger>
+              <Button className={buttonStyles.variants.secondary}>
+                <FilterIcon className={buttonStyles.icon} /> Filters
+              </Button>
+              <Popover className={card}>List of options</Popover>
+            </DialogTrigger>
+            <DialogTrigger>
+              <Button className={buttonStyles.variants.secondary}>
+                <SortIcon className={buttonStyles.icon} /> Sort by
+              </Button>
+              <Popover className={card}>List of options</Popover>
+            </DialogTrigger>
           </div>
         </header>
         <div className={sprinkles({ marginBlockStart: "space-0300" })}>
@@ -281,20 +287,23 @@ const Home = async () => {
                   Start saving for something that matters. Create your first
                   goal and track your progress.
                 </p>
-                <Button.Root
-                  className={sprinkles({
-                    marginInline: "auto",
-                    marginBlockStart: "space-0400",
-                  })}
+                <Button
+                  className={clsx(
+                    buttonStyles.variants.primary,
+                    sprinkles({
+                      marginInline: "auto",
+                      marginBlockStart: "space-0400",
+                    }),
+                  )}
                 >
-                  <Button.Icon icon={PlusIcon} />
+                  <PlusIcon className={buttonStyles.icon} />
                   Create your first goal
-                </Button.Root>
+                </Button>
               </div>
             </div>
           ) : (
             <ul className={goalCards} role="list">
-              {goals.map((goal, i) => {
+              {goals.map((goal) => {
                 const sum = goal.deposits.reduce((sum, deposit) => {
                   return sum + deposit.amount;
                 }, 0);

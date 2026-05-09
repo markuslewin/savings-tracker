@@ -1,24 +1,3 @@
-import { icon, variants } from "@/app/components/button.css";
-import { ComponentProps, FC, SVGProps } from "react";
+"use client";
 
-type RootProps = ComponentProps<"button"> & {
-  variant?: keyof typeof variants;
-};
-
-export const Root = ({
-  variant = "primary",
-  className,
-  ...props
-}: RootProps) => {
-  return (
-    <button {...props} className={[variants[variant], className].join(" ")} />
-  );
-};
-
-type IconProps = ComponentProps<"svg"> & {
-  icon: FC<SVGProps<SVGElement>>;
-};
-
-export const Icon = ({ icon: Icon, ...props }: IconProps) => {
-  return <Icon className={icon} {...props} />;
-};
+export * from "react-aria-components/Button";

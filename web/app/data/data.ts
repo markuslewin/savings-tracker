@@ -1,5 +1,6 @@
 import data from "@/app/data/data.json";
 import { Filter } from "@/app/utils/filter";
+import { Sort } from "@/app/utils/sort";
 
 const filterMap: Record<
   Filter,
@@ -25,7 +26,12 @@ const filterMap: Record<
   },
 };
 
-export const getDashboard = async ({ filter }: { filter: Filter }) => {
+export const getDashboard = async ({
+  filter,
+}: {
+  filter: Filter;
+  sort: Sort;
+}) => {
   const goals = data.goals.map((goal) => {
     return {
       id: goal.id,

@@ -17,20 +17,22 @@ import { getDashboard } from "@/app/data/data";
 import { card } from "@/app/styles/card.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
-import { filters, filterSchema } from "@/app/utils/filter";
+import { filterSchema } from "@/app/utils/filter";
 import { formatUsd } from "@/app/utils/locale";
+import { sortSchema } from "@/app/utils/sort";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import clsx from "clsx";
 import * as z from "zod";
 
 const Home = async ({ searchParams }: PageProps<"/">) => {
-  const { filter } = z
+  const { filter, sort } = z
     .object({
       filter: filterSchema.default("all").catch("all"),
+      sort: sortSchema.default("recently-added").catch("recently-added"),
     })
     .parse(await searchParams);
 
-  const dashboard = await getDashboard({ filter });
+  const dashboard = await getDashboard({ filter, sort });
 
   const monthlyDeposits = [
     { month: "Apr", amount: 0 },
@@ -179,7 +181,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
           })}
         </div>
       </div>
-      <GoalsSection goals={dashboard.goals} filter={filter} />
+      <GoalsSection goals={dashboard.goals} filter={filter} sort={sort} />
     </div>
   );
 };

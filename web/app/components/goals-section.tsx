@@ -25,27 +25,26 @@ import * as buttonStyles from "@/app/components/button.css";
 import { DashedRect } from "@/app/components/dashed";
 import {
   popover,
+  radio,
+  radioCircle,
   radioDot,
+  radioGroup,
   radioGroupLabel,
+  radioLabel,
+  radios,
 } from "@/app/components/goals-section.css";
 import FilterIcon from "@/app/icons/icon-filter.svg";
 import PlusIcon from "@/app/icons/icon-plus.svg";
 import SortIcon from "@/app/icons/icon-sort.svg";
 import TargetIcon from "@/app/icons/icon-target.svg";
-import { card } from "@/app/styles/card.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import {
-  textPreset1,
-  textPreset4,
-  textPreset5,
-  textPreset6,
-  textPreset7,
-} from "@/app/styles/text.css";
+import { textPreset1, textPreset4, textPreset7 } from "@/app/styles/text.css";
 import { Filter, filters, filterSchema } from "@/app/utils/filter";
 import { formatDate, formatPercent, formatUsd } from "@/app/utils/locale";
+import { Sort, sorts, sortSchema } from "@/app/utils/sort";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { useOptimistic, useTransition } from "react";
+import { useCallback, useOptimistic, useTransition } from "react";
 import {
   Button,
   DialogTrigger,
@@ -58,6 +57,7 @@ import {
 
 type GoalsSectionProps = {
   filter: Filter;
+  sort: Sort;
   goals: {
     id: string;
     name: string;
@@ -67,10 +67,27 @@ type GoalsSectionProps = {
   }[];
 };
 
-export const GoalsSection = ({ filter, goals }: GoalsSectionProps) => {
+export const GoalsSection = ({ filter, sort, goals }: GoalsSectionProps) => {
   const [optimisticFilter, setOptimisticFilter] = useOptimistic(filter);
+  const [optimisticSort, setOptimisticSort] = useOptimistic(sort);
   const [isPending, transition] = useTransition();
   const router = useRouter();
+
+  const setSearchParams = useCallback(
+    ({ filter, sort }: { filter: Filter; sort: Sort }) => {
+      // `router` because `redirect` can't opt out of scroll
+      router.replace(
+        `/?${new URLSearchParams({
+          filter,
+          sort,
+        })}`,
+        {
+          scroll: false,
+        },
+      );
+    },
+    [router],
+  );
 
   return (
     <section className={goalsContainer}>
@@ -97,109 +114,32 @@ export const GoalsSection = ({ filter, goals }: GoalsSectionProps) => {
             <Button className={buttonStyles.variants.secondary}>
               <FilterIcon className={buttonStyles.icon} /> Filters
             </Button>
-            <Popover
-              className={clsx(
-                card.styles.grey,
-                popover,
-                sprinkles({
-                  width: "full",
-                  maxWidth: "popover",
-                }),
-              )}
-              placement="bottom end"
-              offset={8}
-            >
+            <Popover className={popover} placement="bottom end" offset={8}>
               <RadioGroup
-                className={sprinkles({
-                  display: "grid",
-                })}
+                className={radioGroup}
                 value={optimisticFilter}
                 onChange={(value) => {
                   const filter = filterSchema.parse(value);
                   transition(() => {
                     setOptimisticFilter(filter);
-                    // `router` because `redirect` can't opt out of scroll
-                    router.replace(
-                      `/?${new URLSearchParams({
-                        filter,
-                      })}`,
-                      {
-                        scroll: false,
-                      },
-                    );
+                    setSearchParams({ filter, sort: optimisticSort });
                   });
                 }}
               >
-                <Label
-                  className={clsx(
-                    radioGroupLabel,
-                    textPreset6,
-                    sprinkles({
-                      textTransform: "uppercase",
-                      color: "neutral-300",
-                    }),
-                  )}
-                >
-                  Filter by status
-                </Label>
-                <div
-                  className={sprinkles({
-                    display: "grid",
-                    gap: "space-0025",
-                  })}
-                >
+                <Label className={radioGroupLabel}>Filter by status</Label>
+                <div className={radios}>
                   {filters.map((filter) => {
                     return (
-                      <Radio
-                        key={filter}
-                        className={clsx(
-                          sprinkles({
-                            padding: "space-0100",
-                            display: "grid",
-                            gridTemplateColumns: "auto 1fr",
-                            alignItems: "center",
-                            gap: "space-0100",
-                          }),
-                          textPreset5,
-                        )}
-                        value={filter}
-                      >
-                        {({ isSelected, isFocusVisible }) => {
+                      <Radio key={filter} className={radio} value={filter}>
+                        {({ isSelected }) => {
                           return (
                             <>
-                              <div
-                                className={clsx(
-                                  sprinkles({
-                                    border: "solid",
-                                    borderColor: "neutral-500",
-                                    borderRadius: "radius-full",
-                                    width: "size-0200",
-                                    height: "size-0200",
-                                    display: "grid",
-                                    placeItems: "center",
-                                  }),
-
-                                  isFocusVisible
-                                    ? sprinkles({
-                                        outline: "default",
-                                        outlineOffset: "default",
-                                      })
-                                    : null,
-                                )}
-                              >
+                              <div className={radioCircle}>
                                 {isSelected ? (
                                   <div className={radioDot} />
                                 ) : null}
                               </div>
-                              <span
-                                className={sprinkles({
-                                  color: isSelected
-                                    ? "neutral-0"
-                                    : "neutral-300",
-                                })}
-                              >
-                                {filter}
-                              </span>
+                              <span className={radioLabel}>{filter}</span>
                             </>
                           );
                         }}
@@ -214,7 +154,41 @@ export const GoalsSection = ({ filter, goals }: GoalsSectionProps) => {
             <Button className={buttonStyles.variants.secondary}>
               <SortIcon className={buttonStyles.icon} /> Sort by
             </Button>
-            <Popover className={card.styles.grey}>List of options</Popover>
+            <Popover className={popover} placement="bottom end" offset={8}>
+              <RadioGroup
+                className={radioGroup}
+                value={optimisticSort}
+                onChange={(value) => {
+                  const sort = sortSchema.parse(value);
+                  transition(() => {
+                    setOptimisticSort(sort);
+                    setSearchParams({ filter: optimisticFilter, sort });
+                  });
+                }}
+              >
+                <Label className={radioGroupLabel}>Sort by</Label>
+                <div className={radios}>
+                  {sorts.map((sort) => {
+                    return (
+                      <Radio key={sort} className={radio} value={sort}>
+                        {({ isSelected }) => {
+                          return (
+                            <>
+                              <div className={radioCircle}>
+                                {isSelected ? (
+                                  <div className={radioDot} />
+                                ) : null}
+                              </div>
+                              <span className={radioLabel}>{sort}</span>
+                            </>
+                          );
+                        }}
+                      </Radio>
+                    );
+                  })}
+                </div>
+              </RadioGroup>
+            </Popover>
           </DialogTrigger>
         </div>
       </header>

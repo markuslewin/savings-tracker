@@ -1,3 +1,4 @@
+import { card } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
 import {
   colors,
@@ -17,34 +18,9 @@ import {
   createTheme,
   createThemeContract,
   createVar,
-  fallbackVar,
   style,
 } from "@vanilla-extract/css";
 import { calc } from "@vanilla-extract/css-utils";
-
-const cardVars = createThemeContract({
-  background: null,
-  color: null,
-  border: null,
-});
-
-export const card = style([
-  sprinkles({
-    border: "solid",
-    borderRadius: "radius-16",
-  }),
-  {
-    borderColor: fallbackVar(cardVars.border, colors["neutral-600"]),
-    background: fallbackVar(cardVars.background, colors["neutral-800"]),
-    color: fallbackVar(cardVars.color, colors["neutral-0"]),
-  },
-]);
-
-export const orangeCardTheme = createTheme(cardVars, {
-  background: `linear-gradient(to right, ${colors["orange-700"]}, ${colors["orange-400"]})`,
-  color: colors["neutral-0"],
-  border: "hsl(0 0% 0% / 30%)",
-});
 
 export const summaryCards = style({
   display: "grid",
@@ -82,7 +58,7 @@ export const summaryDesc = style([
 ]);
 
 export const monthlyCard = style([
-  card,
+  card.styles.grey,
   sprinkles({
     marginBlockStart: {
       mobile: "space-0200",
@@ -274,6 +250,7 @@ const goalCardVars = createThemeContract({
 });
 
 export const noProgress = style([
+  card.styles.grey,
   createTheme(goalCardVars, {
     accent: colors["neutral-400"],
     track: colors["neutral-700"],
@@ -283,6 +260,7 @@ export const noProgress = style([
 ]);
 
 export const inProgress = style([
+  card.styles.grey,
   createTheme(goalCardVars, {
     accent: colors["orange-400"],
     track: colors["neutral-700"],
@@ -292,7 +270,7 @@ export const inProgress = style([
 ]);
 
 export const inProgressClose = style([
-  orangeCardTheme,
+  card.styles.orange,
   createTheme(goalCardVars, {
     accent: colors["neutral-0"],
     track: colors["orange-800"],
@@ -302,6 +280,7 @@ export const inProgressClose = style([
 ]);
 
 export const complete = style([
+  card.styles.grey,
   createTheme(goalCardVars, {
     accent: colors["green-500"],
     track: colors["neutral-700"],
@@ -311,7 +290,6 @@ export const complete = style([
 ]);
 
 export const goalCard = style([
-  card,
   {
     display: "flex",
     flexDirection: "column",

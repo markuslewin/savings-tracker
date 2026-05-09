@@ -72,7 +72,7 @@ export const size = {
   full: "100%",
 };
 
-const radius = {
+export const radius = {
   "radius-00": rem(0),
   "radius-04": rem(4),
   "radius-06": rem(6),
@@ -145,10 +145,12 @@ const responsiveProperties = defineProperties({
     flexGrow: [1],
     flexShrink: [0],
     gridColumn: ["span 2"],
+    placeItems: ["center"],
     marginInline: { ...space, auto: "auto" },
     marginInlineStart: { ...space, auto: "auto" },
     marginBlockStart: { ...space, auto: "auto" },
     marginBlockEnd: { ...space, auto: "auto" },
+    padding: space,
     paddingBlock: space,
     paddingBlockStart: space,
     paddingBlockEnd: space,
@@ -157,7 +159,7 @@ const responsiveProperties = defineProperties({
     paddingInlineEnd: space,
     gap: space,
     width: size,
-    maxWidth: { paragraph: rem(512), container: rem(1280) },
+    maxWidth: { popover: rem(280), paragraph: rem(512), container: rem(1280) },
     height: size,
     borderRadius: radius,
     pointerEvents: ["none"],

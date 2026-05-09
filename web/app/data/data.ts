@@ -1,7 +1,32 @@
 import data from "@/app/data/data.json";
+import { Filter } from "@/app/utils/filter";
 
-export const getGoals = async () => {
-  return data.goals.map((goal) => {
+const filterMap: Record<
+  Filter,
+  (goal: { target: number; deposits: { amount: number }[] }) => boolean
+> = {
+  all: () => {
+    return true;
+  },
+  "not-started": (goal) => {
+    return goal.deposits.length <= 0;
+  },
+  "in-progress": (goal) => {
+    const total = goal.deposits.reduce((sum, deposit) => {
+      return sum + deposit.amount;
+    }, 0);
+    return 0 < total && total < goal.target;
+  },
+  completed: (goal) => {
+    const total = goal.deposits.reduce((sum, deposit) => {
+      return sum + deposit.amount;
+    }, 0);
+    return total >= goal.target;
+  },
+};
+
+export const getDashboard = async ({ filter }: { filter: Filter }) => {
+  const goals = data.goals.map((goal) => {
     return {
       id: goal.id,
       name: goal.name,
@@ -14,6 +39,32 @@ export const getGoals = async () => {
       }),
     };
   });
+  return {
+    summary: {
+      totalSavings: goals
+        .flatMap((goal) => {
+          return goal.deposits;
+        })
+        .reduce((sum, deposit) => {
+          return sum + deposit.amount;
+        }, 0),
+      activeGoals: goals.filter((goal) => {
+        return (
+          goal.deposits.reduce((sum, deposit) => {
+            return sum + deposit.amount;
+          }, 0) < goal.target
+        );
+      }).length,
+      goalsCompleted: goals.filter((goal) => {
+        return (
+          goal.deposits.reduce((sum, deposit) => {
+            return sum + deposit.amount;
+          }, 0) >= goal.target
+        );
+      }).length,
+    },
+    goals: goals.filter(filterMap[filter]),
+  };
 };
 
 export const getGoal = async (id: string) => {

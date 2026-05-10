@@ -19,6 +19,8 @@ export const popover = style([
   }),
   {
     padding: rem(7),
+    overflowY: "auto",
+    scrollbarWidth: "thin",
     vars: {
       [card.vars.borderRadius]: radius["radius-08"],
     },

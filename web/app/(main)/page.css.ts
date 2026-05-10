@@ -1,3 +1,4 @@
+import { transition } from "@/app/styles/animation.css";
 import { card } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
 import {
@@ -199,6 +200,12 @@ export const noGoalsHeading = style([
 export const goalCards = style([
   {
     display: "grid",
+    ...transition,
+    selectors: {
+      "&[data-pending]": {
+        opacity: 0.5,
+      },
+    },
     "@media": {
       [breakpoints.tablet]: {
         gridTemplateColumns: "repeat(2, minmax(0, 1fr))",

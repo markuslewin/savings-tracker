@@ -105,9 +105,7 @@ export const GoalsSection = ({ filter, sort, goals }: GoalsSectionProps) => {
           gap: "space-0200",
         })}
       >
-        <h2 className={goalsHeading}>
-          Your goals {isPending ? "(pending)" : null}
-        </h2>
+        <h2 className={goalsHeading}>Your goals</h2>
         <div
           className={sprinkles({
             display: "flex",
@@ -246,7 +244,11 @@ export const GoalsSection = ({ filter, sort, goals }: GoalsSectionProps) => {
             </div>
           </div>
         ) : (
-          <ul className={goalCards} role="list">
+          <ul
+            className={goalCards}
+            role="list"
+            data-pending={isPending ? "true" : undefined}
+          >
             {goals.map((goal) => {
               const sum = goal.deposits.reduce((sum, deposit) => {
                 return sum + deposit.amount;

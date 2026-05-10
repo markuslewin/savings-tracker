@@ -13,9 +13,6 @@ import {
   goalsHeading,
   inProgress,
   inProgressClose,
-  noGoalsBorder,
-  noGoalsContainer,
-  noGoalsHeading,
   noProgress,
   progressFill,
   progressTrack,
@@ -24,6 +21,12 @@ import {
 import * as buttonStyles from "@/app/components/button.css";
 import { DashedRect } from "@/app/components/dashed";
 import {
+  noGoalsBody,
+  noGoalsBorder,
+  noGoalsContainer,
+  noGoalsContent,
+  noGoalsHeading,
+  noGoalsIcon,
   popover,
   radio,
   radioCircle,
@@ -63,16 +66,22 @@ import {
 type GoalsSectionProps = {
   filter: Filter;
   sort: Sort;
+  noGoals: boolean;
   goals: {
     id: string;
     name: string;
     target: number;
-    deposits: { amount: number }[];
+    saved: number;
     deadline: Date | null;
   }[];
 };
 
-export const GoalsSection = ({ filter, sort, goals }: GoalsSectionProps) => {
+export const GoalsSection = ({
+  filter,
+  sort,
+  noGoals,
+  goals,
+}: GoalsSectionProps) => {
   const [optimisticFilter, setOptimisticFilter] = useOptimistic(filter);
   const [optimisticSort, setOptimisticSort] = useOptimistic(sort);
   const [isPending, transition] = useTransition();
@@ -200,32 +209,13 @@ export const GoalsSection = ({ filter, sort, goals }: GoalsSectionProps) => {
         </div>
       </header>
       <div className={sprinkles({ marginBlockStart: "space-0300" })}>
-        {goals.length <= 0 ? (
+        {noGoals ? (
           <div className={noGoalsContainer}>
             <DashedRect className={noGoalsBorder} />
-            <div
-              className={sprinkles({
-                marginInline: "auto",
-                maxWidth: "paragraph",
-                display: "grid",
-                textAlign: "center",
-              })}
-            >
-              <TargetIcon
-                className={sprinkles({
-                  marginInline: "auto",
-                  width: "auto",
-                  height: "size-0500",
-                  color: "neutral-400",
-                })}
-              />
+            <div className={noGoalsContent}>
+              <TargetIcon className={noGoalsIcon} />
               <h3 className={noGoalsHeading}>No goals yet</h3>
-              <p
-                className={sprinkles({
-                  marginBlockStart: "space-0250",
-                  color: "neutral-300",
-                })}
-              >
+              <p className={noGoalsBody}>
                 Start saving for something that matters. Create your first goal
                 and track your progress.
               </p>
@@ -243,6 +233,17 @@ export const GoalsSection = ({ filter, sort, goals }: GoalsSectionProps) => {
               </Button>
             </div>
           </div>
+        ) : goals.length <= 0 ? (
+          <div className={noGoalsContainer}>
+            <DashedRect className={noGoalsBorder} />
+            <div className={noGoalsContent}>
+              <TargetIcon className={noGoalsIcon} />
+              <h3 className={noGoalsHeading}>No goals found</h3>
+              <p className={noGoalsBody}>
+                No goals matched the filter. Try selecting another filter above.
+              </p>
+            </div>
+          </div>
         ) : (
           <ul
             className={goalCards}
@@ -250,10 +251,7 @@ export const GoalsSection = ({ filter, sort, goals }: GoalsSectionProps) => {
             data-pending={isPending ? "true" : undefined}
           >
             {goals.map((goal) => {
-              const sum = goal.deposits.reduce((sum, deposit) => {
-                return sum + deposit.amount;
-              }, 0);
-              const progress = sum / goal.target;
+              const progress = goal.saved / goal.target;
 
               return (
                 <li
@@ -376,7 +374,7 @@ export const GoalsSection = ({ filter, sort, goals }: GoalsSectionProps) => {
                     })}
                   >
                     <p>
-                      {formatUsd(sum)} of {formatUsd(goal.target)}
+                      {formatUsd(goal.saved)} of {formatUsd(goal.target)}
                     </p>
                     <div className={dot} />
                     <p className={goalCardDeadline}>

@@ -7,9 +7,10 @@ import {
   radius,
   sprinkles,
 } from "@/app/styles/sprinkles.css";
-import { textPreset5, textPreset6 } from "@/app/styles/text.css";
+import { textPreset2, textPreset5, textPreset6 } from "@/app/styles/text.css";
 import { rem } from "@/app/styles/utils";
 import { style } from "@vanilla-extract/css";
+import { calc } from "@vanilla-extract/css-utils";
 
 export const popover = style([
   card.styles.grey,
@@ -100,4 +101,70 @@ export const radioLabel = style([
       "&[data-selected]": { color: colors["neutral-0"] },
     },
   },
+]);
+
+export const noGoalsContainer = style([
+  sprinkles({
+    paddingBlock: "space-0500",
+    paddingInline: "space-0200",
+    border: {
+      forcedColors: "dashed",
+    },
+    borderRadius: {
+      forcedColors: "radius-16",
+    },
+  }),
+  {
+    position: "relative",
+    isolation: "isolate",
+  },
+]);
+
+export const noGoalsBorder = style([
+  sprinkles({
+    color: "neutral-600",
+    display: {
+      forcedColors: "none",
+    },
+  }),
+  {
+    position: "absolute",
+    inset: 0,
+    // Avoid disappearing sides due to rounding
+    width: calc.subtract("100%", "1px"),
+    height: calc.subtract("100%", "1px"),
+    zIndex: -1,
+  },
+]);
+
+export const noGoalsContent = style([
+  sprinkles({
+    marginInline: "auto",
+    maxWidth: "paragraph",
+    display: "grid",
+    textAlign: "center",
+  }),
+]);
+
+export const noGoalsIcon = style([
+  sprinkles({
+    marginInline: "auto",
+    width: "auto",
+    height: "size-0500",
+    color: "neutral-400",
+  }),
+]);
+
+export const noGoalsHeading = style([
+  sprinkles({
+    marginBlockStart: "space-0250",
+  }),
+  textPreset2,
+]);
+
+export const noGoalsBody = style([
+  sprinkles({
+    marginBlockStart: "space-0250",
+    color: "neutral-300",
+  }),
 ]);

@@ -52,45 +52,6 @@
       ]
     },
     {
-      "id": "goal-002",
-      "name": "Mechanical Keyboard",
-      "target": 350,
-      "deadline": "2026-03-15",
-      "createdAt": "2025-12-01T11:00:00.000Z",
-      "deposits": [
-        {
-          "id": "dep-002-a",
-          "amount": 75,
-          "note": "Birthday money",
-          "createdAt": "2025-12-10T16:45:00.000Z"
-        },
-        {
-          "id": "dep-002-b",
-          "amount": 50,
-          "note": "",
-          "createdAt": "2025-12-22T09:00:00.000Z"
-        },
-        {
-          "id": "dep-002-c",
-          "amount": 100,
-          "note": "Holiday bonus",
-          "createdAt": "2025-12-28T12:30:00.000Z"
-        },
-        {
-          "id": "dep-002-d",
-          "amount": 75,
-          "note": "",
-          "createdAt": "2026-01-05T11:20:00.000Z"
-        },
-        {
-          "id": "dep-002-e",
-          "amount": 50,
-          "note": "Almost there!",
-          "createdAt": "2026-02-01T08:00:00.000Z"
-        }
-      ]
-    },
-    {
       "id": "goal-003",
       "name": "React Conf Trip",
       "target": 1800,
@@ -188,45 +149,6 @@
           "id": "dep-004-g",
           "amount": 300,
           "note": "Monthly contribution",
-          "createdAt": "2026-03-01T09:00:00.000Z"
-        }
-      ]
-    },
-    {
-      "id": "goal-005",
-      "name": "4K Monitor Upgrade",
-      "target": 600,
-      "deadline": "2026-04-30",
-      "createdAt": "2025-12-10T08:00:00.000Z",
-      "deposits": [
-        {
-          "id": "dep-005-a",
-          "amount": 100,
-          "note": "Starting the fund",
-          "createdAt": "2025-12-10T08:30:00.000Z"
-        },
-        {
-          "id": "dep-005-b",
-          "amount": 75,
-          "note": "",
-          "createdAt": "2025-12-24T12:00:00.000Z"
-        },
-        {
-          "id": "dep-005-c",
-          "amount": 100,
-          "note": "Found a deal, need to save faster",
-          "createdAt": "2026-01-15T14:00:00.000Z"
-        },
-        {
-          "id": "dep-005-d",
-          "amount": 75,
-          "note": "",
-          "createdAt": "2026-02-01T10:00:00.000Z"
-        },
-        {
-          "id": "dep-005-e",
-          "amount": 100,
-          "note": "",
           "createdAt": "2026-03-01T09:00:00.000Z"
         }
       ]

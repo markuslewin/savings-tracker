@@ -182,7 +182,12 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
           })}
         </div>
       </div>
-      <GoalsSection goals={dashboard.goals} filter={filter} sort={sort} />
+      <GoalsSection
+        filter={filter}
+        sort={sort}
+        noGoals={dashboard.noGoals}
+        goals={dashboard.goals}
+      />
     </div>
   );
 };

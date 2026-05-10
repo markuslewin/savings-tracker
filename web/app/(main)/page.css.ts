@@ -162,47 +162,6 @@ export const goalsContainer = style([
 
 export const goalsHeading = style([textPreset2]);
 
-export const noGoalsContainer = style([
-  sprinkles({
-    paddingBlock: "space-0500",
-    paddingInline: "space-0200",
-    border: {
-      forcedColors: "dashed",
-    },
-    borderRadius: {
-      forcedColors: "radius-16",
-    },
-  }),
-  {
-    position: "relative",
-    isolation: "isolate",
-  },
-]);
-
-export const noGoalsBorder = style([
-  sprinkles({
-    color: "neutral-600",
-    display: {
-      forcedColors: "none",
-    },
-  }),
-  {
-    position: "absolute",
-    inset: 0,
-    // Avoid disappearing sides due to rounding
-    width: calc.subtract("100%", "1px"),
-    height: calc.subtract("100%", "1px"),
-    zIndex: -1,
-  },
-]);
-
-export const noGoalsHeading = style([
-  sprinkles({
-    marginBlockStart: "space-0250",
-  }),
-  textPreset2,
-]);
-
 export const goalCards = style([
   {
     display: "grid",

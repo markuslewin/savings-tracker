@@ -4,25 +4,19 @@ import { Sort } from "@/app/utils/sort";
 
 const filterMap: Record<
   Filter,
-  (goal: { target: number; deposits: { amount: number }[] }) => boolean
+  (goal: { target: number; saved: number }) => boolean
 > = {
   all: () => {
     return true;
   },
   "not-started": (goal) => {
-    return goal.deposits.length <= 0;
+    return goal.saved <= 0;
   },
   "in-progress": (goal) => {
-    const total = goal.deposits.reduce((sum, deposit) => {
-      return sum + deposit.amount;
-    }, 0);
-    return 0 < total && total < goal.target;
+    return 0 < goal.saved && goal.saved < goal.target;
   },
   completed: (goal) => {
-    const total = goal.deposits.reduce((sum, deposit) => {
-      return sum + deposit.amount;
-    }, 0);
-    return total >= goal.target;
+    return goal.saved >= goal.target;
   },
 };
 
@@ -38,37 +32,24 @@ export const getDashboard = async ({
       name: goal.name,
       target: goal.target,
       deadline: goal.deadline === null ? null : new Date(goal.deadline),
-      deposits: goal.deposits.map((deposit) => {
-        return {
-          amount: deposit.amount,
-        };
-      }),
+      saved: goal.deposits.reduce((saved, deposit) => {
+        return saved + deposit.amount;
+      }, 0),
     };
   });
   return {
     summary: {
-      totalSavings: goals
-        .flatMap((goal) => {
-          return goal.deposits;
-        })
-        .reduce((sum, deposit) => {
-          return sum + deposit.amount;
-        }, 0),
+      totalSavings: goals.reduce((sum, goal) => {
+        return sum + goal.saved;
+      }, 0),
       activeGoals: goals.filter((goal) => {
-        return (
-          goal.deposits.reduce((sum, deposit) => {
-            return sum + deposit.amount;
-          }, 0) < goal.target
-        );
+        return goal.saved < goal.target;
       }).length,
       goalsCompleted: goals.filter((goal) => {
-        return (
-          goal.deposits.reduce((sum, deposit) => {
-            return sum + deposit.amount;
-          }, 0) >= goal.target
-        );
+        return goal.saved >= goal.target;
       }).length,
     },
+    noGoals: goals.length <= 0,
     goals: goals.filter(filterMap[filter]),
   };
 };

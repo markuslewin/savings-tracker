@@ -1,6 +1,6 @@
 import { breakpoints } from "@/app/styles/media";
 import { rem } from "@/app/styles/utils";
-import { style } from "@vanilla-extract/css";
+import { style, StyleRule } from "@vanilla-extract/css";
 
 const fonts = {
   bricolageGrotesque: "var(--font-bricolage-grotesque)",
@@ -71,18 +71,22 @@ export const textPreset5SemiBold = style({
   lineHeight: "140%",
 });
 
-export const textPreset6 = style({
+export const textPreset6Base: StyleRule = {
   fontFamily: fonts.inter,
   fontSize: rem(14),
   fontWeight: weights.semiBold,
   letterSpacing: rem(-0.3),
   lineHeight: "140%",
-});
+};
 
-export const textPreset7 = style({
+export const textPreset6 = style(textPreset6Base);
+
+export const textPreset7Base: StyleRule = {
   fontFamily: fonts.inter,
   fontSize: rem(11),
   fontWeight: weights.semiBold,
   letterSpacing: rem(0),
   lineHeight: "120%",
-});
+};
+
+export const textPreset7 = style(textPreset7Base);

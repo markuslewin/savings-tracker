@@ -13,6 +13,8 @@ import {
   textPreset2,
   textPreset4,
   textPreset5SemiBold,
+  textPreset6Base,
+  textPreset7Base,
 } from "@/app/styles/text.css";
 import { rem } from "@/app/styles/utils";
 import {
@@ -102,12 +104,16 @@ const desktopAmount = 12;
 export const barsGridItem = style([
   {
     display: "none",
+    ...textPreset7Base,
     selectors: {
       [`&:nth-last-child(-n + ${mobileAmount})`]: {
         display: "block",
       },
     },
     "@media": {
+      [breakpoints.tablet]: {
+        ...textPreset6Base,
+      },
       [breakpoints.desktop]: {
         selectors: {
           [`&:nth-last-child(-n + ${desktopAmount})`]: {

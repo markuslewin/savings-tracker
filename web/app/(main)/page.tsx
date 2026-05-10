@@ -152,6 +152,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
               marginBlockStart: "space-0125",
             }),
           )}
+          // Values are accessible via list of bars
           aria-hidden="true"
         >
           {monthlyDeposits.map((deposit, i) => {

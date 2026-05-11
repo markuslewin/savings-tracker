@@ -1,19 +1,14 @@
+import { NewGoalButton } from "@/app/(main)/components/new-goal-button";
 import { container, header } from "@/app/(main)/layout.css";
-import { Button } from "@/app/components/button";
-import * as buttonStyles from "@/app/components/button.css";
-import PlusIcon from "@/app/icons/icon-plus.svg";
 import { breakpoints } from "@/app/styles/media";
 import { sprinkles } from "@/app/styles/sprinkles.css";
+import { NewGoalDialog } from "@/app/utils/new-goal-dialog/component";
+import { OptimisticSearchParams } from "@/app/utils/optimistic-search-params/component";
 import Link from "next/link";
-import { ReactNode } from "react";
 
-type MainLayoutProps = {
-  children: ReactNode;
-};
-
-const MainLayout = ({ children }: MainLayoutProps) => {
+const MainLayout = ({ children }: LayoutProps<"/">) => {
   return (
-    <>
+    <OptimisticSearchParams>
       <header className={header}>
         <div className={container}>
           <div
@@ -33,24 +28,22 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                   height={40}
                 />
                 <img
-                  alt=""
+                  alt="Savings Tracker"
                   src={"/images/logo-small.svg"}
                   width={40}
                   height={40}
                 />
               </picture>
             </Link>
-            <Button className={buttonStyles.variants.primary}>
-              <PlusIcon className={buttonStyles.icon} />
-              New goal
-            </Button>
+            <NewGoalButton />
           </div>
         </div>
       </header>
       <main>
         <div className={container}>{children}</div>
       </main>
-    </>
+      <NewGoalDialog />
+    </OptimisticSearchParams>
   );
 };
 

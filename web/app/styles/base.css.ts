@@ -20,6 +20,7 @@ globalStyle("dd", {
 
 globalStyle("button", {
   border: "none",
+  padding: 0,
 });
 
 globalStyle("ul, ol", {

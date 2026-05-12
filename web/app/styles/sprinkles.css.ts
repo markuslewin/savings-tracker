@@ -86,7 +86,7 @@ export const radius = {
   "radius-full": rem(999),
 };
 
-const border = {
+export const border = {
   solid: `${rem(1)} solid transparent`,
   dashed: `${rem(1)} dashed transparent`,
 };

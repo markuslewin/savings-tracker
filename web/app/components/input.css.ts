@@ -14,7 +14,9 @@ export const icon = style([
     pointerEvents: "none",
   }),
   {
-    gridArea: "icon",
+    gridColumn: 1,
+    gridRow: 1,
+    zIndex: 1,
   },
 ]);
 
@@ -25,7 +27,7 @@ export const root = style([
     color: "neutral-0",
   }),
   {
-    gridTemplateAreas: "icon/field field",
+    isolation: "isolate",
     selectors: {
       [`&:has(${icon})`]: {
         vars: {
@@ -39,6 +41,8 @@ export const root = style([
 export const field = style([
   {
     gridArea: "field",
+    gridColumn: "1 / span 2",
+    gridRow: 1,
     paddingInline: rem(15),
     paddingBlock: rem(14),
     paddingInlineStart: fallbackVar(fieldPaddingInlineStart, rem(15)),

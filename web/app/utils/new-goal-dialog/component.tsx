@@ -8,6 +8,7 @@ import CrossIcon from "@/app/icons/icon-cross.svg";
 import DollarIcon from "@/app/icons/icon-dollar.svg";
 import { createGoal } from "@/app/utils/new-goal-dialog/action";
 import { useNewGoalDialog } from "@/app/utils/new-goal-dialog/hook";
+import * as schema from "@/app/utils/new-goal-dialog/schema";
 import {
   actions,
   close,
@@ -21,6 +22,7 @@ import {
   overlay,
   textField,
 } from "@/app/utils/new-goal-dialog/styles.css";
+import { validate } from "@/app/utils/validation";
 import { useActionState } from "react";
 import { Form, Input, Label, TextField } from "react-aria-components";
 import {
@@ -71,6 +73,8 @@ export const NewGoalDialog = () => {
                     ? state.values.name
                     : undefined
                 }
+                isRequired
+                validate={validate(schema.name)}
               >
                 <Label className={label}>Goal name</Label>
                 <span className={inputStyles.root}>
@@ -86,6 +90,8 @@ export const NewGoalDialog = () => {
                     ? state.values.target
                     : undefined
                 }
+                isRequired
+                validate={validate(schema.target)}
               >
                 <Label className={label}>Target amount</Label>
                 <span className={inputStyles.root}>

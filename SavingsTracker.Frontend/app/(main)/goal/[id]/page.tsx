@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 const Goal = async ({ params }: PageProps<"/goal/[id]">) => {
   const weather = await (
-    await fetch(new URL("weatherforecast", process.env.API_HTTPS))
+    await fetch(new URL("weatherforecast", process.env.GOALSERVICE_HTTPS))
   ).json();
   console.log({ weather });
 

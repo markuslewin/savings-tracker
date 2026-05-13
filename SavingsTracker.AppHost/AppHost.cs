@@ -1,10 +1,10 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var api = builder.AddProject<Projects.api>("api");
+var goalService = builder.AddProject<Projects.SavingsTracker_GoalService>("goalservice");
 
 builder
-  .AddJavaScriptApp("web", "../web")
+  .AddJavaScriptApp("frontend", "../SavingsTracker.Frontend")
   .WithHttpEndpoint(port: 3000, env: "PORT")
-  .WithReference(api);
+  .WithReference(goalService);
 
 builder.Build().Run();

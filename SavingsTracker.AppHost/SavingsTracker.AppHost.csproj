@@ -1,7 +1,7 @@
 <Project Sdk="Aspire.AppHost.Sdk/13.3.1">
 
   <ItemGroup>
-    <ProjectReference Include="..\api\api.csproj" />
+    <ProjectReference Include="..\SavingsTracker.GoalService\SavingsTracker.GoalService.csproj" />
   </ItemGroup>
 
   <ItemGroup>

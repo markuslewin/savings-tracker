@@ -14,6 +14,11 @@ var postgres = builder
 
 var goalDb = postgres.AddDatabase("goaldb");
 
+builder
+  .AddProject<Projects.SavingsTracker_GoalDbManager>("migrations")
+  .WithReference(goalDb)
+  .WaitFor(goalDb);
+
 var goalService = builder
   .AddProject<Projects.SavingsTracker_GoalService>("goalservice")
   .WithReference(goalDb);

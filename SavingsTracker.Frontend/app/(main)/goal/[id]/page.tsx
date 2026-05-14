@@ -3,10 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 const Goal = async ({ params }: PageProps<"/goal/[id]">) => {
-  const weather = await (
-    await fetch(new URL("weatherforecast", process.env.GOALSERVICE_HTTPS))
+  const goals = await (
+    await fetch(new URL("goals", process.env.GOALSERVICE_HTTPS))
   ).json();
-  console.log({ weather });
+  console.log({ goals });
 
   const { id } = await params;
   const goal = await getGoal(id);

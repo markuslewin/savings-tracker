@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SavingsTracker.GoalService\SavingsTracker.GoalService.csproj" />
+    <ProjectReference Include="..\SavingsTracker.GoalDbManager\SavingsTracker.GoalDbManager.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,7 +7,7 @@ using SavingsTracker.GoalDb;
 
 #nullable disable
 
-namespace SavingsTracker.GoalDb.Migrations
+namespace SavingsTracker.GoalDbManager.Migrations
 {
     [DbContext(typeof(GoalDbContext))]
     partial class GoalDbContextModelSnapshot : ModelSnapshot
@@ -23,11 +23,8 @@ namespace SavingsTracker.GoalDb.Migrations
 
             modelBuilder.Entity("SavingsTracker.GoalDb.Goal", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()

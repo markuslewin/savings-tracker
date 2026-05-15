@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace SavingsTracker.GoalDb.Migrations
+namespace SavingsTracker.GoalDbManager.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -15,8 +14,7 @@ namespace SavingsTracker.GoalDb.Migrations
                 name: "Goals",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Target = table.Column<int>(type: "integer", nullable: false)
                 },

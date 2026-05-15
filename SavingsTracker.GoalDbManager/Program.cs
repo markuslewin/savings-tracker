@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using SavingsTracker.GoalDb;
 using SavingsTracker.GoalDbManager;
 
@@ -12,19 +13,20 @@ builder.Services.AddHostedService<Worker>();
 // });
 
 builder.AddNpgsqlDbContext<GoalDbContext>(
-  "goaldb", configureDbContextOptions: options =>
+  "goaldb", configureDbContextOptions: optionsBuilder =>
 {
-  options.UseSeeding((context, _) =>
+  optionsBuilder.UseNpgsql(npgsqlBuilder =>
+  {
+    npgsqlBuilder.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+  });
+  optionsBuilder.UseSeeding((context, _) =>
   {
     if (context is not GoalDbContext db)
     {
       throw new Exception($"Invalid context type: {context.GetType().Name}");
     }
 
-    db.Goals.AddRange([
-       new () {Name = "Demo", Target = 1000}
-    ]);
-    db.SaveChanges();
+    Seeder.Seed(db);
   });
 });
 

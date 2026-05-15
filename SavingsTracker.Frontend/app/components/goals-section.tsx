@@ -66,22 +66,21 @@ import {
 type GoalsSectionProps = {
   filter: Filter;
   sort: Sort;
-  noGoals: boolean;
-  goals: {
-    id: string;
-    name: string;
-    target: number;
-    saved: number;
-    deadline: Date | null;
-  }[];
+  view:
+    | { type: "no-goals" }
+    | {
+        type: "goals";
+        goals: {
+          id: string;
+          name: string;
+          target: number;
+          saved: number;
+          deadline: Date | null;
+        }[];
+      };
 };
 
-export const GoalsSection = ({
-  filter,
-  sort,
-  noGoals,
-  goals,
-}: GoalsSectionProps) => {
+export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
   const [optimisticFilter, setOptimisticFilter] = useOptimistic(filter);
   const [optimisticSort, setOptimisticSort] = useOptimistic(sort);
   const [isPending, transition] = useTransition();
@@ -209,7 +208,7 @@ export const GoalsSection = ({
         </div>
       </header>
       <div className={sprinkles({ marginBlockStart: "space-0300" })}>
-        {noGoals ? (
+        {view.type === "no-goals" ? (
           <div className={noGoalsContainer}>
             <DashedRect className={noGoalsBorder} />
             <div className={noGoalsContent}>
@@ -233,7 +232,7 @@ export const GoalsSection = ({
               </Button>
             </div>
           </div>
-        ) : goals.length <= 0 ? (
+        ) : view.goals.length <= 0 ? (
           <div className={noGoalsContainer}>
             <DashedRect className={noGoalsBorder} />
             <div className={noGoalsContent}>
@@ -250,7 +249,7 @@ export const GoalsSection = ({
             role="list"
             data-pending={isPending ? "true" : undefined}
           >
-            {goals.map((goal) => {
+            {view.goals.map((goal) => {
               const progress = goal.saved / goal.target;
 
               return (

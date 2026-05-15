@@ -13,12 +13,13 @@ import {
   summaryTerm,
 } from "@/app/(main)/page.css";
 import { GoalsSection } from "@/app/components/goals-section";
-import { getDashboard } from "@/app/data/data";
 import { card } from "@/app/styles/card.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
 import { filterSchema } from "@/app/utils/filter";
+import { addSaved, getGoals, isActive, isCompleted } from "@/app/utils/goal";
 import { formatUsd } from "@/app/utils/locale";
+import { sum } from "@/app/utils/math";
 import { sortSchema } from "@/app/utils/sort";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import clsx from "clsx";
@@ -32,7 +33,8 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
     })
     .parse(await searchParams);
 
-  const dashboard = await getDashboard({ filter, sort });
+  const goals = await getGoals();
+  const goalsWithSaved = addSaved(goals);
 
   const monthlyDeposits = [
     { month: "Apr", amount: 0 },
@@ -71,7 +73,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
         >
           <dt className={summaryTerm}>Total savings</dt>
           <dd className={summaryDesc}>
-            {formatUsd(dashboard.summary.totalSavings)}
+            {formatUsd(sum(goalsWithSaved.map((g) => g.saved)))}
           </dd>
         </div>
         <div className={clsx(card.styles.grey, summaryCard)}>
@@ -84,7 +86,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
               }),
             )}
           >
-            {dashboard.summary.activeGoals}
+            {goalsWithSaved.filter(isActive).length}
           </dd>
         </div>
         <div className={clsx(card.styles.grey, summaryCard)}>
@@ -97,7 +99,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
               }),
             )}
           >
-            {dashboard.summary.goalsCompleted}
+            {goalsWithSaved.filter(isCompleted).length}
           </dd>
         </div>
       </dl>
@@ -185,8 +187,11 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
       <GoalsSection
         filter={filter}
         sort={sort}
-        noGoals={dashboard.noGoals}
-        goals={dashboard.goals}
+        view={
+          goalsWithSaved.length <= 0
+            ? { type: "no-goals" }
+            : { type: "goals", goals: goalsWithSaved }
+        }
       />
     </div>
   );

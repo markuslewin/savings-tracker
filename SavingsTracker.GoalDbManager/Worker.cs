@@ -23,7 +23,6 @@ public class Worker(
             using var scope = serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<GoalDbContext>();
             dbContext.Database.Migrate();
-            // await dbContext.Database.MigrateAsync(cancellationToken);
         }
         catch (Exception ex)
         {

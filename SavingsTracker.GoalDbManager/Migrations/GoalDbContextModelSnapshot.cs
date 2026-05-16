@@ -24,8 +24,11 @@ namespace SavingsTracker.GoalDbManager.Migrations
 
             modelBuilder.Entity("SavingsTracker.GoalDb.Deposit", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Amount")
                         .HasColumnType("integer");
@@ -33,9 +36,8 @@ namespace SavingsTracker.GoalDbManager.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("GoalId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("GoalId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Note")
                         .IsRequired()
@@ -50,8 +52,11 @@ namespace SavingsTracker.GoalDbManager.Migrations
 
             modelBuilder.Entity("SavingsTracker.GoalDb.Goal", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");

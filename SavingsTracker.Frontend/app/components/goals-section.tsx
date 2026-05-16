@@ -71,7 +71,7 @@ type GoalsSectionProps = {
     | {
         type: "goals";
         goals: {
-          id: string;
+          id: number;
           name: string;
           target: number;
           saved: number;

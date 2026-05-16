@@ -9,16 +9,16 @@ if (base === undefined) {
 export const getGoals = async () => {
   const response = await fetch(new URL("goals", base));
   const json = await response.json();
-  const parsed = z
+  const goals = z
     .array(
       z.object({
-        id: z.string(),
+        id: z.number(),
         name: z.string(),
         target: z.number(),
         deadline: z.nullable(z.coerce.date()),
         deposits: z.array(
           z.object({
-            id: z.string(),
+            id: z.number(),
             amount: z.number(),
             note: z.string(),
             createdAt: z.coerce.date(),
@@ -27,8 +27,37 @@ export const getGoals = async () => {
       }),
     )
     .parse(json);
-  return parsed;
+  return goals;
 };
+
+export const createGoal = async ({
+  name,
+  target,
+}: {
+  name: string;
+  target: number;
+}) => {
+  const response = await fetch(new URL("goals", base), {
+    method: "post",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ name, target }),
+  });
+  if (!response.ok) return error(new Error("Unsuccessful status code"));
+
+  const json = await response.json();
+  const data = z
+    .object({
+      id: z.number(),
+    })
+    .parse(json);
+  return success(data);
+};
+
+const success = <T>(data: T) => ({ success: true, data }) as const;
+
+const error = <T>(error: T) => ({ success: false, error }) as const;
 
 export const isActive = ({
   target,

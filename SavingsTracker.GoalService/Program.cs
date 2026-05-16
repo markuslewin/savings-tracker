@@ -24,6 +24,7 @@ app.MapGet("/goals", (GoalDbContext ctx) =>
 {
     return ctx
         .Goals
+        .AsNoTracking()
         .OrderByDescending(g => g.CreatedAt)
         .Select(g => new
         {
@@ -41,5 +42,25 @@ app.MapGet("/goals", (GoalDbContext ctx) =>
             })
         });
 });
+app.MapPost("/goals", async (GoalDbContext ctx, PostGoal goal) =>
+{
+    var result = await ctx.Goals.AddAsync(new Goal
+    {
+        Name = goal.Name,
+        Target = goal.Target,
+    });
+    await ctx.SaveChangesAsync();
+
+    return TypedResults.Created($"/goals/${result.Entity.Id}", new
+    {
+        result.Entity.Id
+    });
+});
 
 app.Run();
+
+public class PostGoal
+{
+    public string Name { get; set; }
+    public int Target { get; set; }
+}

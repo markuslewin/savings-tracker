@@ -30,6 +30,32 @@ export const getGoals = async () => {
   return goals;
 };
 
+export const getGoal = async (id: number) => {
+  const response = await fetch(new URL(`goals/${id}`, base));
+  if (response.status === 404) return success(null);
+  if (!response.ok) return error(new Error("Unsuccessful status code"));
+
+  const json = await response.json();
+  const goal = z
+    .object({
+      id: z.number(),
+      name: z.string(),
+      target: z.number(),
+      deadline: z.nullable(z.coerce.date()),
+      createdAt: z.coerce.date(),
+      deposits: z.array(
+        z.object({
+          id: z.number(),
+          amount: z.number(),
+          note: z.string(),
+          createdAt: z.coerce.date(),
+        }),
+      ),
+    })
+    .parse(json);
+  return success(goal);
+};
+
 export const createGoal = async ({
   name,
   target,

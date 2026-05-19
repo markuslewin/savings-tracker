@@ -1,30 +1,45 @@
-import { getGoal } from "@/app/data/data";
+import { Button } from "@/app/components/button";
+import * as buttonStyles from "@/app/components/button.css";
+import { getGoal } from "@/app/utils/goal";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import * as z from "zod";
 
-const Goal = async ({ params }: PageProps<"/goal/[id]">) => {
-  const goals = await (
-    await fetch(new URL("goals", process.env.GOALSERVICE_HTTPS))
-  ).json();
-  console.log({ goals });
+const Goal = async ({ params }: PageProps<"/goals/[id]">) => {
+  const { id } = z
+    .object({
+      id: z.coerce.number(),
+    })
+    .parse(await params);
+  const result = await getGoal(id);
+  if (!result.success) throw result.error;
 
-  const { id } = await params;
-  const goal = await getGoal(id);
-  if (goal === null) {
-    return notFound();
-  }
+  const { data: goal } = result;
+  if (goal === null) return notFound();
 
   return (
-    <>
-      <h1>Goal &quot;{id}&quot;</h1>
-      <p>{goal.name}</p>
+    <article>
+      <header>
+        <Link href={"/#goals"}>Back</Link>
+        <Button className={buttonStyles.variants.tertiary}>Edit goal</Button>
+        <Button className={buttonStyles.variants.tertiary}>Delete goal</Button>
+      </header>
+      <h1>{goal.name}</h1>
+      <p>{goal.deadline?.toString()}</p>
+      <p>{goal.createdAt.toString()}</p>
+      <p>{goal.target}</p>
       <ul>
         {goal.deposits.map((deposit) => {
-          return <li key={deposit.id}>{deposit.amount}</li>;
+          return (
+            <li key={deposit.id}>
+              <p>{deposit.note}</p>
+              <p>{deposit.amount}</p>
+              <p>{deposit.createdAt.toString()}</p>
+            </li>
+          );
         })}
       </ul>
-      <Link href={"/"}>Back</Link>
-    </>
+    </article>
   );
 };
 

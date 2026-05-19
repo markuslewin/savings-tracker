@@ -103,7 +103,7 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
   );
 
   return (
-    <section className={goalsContainer}>
+    <section className={goalsContainer} id="goals">
       <header
         className={sprinkles({
           display: "flex",
@@ -286,7 +286,7 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
                             color: "inherit",
                           }),
                         )}
-                        href={`/goal/${goal.id}`}
+                        href={`/goals/${goal.id}`}
                       >
                         {goal.name}
                       </Link>

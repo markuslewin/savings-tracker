@@ -1,6 +1,6 @@
 import { Button } from "@/app/components/button";
 import * as buttonStyles from "@/app/components/button.css";
-import { getGoal } from "@/app/utils/goal";
+import { getGoal } from "@/app/utils/api";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import * as z from "zod";

@@ -1,6 +1,6 @@
 "use server";
 
-import { createGoal as _createGoal } from "@/app/utils/goal";
+import { createGoal as _createGoal } from "@/app/utils/api";
 import { schema } from "@/app/utils/new-goal-dialog/schema";
 import { redirect } from "next/navigation";
 import * as z from "zod";

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using SavingsTracker.GoalDb;
+using SavingsTracker.GoalService.Models;
+using Goal = SavingsTracker.GoalService.Models.Goal;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +45,7 @@ app.MapGet("/goals/{id}", async Task<Results<Ok<Goal>, NotFound>> (int id, GoalD
     return TypedResults.Ok(new Goal(goal));
 });
 
-app.MapPost("/goals", async Task<Created<Goal>> (GoalDbContext ctx, PostGoal goal) =>
+app.MapPost("/goals", async Task<Created<Goal>> (GoalDbContext ctx, AddGoalRequest goal) =>
 {
     var result = await ctx.Goals.AddAsync(new SavingsTracker.GoalDb.Goal
     {
@@ -58,27 +60,3 @@ app.MapPost("/goals", async Task<Created<Goal>> (GoalDbContext ctx, PostGoal goa
 });
 
 app.Run();
-
-public class Goal(SavingsTracker.GoalDb.Goal goal)
-{
-    public int Id { get; set; } = goal.Id;
-    public string Name { get; set; } = goal.Name;
-    public int Target { get; set; } = goal.Target;
-    public DateOnly? Deadline { get; set; } = goal.Deadline;
-    public DateTimeOffset CreatedAt { get; set; } = goal.CreatedAt;
-    public IEnumerable<Deposit> Deposits { get; set; } = goal.Deposits.Select(d => new Deposit(d));
-}
-
-public class Deposit(SavingsTracker.GoalDb.Deposit deposit)
-{
-    public int Id { get; set; } = deposit.Id;
-    public int Amount { get; set; } = deposit.Amount;
-    public string Note { get; set; } = deposit.Note;
-    public DateTimeOffset CreatedAt { get; set; } = deposit.CreatedAt;
-}
-
-public class PostGoal
-{
-    public string Name { get; set; }
-    public int Target { get; set; }
-}

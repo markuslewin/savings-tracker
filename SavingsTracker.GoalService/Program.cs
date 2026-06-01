@@ -21,15 +21,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/goals", async Task<Ok<IEnumerable<Goal>>> (GoalDbContext ctx) =>
+app.MapGet("/goals", async Task<Ok<IQueryable<Goal>>> (GoalDbContext ctx) =>
 {
-    var goals = await ctx
+    var goals = ctx
         .Goals
         .AsNoTracking()
         .Include(g => g.Deposits)
         .OrderByDescending(g => g.CreatedAt)
-        .ToListAsync();
-    return TypedResults.Ok(goals.Select(g => new Goal(g)));
+        .Select(g => new Goal(g));
+    return TypedResults.Ok(goals);
 });
 
 app.MapGet("/goals/{id}", async Task<Results<Ok<Goal>, NotFound>> (int id, GoalDbContext ctx) =>

@@ -16,7 +16,7 @@ import { GoalsSection } from "@/app/components/goals-section";
 import { card } from "@/app/styles/card.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
-import { getGoals } from "@/app/utils/api";
+import { getGoals, getMessage } from "@/app/utils/api";
 import { filterSchema } from "@/app/utils/filter";
 import { addSaved, isActive, isCompleted } from "@/app/utils/goal";
 import { formatUsd } from "@/app/utils/locale";
@@ -24,6 +24,7 @@ import { sum } from "@/app/utils/math";
 import { sortSchema } from "@/app/utils/sort";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import clsx from "clsx";
+import { headers } from "next/headers";
 import * as z from "zod";
 
 const Home = async ({ searchParams }: PageProps<"/">) => {
@@ -51,6 +52,11 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
     { month: "Feb", amount: 1550 },
     { month: "Mar", amount: 1550 },
   ];
+
+  const message = await getMessage({
+    cookie: (await headers()).get("cookie"),
+  });
+  console.log({ message });
 
   return (
     <div

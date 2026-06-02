@@ -27,6 +27,46 @@ export const register = async ({
   }
 };
 
+export const logIn = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
+  const response = await fetch(new URL("accounts/login", base), {
+    method: "post",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  });
+  if (response.status === 401) {
+    return error(new Error("Invalid email or password"));
+  }
+  if (!response.ok) {
+    throw new Error("Failed to login.");
+  }
+
+  const setCookies = response.headers.getSetCookie();
+  return success({ setCookies });
+};
+
+export const getMessage = async ({ cookie }: { cookie: string | null }) => {
+  const response = await fetch(new URL("accounts/secret", base), {
+    headers:
+      cookie === null
+        ? undefined
+        : {
+            cookie,
+          },
+  });
+  if (!response.ok) {
+    return null;
+  }
+  return await response.text();
+};
+
 export const getGoals = async () => {
   const response = await fetch(new URL("goals", base));
   const json = await response.json();

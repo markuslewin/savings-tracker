@@ -9,11 +9,14 @@ using Microsoft.EntityFrameworkCore;
 using SavingsTracker.GoalDb;
 using SavingsTracker.GoalService.Models;
 using SavingsTracker.GoalService.Services;
+
 using Goal = SavingsTracker.GoalService.Models.Goal;
 
 const string confirmEmailEndpointName = "ConfirmEmail";
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthorization();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -135,9 +138,33 @@ accountGroup.MapPost("/register", async Task<Results<Ok, ValidationProblem>> (
 accountGroup
     .MapGet("/confirmEmail", async Task () =>
     {
-
+        throw new NotImplementedException();
     })
     .WithName(confirmEmailEndpointName);
 
+accountGroup.MapPost("/login",
+    async Task<Results<EmptyHttpResult, ProblemHttpResult>> (
+        LoginRequest login, SignInManager<User> signInManager) =>
+    {
+        var result = await signInManager.PasswordSignInAsync(
+            login.Email,
+            login.Password,
+            isPersistent: true,
+            lockoutOnFailure: true);
+        if (!result.Succeeded)
+        {
+            return TypedResults.Problem(
+                result.ToString(),
+                statusCode: StatusCodes.Status401Unauthorized);
+        }
+        return TypedResults.Empty;
+    });
+
+accountGroup
+    .MapGet("/secret", () =>
+    {
+        return "Secret message";
+    })
+    .RequireAuthorization();
 
 app.Run();

@@ -1,10 +1,8 @@
-import { logIn } from "@/app/utils/api";
+import { logIn, setAuthCookie } from "@/app/utils/api";
 import Form from "next/form";
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import * as z from "zod";
-import { parseSetCookie } from "cookie";
 
 const Signin = () => {
   return (
@@ -30,18 +28,7 @@ const Signin = () => {
             return;
           }
 
-          const cookieStore = await cookies();
-          for (const setCookie of result.data.setCookies) {
-            const parsedSetCookie = parseSetCookie(setCookie);
-            if (parsedSetCookie.value === undefined) {
-              break;
-            }
-            cookieStore.set({
-              ...parsedSetCookie,
-              value: parsedSetCookie.value,
-            });
-          }
-
+          await setAuthCookie(result.data.setCookie);
           redirect("/");
         }}
       >

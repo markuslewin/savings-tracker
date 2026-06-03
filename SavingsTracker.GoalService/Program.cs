@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -42,16 +43,29 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/goals", async Task<Ok<IQueryable<Goal>>> (GoalDbContext ctx) =>
-{
-    var goals = ctx
-        .Goals
-        .AsNoTracking()
-        .Include(g => g.Deposits)
-        .OrderByDescending(g => g.CreatedAt)
-        .Select(g => new Goal(g));
-    return TypedResults.Ok(goals);
-});
+app
+    .MapGet("/goals",
+        async Task<Results<Ok<IQueryable<Goal>>, UnauthorizedHttpResult>> (
+            ClaimsPrincipal principal,
+            UserManager<User> userManager,
+            GoalDbContext ctx) =>
+        {
+            var userId = userManager.GetUserId(principal);
+            if (userId is null)
+            {
+                return TypedResults.Unauthorized();
+            }
+
+            var goals = ctx
+                .Goals
+                .AsNoTracking()
+                .Include(g => g.Deposits)
+                .Where(g => g.UserId == userId)
+                .OrderByDescending(g => g.CreatedAt)
+                .Select(g => new Goal(g));
+            return TypedResults.Ok(goals);
+        })
+    .RequireAuthorization();
 
 app.MapGet("/goals/{id}", async Task<Results<Ok<Goal>, NotFound>> (int id, GoalDbContext ctx) =>
 {
@@ -159,12 +173,5 @@ accountGroup.MapPost("/login",
         }
         return TypedResults.Empty;
     });
-
-accountGroup
-    .MapGet("/secret", () =>
-    {
-        return "Secret message";
-    })
-    .RequireAuthorization();
 
 app.Run();

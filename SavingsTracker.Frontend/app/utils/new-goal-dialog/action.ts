@@ -1,6 +1,6 @@
 "use server";
 
-import { createGoal as _createGoal } from "@/app/utils/api";
+import { createGoal as _createGoal, getAuthCookie } from "@/app/utils/api";
 import { schema } from "@/app/utils/new-goal-dialog/schema";
 import { redirect } from "next/navigation";
 import * as z from "zod";
@@ -15,7 +15,10 @@ export const createGoal = async (prevState: unknown, formData: FormData) => {
     };
   }
 
-  const result = await _createGoal(parsed.data);
+  const result = await _createGoal({
+    cookie: await getAuthCookie(),
+    data: parsed.data,
+  });
   if (!result.success) {
     // todo: Feedback
     throw result.error;

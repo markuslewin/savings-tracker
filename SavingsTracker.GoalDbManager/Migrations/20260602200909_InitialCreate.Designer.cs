@@ -12,7 +12,7 @@ using SavingsTracker.GoalDb;
 namespace SavingsTracker.GoalDbManager.Migrations
 {
     [DbContext(typeof(GoalDbContext))]
-    [Migration("20260601214741_InitialCreate")]
+    [Migration("20260602200909_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -206,7 +206,13 @@ namespace SavingsTracker.GoalDbManager.Migrations
                     b.Property<int>("Target")
                         .HasColumnType("integer");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Goals");
                 });
@@ -343,7 +349,23 @@ namespace SavingsTracker.GoalDbManager.Migrations
 
             modelBuilder.Entity("SavingsTracker.GoalDb.Goal", b =>
                 {
+                    b.HasOne("SavingsTracker.GoalDb.User", "User")
+                        .WithMany("Goals")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SavingsTracker.GoalDb.Goal", b =>
+                {
                     b.Navigation("Deposits");
+                });
+
+            modelBuilder.Entity("SavingsTracker.GoalDb.User", b =>
+                {
+                    b.Navigation("Goals");
                 });
 #pragma warning restore 612, 618
         }

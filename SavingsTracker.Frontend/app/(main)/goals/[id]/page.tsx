@@ -1,6 +1,6 @@
 import { Button } from "@/app/components/button";
 import * as buttonStyles from "@/app/components/button.css";
-import { getGoal } from "@/app/utils/api";
+import { getAuthCookie, getGoal } from "@/app/utils/api";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import * as z from "zod";
@@ -11,7 +11,13 @@ const Goal = async ({ params }: PageProps<"/goals/[id]">) => {
       id: z.coerce.number(),
     })
     .parse(await params);
-  const result = await getGoal(id);
+
+  const result = await getGoal({
+    cookie: await getAuthCookie(),
+    data: {
+      id,
+    },
+  });
   if (!result.success) throw result.error;
 
   const { data: goal } = result;

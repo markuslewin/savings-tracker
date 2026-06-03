@@ -1,10 +1,54 @@
 import { error, success } from "@/app/utils/result";
+import { serialize, parseSetCookie } from "cookie";
+import { cookies } from "next/headers";
 import * as z from "zod";
 
-const base = process.env.GOALSERVICE_HTTPS;
-if (base === undefined) {
-  throw new Error("Missing env `GOALSERVICE_HTTPS`.");
-}
+const frontendAuthCookieName = "SavingsTracker.Auth";
+const apiAuthCookieName = ".AspNetCore.Identity.Application";
+
+const goalSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  target: z.number(),
+  deadline: z.nullable(z.coerce.date()),
+  createdAt: z.coerce.date(),
+  deposits: z.array(
+    z.object({
+      id: z.number(),
+      amount: z.number(),
+      note: z.string(),
+      createdAt: z.coerce.date(),
+    }),
+  ),
+});
+
+const goalsSchema = z.array(goalSchema);
+
+export const getAuthCookie = async () => {
+  const cookie = (await cookies()).get(frontendAuthCookieName);
+  if (cookie === undefined) {
+    return null;
+  }
+  return serialize({ ...cookie, name: apiAuthCookieName });
+};
+
+export const setAuthCookie = async (
+  cookie: ReturnType<typeof parseSetCookie>,
+) => {
+  (await cookies()).set({
+    ...cookie,
+    name: frontendAuthCookieName,
+    value: cookie.value ?? "",
+  });
+};
+
+const getBase = () => {
+  const base = process.env.GOALSERVICE_HTTPS;
+  if (base === undefined) {
+    throw new Error("Missing env `GOALSERVICE_HTTPS`.");
+  }
+  return base;
+};
 
 export const register = async ({
   fullName,
@@ -15,7 +59,7 @@ export const register = async ({
   email: string;
   password: string;
 }) => {
-  const response = await fetch(new URL("accounts/register", base), {
+  const response = await fetch(new URL("accounts/register", getBase()), {
     method: "post",
     headers: {
       "content-type": "application/json",
@@ -34,7 +78,7 @@ export const logIn = async ({
   email: string;
   password: string;
 }) => {
-  const response = await fetch(new URL("accounts/login", base), {
+  const response = await fetch(new URL("accounts/login", getBase()), {
     method: "post",
     headers: {
       "content-type": "application/json",
@@ -49,85 +93,61 @@ export const logIn = async ({
   }
 
   const setCookies = response.headers.getSetCookie();
-  return success({ setCookies });
-};
-
-export const getMessage = async ({ cookie }: { cookie: string | null }) => {
-  const response = await fetch(new URL("accounts/secret", base), {
-    headers:
-      cookie === null
-        ? undefined
-        : {
-            cookie,
-          },
-  });
-  if (!response.ok) {
-    return null;
+  for (const setCookie of setCookies) {
+    const parsed = parseSetCookie(setCookie);
+    if (parsed.name === apiAuthCookieName) {
+      return success({ setCookie: parsed });
+    }
   }
-  return await response.text();
+  return error(new Error("No Set-Cookie found."));
 };
 
-export const getGoals = async () => {
-  const response = await fetch(new URL("goals", base));
+export const getGoals = async ({ cookie }: { cookie: string | null }) => {
+  const response = await fetch(new URL("goals", getBase()), {
+    headers: {
+      ...(cookie === null ? {} : { cookie }),
+    },
+  });
   const json = await response.json();
-  const goals = z
-    .array(
-      z.object({
-        id: z.number(),
-        name: z.string(),
-        target: z.number(),
-        deadline: z.nullable(z.coerce.date()),
-        deposits: z.array(
-          z.object({
-            id: z.number(),
-            amount: z.number(),
-            note: z.string(),
-            createdAt: z.coerce.date(),
-          }),
-        ),
-      }),
-    )
-    .parse(json);
+  const goals = goalsSchema.parse(json);
   return goals;
 };
 
-export const getGoal = async (id: number) => {
-  const response = await fetch(new URL(`goals/${id}`, base));
+export const getGoal = async ({
+  cookie,
+  data: { id },
+}: {
+  cookie: string | null;
+  data: { id: number };
+}) => {
+  const response = await fetch(new URL(`goals/${id}`, getBase()), {
+    headers: {
+      ...(cookie === null ? {} : { cookie }),
+    },
+  });
   if (response.status === 404) return success(null);
   if (!response.ok) return error(new Error("Unsuccessful status code"));
 
   const json = await response.json();
-  const goal = z
-    .object({
-      id: z.number(),
-      name: z.string(),
-      target: z.number(),
-      deadline: z.nullable(z.coerce.date()),
-      createdAt: z.coerce.date(),
-      deposits: z.array(
-        z.object({
-          id: z.number(),
-          amount: z.number(),
-          note: z.string(),
-          createdAt: z.coerce.date(),
-        }),
-      ),
-    })
-    .parse(json);
+  const goal = goalSchema.parse(json);
   return success(goal);
 };
 
 export const createGoal = async ({
-  name,
-  target,
+  cookie,
+  data: { name, target },
 }: {
-  name: string;
-  target: number;
+  cookie: string | null;
+  data: {
+    name: string;
+    target: number;
+  };
 }) => {
-  const response = await fetch(new URL("goals", base), {
+  const response = await fetch(new URL("goals", getBase()), {
     method: "post",
     headers: {
       "content-type": "application/json",
+      ...(cookie === null ? {} : { cookie }),
     },
     body: JSON.stringify({ name, target }),
   });

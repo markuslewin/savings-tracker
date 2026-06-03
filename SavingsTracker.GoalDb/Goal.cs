@@ -11,5 +11,7 @@ public class Goal
   public DateTimeOffset CreatedAt { get; set; }
   // public DateTimeOffset UpdatedAt { get; set; }
 
+  public string UserId { get; set; }
+  public User User { get; set; }
   public ICollection<Deposit> Deposits { get; set; }
 }

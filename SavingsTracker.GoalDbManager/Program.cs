@@ -19,15 +19,6 @@ builder.AddNpgsqlDbContext<GoalDbContext>(
   {
     npgsqlBuilder.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
   });
-  optionsBuilder.UseSeeding((context, _) =>
-  {
-    if (context is not GoalDbContext db)
-    {
-      throw new Exception($"Invalid context type: {context.GetType().Name}");
-    }
-
-    Seeder.Seed(db);
-  });
 });
 
 var host = builder.Build();

@@ -9,14 +9,12 @@ export const quoteBleed = createVar();
 export const container = style([
   center.root,
   {
-    padding: space["space-0200"],
+    paddingBlock: space["space-0500"],
+    paddingInline: space["space-0200"],
     vars: {
       [center.size]: rem(640),
     },
     "@media": {
-      [breakpoints.tablet]: {
-        padding: space["space-0800"],
-      },
       [breakpoints.desktop]: {
         padding: space["space-0500"],
         vars: {

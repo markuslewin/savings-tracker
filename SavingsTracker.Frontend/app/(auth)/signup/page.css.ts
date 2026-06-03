@@ -1,11 +1,32 @@
-import { style } from "@vanilla-extract/css";
-import { quote as layoutQuote, quoteBleed } from "@/app/(auth)/layout.css";
+import {
+  form as layoutForm,
+  quote as layoutQuote,
+  quoteBleed,
+} from "@/app/(auth)/layout.css";
 import { card } from "@/app/styles/card.css";
-import { textPreset1, textPreset4 } from "@/app/styles/text.css";
-import { calc } from "@vanilla-extract/css-utils";
-import { rem } from "@/app/styles/utils";
 import { breakpoints } from "@/app/styles/media";
-import { space } from "@/app/styles/sprinkles.css";
+import { colors, space } from "@/app/styles/sprinkles.css";
+import { stack } from "@/app/styles/stack.css";
+import { textPreset1, textPreset2, textPreset4 } from "@/app/styles/text.css";
+import { rem } from "@/app/styles/utils";
+import { style } from "@vanilla-extract/css";
+import { calc } from "@vanilla-extract/css-utils";
+
+export const article = style([layoutForm, stack("space-0400")]);
+
+export const intro = style([stack("space-0200")]);
+
+export const heading = style([textPreset2]);
+
+export const paragraph = style({
+  color: colors["neutral-300"],
+});
+
+export const form = style([stack("space-0250")]);
+
+export const submit = style({
+  marginBlockStart: space["space-0150"],
+});
 
 export const quote = style([
   layoutQuote,

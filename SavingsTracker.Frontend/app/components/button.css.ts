@@ -15,6 +15,7 @@ const base = style([
   {
     paddingInline: rem(19),
     paddingBlock: rem(11),
+    justifyContent: "center",
   },
   textPreset5,
   transition,

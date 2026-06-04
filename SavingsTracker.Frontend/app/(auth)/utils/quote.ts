@@ -13,6 +13,6 @@ const quotes = [
   },
 ];
 
-export const getQuote = () => {
-  return quotes[0];
+export const getRandomQuote = () => {
+  return quotes[Math.floor(Math.random() * quotes.length)];
 };

@@ -1,4 +1,9 @@
+import QuoteLayout from "@/app/(auth)/utils/quote-layout";
+import { Button } from "@/app/components/button";
+import { TextField } from "@/app/components/text-field";
+import { sprinkles } from "@/app/styles/sprinkles.css";
 import { logIn, setAuthCookie } from "@/app/utils/api";
+import { Hr } from "@/app/utils/hr";
 import Form from "next/form";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -6,13 +11,22 @@ import * as z from "zod";
 
 const Signin = () => {
   return (
-    <>
-      <h1>Sign in</h1>
+    <QuoteLayout>
+      <div
+        className={sprinkles({
+          stack: "space-0100",
+        })}
+      >
+        <h1>Welcome back</h1>
+        <p className={sprinkles({ color: "neutral-300" })}>
+          Sign in to your account
+        </p>
+      </div>
+      <Hr color="neutral-700" />
       <Form
-        style={{
-          display: "grid",
-          gap: "1rem",
-        }}
+        className={sprinkles({
+          stack: "space-0250",
+        })}
         action={async (formData) => {
           "use server";
           const values = Object.fromEntries(formData);
@@ -32,13 +46,42 @@ const Signin = () => {
           redirect("/");
         }}
       >
-        <input name="email" />
-        <input type="password" name="password" />
-        <button>Sign in</button>
+        <TextField label="Email address" name="email" isRequired />
+        <div className={sprinkles({ stack: "space-0150" })}>
+          <TextField
+            label="Password"
+            type="password"
+            name="password"
+            isRequired
+          />
+          <Link
+            className={sprinkles({
+              justifySelf: "end",
+              textAlign: "end",
+              textDecoration: "none",
+              color: "neutral-300",
+            })}
+            href={"/forgot-password"}
+          >
+            Forgot password?
+          </Link>
+        </div>
+        <Button className={sprinkles({ marginBlockStart: "space-0150" })}>
+          Sign in
+        </Button>
+        <p
+          className={sprinkles({
+            textAlign: "center",
+            color: "neutral-300",
+          })}
+        >
+          Don&apos;t have an account?{" "}
+          <Link className={sprinkles({ color: "neutral-0" })} href={"/signup"}>
+            Create one
+          </Link>
+        </p>
       </Form>
-      <Link href={"/forgot-password"}>Forgot password?</Link>
-      <Link href={"/signup"}>Create one</Link>
-    </>
+    </QuoteLayout>
   );
 };
 

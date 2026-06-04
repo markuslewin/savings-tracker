@@ -1,5 +1,6 @@
 import { breakpoints } from "@/app/styles/media";
 import { rem } from "@/app/styles/utils";
+import { StyleRule } from "@vanilla-extract/css";
 import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
 
 export const colors = {
@@ -115,6 +116,12 @@ const responsiveProperties = defineProperties({
   },
   defaultCondition: "mobile",
   properties: {
+    stack: Object.fromEntries(
+      Object.entries(space).map(([key, value]) => [
+        key,
+        { display: "grid", gap: value },
+      ]),
+    ) as Record<keyof typeof space, StyleRule>,
     boxSizing: ["border-box", "content-box"],
     border: border,
     borderBottom: border,
@@ -135,12 +142,13 @@ const responsiveProperties = defineProperties({
     gridTemplateColumns: ["auto 1fr"],
     justifyContent: [
       "stretch",
-      "flex-start",
+      "start",
       "center",
-      "flex-end",
+      "end",
       "space-around",
       "space-between",
     ],
+    justifySelf: ["end"],
     alignItems: ["stretch", "start", "center", "end"],
     alignSelf: ["stretch", "start", "center", "end"],
     flexGrow: [1],
@@ -165,7 +173,7 @@ const responsiveProperties = defineProperties({
     borderRadius: radius,
     pointerEvents: ["none"],
     isolation: ["isolate"],
-    textAlign: ["center"],
+    textAlign: ["center", "end"],
     textTransform: ["uppercase"],
     textDecoration: ["none"],
     overflow: ["hidden"],

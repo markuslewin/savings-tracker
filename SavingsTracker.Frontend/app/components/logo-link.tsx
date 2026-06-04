@@ -3,24 +3,24 @@ import Link from "next/link";
 import { ReactNode } from "react";
 import Image from "next/image";
 
-const alt = "Savings Tracker";
-
 type LogoLinkProps = {
-  logo?: () => ReactNode;
+  logo?: LogoRenderProp;
 };
+
+type LogoRenderProp = (props: { alt: string }) => ReactNode;
 
 // todo: hcm
 export const LogoLink = ({ logo = narrow }: LogoLinkProps) => {
-  return <Link href={"/"}>{logo()}</Link>;
+  return <Link href={"/"}>{logo({ alt: "Savings Tracker" })}</Link>;
 };
 
-export const full = () => {
+export const full: LogoRenderProp = ({ alt }) => {
   return (
     <Image alt={alt} src="/images/logo-large.svg" width={230} height={40} />
   );
 };
 
-export const narrow = () => {
+export const narrow: LogoRenderProp = ({ alt }) => {
   return (
     <picture>
       <source

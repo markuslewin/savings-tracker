@@ -66,8 +66,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
       <dl className={summaryCards}>
         <div
           className={clsx(
-            card.styles.orange,
-            summaryCard,
+            summaryCard.orange,
             sprinkles({
               gridColumn: {
                 tablet: "span 2",
@@ -80,7 +79,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
             {formatUsd(sum(goalsWithSaved.map((g) => g.saved)))}
           </dd>
         </div>
-        <div className={clsx(card.styles.grey, summaryCard)}>
+        <div className={summaryCard.grey}>
           <dt className={summaryTerm}>Active goals</dt>
           <dd
             className={clsx(
@@ -93,7 +92,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
             {goalsWithSaved.filter(isActive).length}
           </dd>
         </div>
-        <div className={clsx(card.styles.grey, summaryCard)}>
+        <div className={summaryCard.grey}>
           <dt className={summaryTerm}>Goals completed</dt>
           <dd
             className={clsx(

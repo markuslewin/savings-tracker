@@ -1,5 +1,5 @@
 import { transition } from "@/app/styles/animation.css";
-import { card } from "@/app/styles/card.css";
+import { card, fromCenter } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
 import {
   colors,
@@ -22,6 +22,7 @@ import {
   createThemeContract,
   createVar,
   style,
+  styleVariants,
 } from "@vanilla-extract/css";
 import { calc } from "@vanilla-extract/css-utils";
 
@@ -39,7 +40,7 @@ export const summaryCards = style({
   },
 });
 
-export const summaryCard = style({
+export const summaryCardBase = style({
   padding: rem(15),
   "@media": {
     [breakpoints.tablet]: {
@@ -49,6 +50,20 @@ export const summaryCard = style({
       paddingBlock: rem(19),
     },
   },
+});
+
+export const summaryCard = styleVariants({
+  grey: [
+    summaryCardBase,
+    card.styles.grey,
+    {
+      vars: {
+        [card.vars.shapeLayer]:
+          `no-repeat ${fromCenter(107, 74)}/${rem(200)} url(/images/pattern-star.svg)`,
+      },
+    },
+  ],
+  orange: [summaryCardBase, card.styles.orange],
 });
 
 export const summaryTerm = style([textPreset5SemiBold]);
@@ -221,8 +236,18 @@ const goalCardVars = createThemeContract({
   deadline: null,
 });
 
-export const noProgress = style([
+const greyCard = style([
   card.styles.grey,
+  {
+    vars: {
+      [card.vars.shapeLayer]:
+        `no-repeat top center/${rem(408)} url(/images/pattern-grid.svg)`,
+    },
+  },
+]);
+
+export const noProgress = style([
+  greyCard,
   createTheme(goalCardVars, {
     accent: colors["neutral-400"],
     track: colors["neutral-700"],
@@ -232,7 +257,7 @@ export const noProgress = style([
 ]);
 
 export const inProgress = style([
-  card.styles.grey,
+  greyCard,
   createTheme(goalCardVars, {
     accent: colors["orange-400"],
     track: colors["neutral-700"],
@@ -252,7 +277,7 @@ export const inProgressClose = style([
 ]);
 
 export const complete = style([
-  card.styles.grey,
+  greyCard,
   createTheme(goalCardVars, {
     accent: colors["green-500"],
     track: colors["neutral-700"],

@@ -3,7 +3,7 @@ import {
   quote as layoutQuote,
   quoteBleed,
 } from "@/app/(auth)/layout.css";
-import { card } from "@/app/styles/card.css";
+import { card, fromCenter } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
 import { space } from "@/app/styles/sprinkles.css";
 import { stack } from "@/app/styles/stack.css";
@@ -19,6 +19,10 @@ export const quote = style([
   card.styles.orange,
   {
     padding: calc.subtract(quoteBleed, rem(1)),
+    vars: {
+      [card.vars.shapeLayer]:
+        `no-repeat ${fromCenter(166, 299)}/${rem(464)} url(/images/pattern-star-15.svg)`,
+    },
     "@media": {
       [breakpoints.desktop]: {
         display: "grid",

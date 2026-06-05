@@ -1,3 +1,4 @@
+import { transition } from "@/app/styles/animation.css";
 import { breakpoints } from "@/app/styles/media";
 import { rem } from "@/app/styles/utils";
 import { StyleRule } from "@vanilla-extract/css";
@@ -102,6 +103,11 @@ export const outlineOffset = {
   4: rem(4),
 };
 
+export const underline = {
+  textDecoration: "underline",
+  textUnderlineOffset: rem(3),
+};
+
 const responsiveProperties = defineProperties({
   conditions: {
     mobile: {},
@@ -148,7 +154,7 @@ const responsiveProperties = defineProperties({
       "space-around",
       "space-between",
     ],
-    justifySelf: ["center", "end"],
+    justifySelf: ["start", "center", "end"],
     alignItems: ["stretch", "start", "center", "end"],
     alignSelf: ["stretch", "start", "center", "end"],
     flexGrow: [1],
@@ -177,12 +183,22 @@ const responsiveProperties = defineProperties({
     borderRadius: radius,
     pointerEvents: ["none"],
     isolation: ["isolate"],
+    fontWeight: ["inherit"],
     textAlign: ["center", "end"],
     textTransform: ["uppercase"],
     textDecoration: ["none"],
+    line: {
+      none: {
+        textDecoration: "none",
+      },
+      underline,
+    },
     overflow: ["hidden"],
     translate: {
       down: "0 1px",
+    },
+    transition: {
+      default: transition,
     },
   },
 });

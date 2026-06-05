@@ -3,23 +3,33 @@
 import { paragraph } from "@/app/(auth)/forgot-password/utils/forgot-password.css";
 import { Button } from "@/app/components/button";
 import { TextField } from "@/app/components/text-field";
+import ChevronLeftIcon from "@/app/icons/icon-chevron-left.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import Form from "next/form";
 import Link from "next/link";
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
 
 type ForgotPasswordProps = {
   resetAction: () => Promise<void>;
 };
 
 export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
-  const [{ sentTo }, action, isPending] = useActionState<{
-    sentTo: string | null;
-  }>(
-    async () => {
-      // todo: Implement
-      await resetAction();
-      return { sentTo: "user@example.com" };
+  const [{ sentTo }, dispatch, isPending] = useActionState<
+    {
+      sentTo: string | null;
+    },
+    FormData | { type: "reset" }
+  >(
+    async (previousState, payload) => {
+      if (payload instanceof FormData) {
+        // todo: Implement
+        await resetAction();
+        return { sentTo: "user@example.com" };
+      }
+      switch (payload.type) {
+        case "reset":
+          return { sentTo: null };
+      }
     },
     {
       sentTo: null,
@@ -42,7 +52,7 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
         className={sprinkles({
           stack: "space-0250",
         })}
-        action={action}
+        action={dispatch}
       >
         <TextField label="Email address" name="email" isRequired />
         <Button
@@ -83,6 +93,7 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
           We&apos;ve sent a reset link to{" "}
           <b
             className={sprinkles({
+              fontWeight: "inherit",
               color: "neutral-0",
             })}
           >
@@ -91,6 +102,7 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
         </p>
       </div>
       <p>The link expires in 30 minutes.</p>
+      {/* todo: Open email app..? */}
       <Button variant="secondary">Open email app</Button>
       <div
         className={sprinkles({
@@ -104,16 +116,40 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
         >
           Didn&apos;t receive it?{" "}
           <Button
-            type="submit"
-            formAction={() => {
-              // todo
-              console.log("Resend email");
+            className={sprinkles({
+              line: "underline",
+              color: "neutral-0",
+            })}
+            variant="text"
+            onPress={() => {
+              startTransition(() => {
+                dispatch({ type: "reset" });
+              });
             }}
           >
             Resend email
           </Button>
         </p>
-        <Link href={"/signin"}>Back to sign in</Link>
+        <Link
+          className={sprinkles({
+            justifySelf: "start",
+            display: "inline-flex",
+            gap: "space-0075",
+            alignItems: "center",
+            textDecoration: "none",
+            color: { default: "neutral-300", hover: "neutral-0" },
+            transition: "default",
+          })}
+          href={"/signin"}
+        >
+          <ChevronLeftIcon
+            className={sprinkles({
+              width: "auto",
+              height: "size-0250",
+            })}
+          />{" "}
+          Back to sign in
+        </Link>
       </div>
     </>
   );

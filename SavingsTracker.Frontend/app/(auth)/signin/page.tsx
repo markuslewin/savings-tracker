@@ -59,7 +59,11 @@ const Signin = () => {
               justifySelf: "end",
               textAlign: "end",
               textDecoration: "none",
-              color: "neutral-300",
+              color: {
+                default: "neutral-300",
+                hover: "neutral-0",
+              },
+              transition: "default",
             })}
             href={"/forgot-password"}
           >

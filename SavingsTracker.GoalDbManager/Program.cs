@@ -7,6 +7,11 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 builder.Services.AddHostedService<Worker>();
 
+builder
+    .Services
+    .AddIdentityApiEndpoints<User>()
+    .AddEntityFrameworkStores<GoalDbContext>();
+
 // builder.Services.AddOpenTelemetry().WithTracing(tracing =>
 // {
 //   // tracing.AddSource();

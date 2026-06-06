@@ -12,7 +12,7 @@ using SavingsTracker.GoalDb;
 namespace SavingsTracker.GoalDbManager.Migrations
 {
     [DbContext(typeof(GoalDbContext))]
-    [Migration("20260602200909_InitialCreate")]
+    [Migration("20260606182647_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -239,6 +239,9 @@ namespace SavingsTracker.GoalDbManager.Migrations
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDemo")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");

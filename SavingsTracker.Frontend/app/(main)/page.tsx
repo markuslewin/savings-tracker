@@ -13,13 +13,11 @@ import {
   summaryTerm,
 } from "@/app/(main)/page.css";
 import { GoalsSection } from "@/app/components/goals-section";
-import { card } from "@/app/styles/card.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
-import { getAuthCookie } from "@/app/utils/api";
+import { getAuthCookie, getGoals } from "@/app/utils/api";
 import { filterSchema } from "@/app/utils/filter";
 import { addSaved, isActive, isCompleted } from "@/app/utils/goal";
-import { getGoals } from "@/app/utils/goal-service/core";
 import { formatUsd } from "@/app/utils/locale";
 import { sum } from "@/app/utils/math";
 import { sortSchema } from "@/app/utils/sort";

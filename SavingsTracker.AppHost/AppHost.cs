@@ -2,11 +2,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var postgres = builder
   .AddPostgres("postgres")
-  // .WithPgAdmin(pgAdmin =>
-  // {
-  //   pgAdmin.WithHostPort(5050);
-  // })
-  ;
+  .WithPgWeb(pgWeb => pgWeb.WithHostPort(5050));
 // if (builder.ExecutionContext.IsRunMode)
 // {
 //   postgres.WithDataVolume();

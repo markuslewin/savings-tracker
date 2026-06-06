@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SavingsTracker.GoalDb;
 
@@ -6,8 +7,8 @@ namespace SavingsTracker.GoalDbManager;
 
 public class Worker(
     IServiceProvider serviceProvider,
-    IHostApplicationLifetime hostApplicationLifetime
-// ILogger<Worker> logger
+    IHostApplicationLifetime hostApplicationLifetime,
+    ILogger<Worker> logger
 ) : BackgroundService
 {
     public const string ActivitySourceName = "Migrations";
@@ -21,8 +22,17 @@ public class Worker(
         try
         {
             using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<GoalDbContext>();
-            dbContext.Database.Migrate();
+            var ctx = scope.ServiceProvider.GetRequiredService<GoalDbContext>();
+            ctx.Database.Migrate();
+
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+            var user = new User
+            {
+                IsDemo = true,
+                FullName = "Demo"
+            };
+            await userManager.CreateAsync(user);
+            Seeder.Seed(ctx, user);
         }
         catch (Exception ex)
         {

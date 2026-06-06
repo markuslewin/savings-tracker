@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -51,46 +52,72 @@ app
             GoalDbContext ctx) =>
         {
             var userId = userManager.GetUserId(principal);
-            if (userId is null)
-            {
-                return TypedResults.Unauthorized();
-            }
-
-            var goals = ctx
-                .Goals
+            IQueryable<SavingsTracker.GoalDb.Goal> query = ctx.Goals
                 .AsNoTracking()
                 .Include(g => g.Deposits)
-                .Where(g => g.UserId == userId)
-                .OrderByDescending(g => g.CreatedAt)
-                .Select(g => new Goal(g));
-            return TypedResults.Ok(goals);
-        })
-    .RequireAuthorization();
+                .OrderByDescending(g => g.CreatedAt);
+            if (userId is null)
+            {
+                query = query.Where(g => g.User.IsDemo);
+            }
+            else
+            {
+                query = query.Where(g => g.UserId == userId);
+            }
+            return TypedResults.Ok(query.Select(g => new Goal(g)));
+        });
 
-app.MapGet("/goals/{id}", async Task<Results<Ok<Goal>, NotFound>> (int id, GoalDbContext ctx) =>
-{
-    var goal = await ctx
-        .Goals
-        .Include(g => g.Deposits)
-        .FirstOrDefaultAsync(g => g.Id == id);
-    if (goal is null) return TypedResults.NotFound();
-
-    return TypedResults.Ok(new Goal(goal));
-});
-
-app.MapPost("/goals", async Task<Created<Goal>> (GoalDbContext ctx, AddGoalRequest goal) =>
-{
-    var result = await ctx.Goals.AddAsync(new SavingsTracker.GoalDb.Goal
+app
+    .MapGet("/goals/{id}", async Task<Results<Ok<Goal>, NotFound>> (
+        int id,
+        ClaimsPrincipal principal,
+        UserManager<User> userManager,
+        GoalDbContext ctx) =>
     {
-        Name = goal.Name,
-        Target = goal.Target,
-    });
-    await ctx.SaveChangesAsync();
+        IQueryable<SavingsTracker.GoalDb.Goal> query = ctx
+            .Goals
+            .Include(g => g.Deposits);
 
-    return TypedResults.Created(
-        $"/goals/${result.Entity.Id}",
-        new Goal(result.Entity));
-});
+        var user = await userManager.GetUserAsync(principal);
+        Expression<Func<SavingsTracker.GoalDb.Goal, bool>> predicate;
+        if (user is null)
+        {
+            predicate = g => g.User.IsDemo && g.Id == id;
+        }
+        else
+        {
+            predicate = g => g.UserId == user.Id && g.Id == id;
+        }
+
+        var goal = await query.FirstOrDefaultAsync(predicate);
+        if (goal is null) return TypedResults.NotFound();
+
+        return TypedResults.Ok(new Goal(goal));
+    });
+
+app
+    .MapPost("/goals", async Task<Results<Created<Goal>, UnauthorizedHttpResult>> (
+        ClaimsPrincipal principal,
+        UserManager<User> userManager,
+        GoalDbContext ctx,
+        AddGoalRequest goal) =>
+    {
+        var user = await userManager.GetUserAsync(principal);
+        if (user is null) return TypedResults.Unauthorized();
+
+        var result = await ctx.Goals.AddAsync(new SavingsTracker.GoalDb.Goal
+        {
+            Name = goal.Name,
+            Target = goal.Target,
+            User = user
+        });
+        await ctx.SaveChangesAsync();
+
+        return TypedResults.Created(
+            $"/goals/${result.Entity.Id}",
+            new Goal(result.Entity));
+    })
+    .RequireAuthorization();
 
 var accountGroup = app.MapGroup("/accounts");
 

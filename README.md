@@ -1,6 +1,24 @@
 # Savings Tracker
 
-## Add migration
+## Development
+
+### Run
+
+```sh
+aspire run
+```
+
+### Watch
+
+```sh
+dotnet watch --project SavingsTracker.AppHost/SavingsTracker.AppHost.csproj
+```
+
+### Debug
+
+Launch via `.vscode/launch.json`.
+
+### Add migration
 
 ```sh
 dotnet tool install --global dotnet-ef

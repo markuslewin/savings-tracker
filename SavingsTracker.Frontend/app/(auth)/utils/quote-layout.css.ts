@@ -3,12 +3,12 @@ import {
   quote as layoutQuote,
   quoteBleed,
 } from "@/app/(auth)/layout.css";
-import { card, fromCenter } from "@/app/styles/card.css";
+import { card } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
 import { space } from "@/app/styles/sprinkles.css";
 import { stack } from "@/app/styles/stack.css";
 import { textPreset1, textPreset4 } from "@/app/styles/text.css";
-import { rem } from "@/app/styles/utils";
+import { fromCenter, rem } from "@/app/styles/utils";
 import { style } from "@vanilla-extract/css";
 import { calc } from "@vanilla-extract/css-utils";
 

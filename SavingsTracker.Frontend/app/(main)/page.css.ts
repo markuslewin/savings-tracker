@@ -1,5 +1,5 @@
 import { transition } from "@/app/styles/animation.css";
-import { card, fromCenter } from "@/app/styles/card.css";
+import { card } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
 import {
   colors,
@@ -16,7 +16,7 @@ import {
   textPreset6Base,
   textPreset7Base,
 } from "@/app/styles/text.css";
-import { rem } from "@/app/styles/utils";
+import { fromCenter, rem } from "@/app/styles/utils";
 import {
   createTheme,
   createThemeContract,

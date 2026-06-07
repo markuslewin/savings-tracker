@@ -108,6 +108,14 @@ export const underline = {
   textUnderlineOffset: rem(3),
 };
 
+const mapScale = <Key extends string>(
+  scale: Record<Key, string>,
+  f: (value: string) => StyleRule,
+) =>
+  Object.fromEntries(
+    Object.entries(space).map(([key, value]) => [key, f(value)]),
+  ) as Record<Key, StyleRule>;
+
 const responsiveProperties = defineProperties({
   conditions: {
     mobile: {},
@@ -122,12 +130,13 @@ const responsiveProperties = defineProperties({
   },
   defaultCondition: "mobile",
   properties: {
-    stack: Object.fromEntries(
-      Object.entries(space).map(([key, value]) => [
-        key,
-        { display: "grid", gap: value },
-      ]),
-    ) as Record<keyof typeof space, StyleRule>,
+    stack: mapScale(space, (value) => ({ display: "grid", gap: value })),
+    cluster: mapScale(space, (value) => ({
+      display: "flex",
+      alignItems: "center",
+      flexWrap: "wrap",
+      gap: value,
+    })),
     boxSizing: ["border-box", "content-box"],
     border: border,
     borderBottom: border,

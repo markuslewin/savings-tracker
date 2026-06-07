@@ -1,12 +1,10 @@
 import { colors, radius, sprinkles } from "@/app/styles/sprinkles.css";
-import { rem } from "@/app/styles/utils";
 import {
   createVar,
   fallbackVar,
   style,
   styleVariants,
 } from "@vanilla-extract/css";
-import { calc } from "@vanilla-extract/css-utils";
 
 const borderRadius = createVar();
 const shapeLayer = createVar();
@@ -45,8 +43,4 @@ export const card = {
     borderRadius,
     shapeLayer,
   },
-};
-
-export const fromCenter = (x: number, y: number) => {
-  return `${calc.add("50%", rem(x))} ${calc.add("50%", rem(y))}`;
 };

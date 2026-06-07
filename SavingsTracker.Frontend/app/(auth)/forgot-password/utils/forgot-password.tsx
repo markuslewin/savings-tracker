@@ -1,9 +1,9 @@
 "use client";
 
 import { paragraph } from "@/app/(auth)/forgot-password/utils/forgot-password.css";
+import { Back } from "@/app/components/back";
 import { Button } from "@/app/components/button";
 import { TextField } from "@/app/components/text-field";
-import ChevronLeftIcon from "@/app/icons/icon-chevron-left.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import Form from "next/form";
 import Link from "next/link";
@@ -130,26 +130,7 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
             Resend email
           </Button>
         </p>
-        <Link
-          className={sprinkles({
-            justifySelf: "start",
-            display: "inline-flex",
-            gap: "space-0075",
-            alignItems: "center",
-            textDecoration: "none",
-            color: { default: "neutral-300", hover: "neutral-0" },
-            transition: "default",
-          })}
-          href={"/signin"}
-        >
-          <ChevronLeftIcon
-            className={sprinkles({
-              width: "auto",
-              height: "size-0250",
-            })}
-          />{" "}
-          Back to sign in
-        </Link>
+        <Back to={"/signin"}>Back to sign in</Back>
       </div>
     </>
   );

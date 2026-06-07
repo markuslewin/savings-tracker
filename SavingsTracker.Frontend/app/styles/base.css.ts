@@ -31,6 +31,10 @@ globalStyle("dd", {
   margin: 0,
 });
 
+globalStyle("dl", {
+  margin: 0,
+});
+
 globalStyle("button", {
   border: "none",
   padding: 0,

@@ -18,6 +18,13 @@
             "COMPlus_ZapDisable": "1",
             "COMPlus_ReadyToRun": "0"
           }
+        },
+        "node": {
+          "skipFiles": [
+            "${workspaceFolder}/SavingsTracker.Frontend/node_modules/next/**/*",
+            "${workspaceFolder}/SavingsTracker.Frontend/.next/**/*",
+            "<node_internals>/**"
+          ]
         }
       }
     }

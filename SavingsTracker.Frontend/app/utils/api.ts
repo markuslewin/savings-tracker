@@ -21,6 +21,7 @@ const goalSchema = z.object({
     }),
   ),
 });
+export type Goal = z.infer<typeof goalSchema>;
 
 const goalsSchema = z.array(goalSchema);
 

@@ -1,18 +1,14 @@
-import { split } from "@/app/(main)/goals/[id]/page.css";
+import { GoalDetails } from "@/app/(main)/goals/[id]/components/goal-details";
 import { Back } from "@/app/components/back";
 import { Button } from "@/app/components/button";
-import { TextField } from "@/app/components/text-field";
-import { card } from "@/app/styles/card.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { srOnly } from "@/app/styles/srOnly.css";
 import { textPreset1 } from "@/app/styles/text.css";
 import { getAuthCookie, getGoal } from "@/app/utils/api";
 import { formatDate } from "@/app/utils/locale";
-import Form from "next/form";
 import { notFound } from "next/navigation";
 import * as z from "zod";
 
-const Goal = async ({ params }: PageProps<"/goals/[id]">) => {
+const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
   const { id } = z
     .object({
       id: z.coerce.number(),
@@ -74,52 +70,21 @@ const Goal = async ({ params }: PageProps<"/goals/[id]">) => {
         >
           {goal.deadline === null ? null : (
             <>
-              <p>Due {formatDate(goal.deadline)}</p>•{/* <Dot size="" /> */}
+              <p>Due {formatDate(goal.deadline)}</p>•
             </>
           )}
           <p>Created {formatDate(goal.createdAt)}</p>
         </div>
       </div>
-      <div className={split}>
-        <div>
-          <div className={card.styles.grey}>
-            <h2 className={srOnly}>Progress</h2>
-            <p>{goal.target}</p>
-          </div>
-          <div>
-            <h2>Add deposit</h2>
-            <Form
-              action={async (formData) => {
-                "use server";
-                console.log("Add", formData.get("amount"));
-              }}
-            >
-              <TextField label="Amount" name="amount" />
-              <TextField label="Note (optional)" name="note" />
-              <Button variant="primary">Add funds</Button>
-            </Form>
-          </div>
-        </div>
-        <div>
-          <div>
-            <h2>Deposit history</h2>
-            <p>{goal.deposits.length} deposits</p>
-          </div>
-          <ul>
-            {goal.deposits.map((deposit) => {
-              return (
-                <li key={deposit.id}>
-                  <p>{deposit.note}</p>
-                  <p>{deposit.amount}</p>
-                  <p>{deposit.createdAt.toString()}</p>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </div>
+      <GoalDetails
+        goal={goal}
+        addDepositAction={async (formData) => {
+          "use server";
+          console.log("Add", formData.get("amount"), formData.get("note"));
+        }}
+      />
     </article>
   );
 };
 
-export default Goal;
+export default GoalPage;

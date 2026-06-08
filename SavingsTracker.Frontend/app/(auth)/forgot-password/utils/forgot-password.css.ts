@@ -1,4 +1,4 @@
-import { colors } from "@/app/styles/sprinkles.css";
+import { colors } from "@/app/styles/tokens";
 import { rem } from "@/app/styles/utils";
 import { style } from "@vanilla-extract/css";
 

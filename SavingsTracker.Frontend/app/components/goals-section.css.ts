@@ -1,13 +1,8 @@
 import { card } from "@/app/styles/card.css";
 import { circle } from "@/app/styles/circle.css";
-import {
-  colors,
-  outline,
-  outlineOffset,
-  radius,
-  sprinkles,
-} from "@/app/styles/sprinkles.css";
+import { outline, outlineOffset, sprinkles } from "@/app/styles/sprinkles.css";
 import { textPreset2, textPreset5, textPreset6 } from "@/app/styles/text.css";
+import { colors, radius } from "@/app/styles/tokens";
 import { rem } from "@/app/styles/utils";
 import { style } from "@vanilla-extract/css";
 import { calc } from "@vanilla-extract/css-utils";

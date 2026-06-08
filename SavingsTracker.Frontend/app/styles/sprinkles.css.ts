@@ -1,4 +1,5 @@
 import { transition } from "@/app/styles/animation.css";
+import { card } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
 import { rem } from "@/app/styles/utils";
 import { StyleRule } from "@vanilla-extract/css";
@@ -136,6 +137,9 @@ const responsiveProperties = defineProperties({
       alignItems: "center",
       flexWrap: "wrap",
       gap: value,
+    })),
+    cardSpace: mapScale(space, (value) => ({
+      vars: { [card.vars.padding]: value },
     })),
     boxSizing: ["border-box", "content-box"],
     border: border,

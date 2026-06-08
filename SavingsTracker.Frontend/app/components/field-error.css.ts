@@ -1,5 +1,6 @@
-import { colors, size, space } from "@/app/styles/sprinkles.css";
+import { size, space } from "@/app/styles/sprinkles.css";
 import { textPreset6 } from "@/app/styles/text.css";
+import { colors } from "@/app/styles/tokens";
 import { style } from "@vanilla-extract/css";
 
 export const error = style([

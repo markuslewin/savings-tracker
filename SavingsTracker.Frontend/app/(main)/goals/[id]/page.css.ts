@@ -4,6 +4,7 @@ import { style } from "@vanilla-extract/css";
 
 export const split = style({
   display: "grid",
+  alignItems: "start",
   gap: space["space-0400"],
   "@media": {
     [breakpoints.tablet]: {

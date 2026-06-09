@@ -143,6 +143,7 @@ const responsiveProperties = defineProperties({
     })),
     boxSizing: ["border-box", "content-box"],
     border: border,
+    borderBlockStart: border,
     borderBottom: border,
     outline: outline,
     outlineOffset: outlineOffset,

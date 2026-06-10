@@ -6,12 +6,11 @@ import {
 import { card } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
 import { space, sprinkles } from "@/app/styles/sprinkles.css";
-import { stack } from "@/app/styles/stack.css";
 import { fromCenter, rem } from "@/app/styles/utils";
 import { style } from "@vanilla-extract/css";
 import { calc } from "@vanilla-extract/css-utils";
 
-export const article = style([layoutForm, stack("space-0400")]);
+export const article = style([layoutForm, sprinkles({ stack: "space-0400" })]);
 
 export const quote = style([
   layoutQuote,

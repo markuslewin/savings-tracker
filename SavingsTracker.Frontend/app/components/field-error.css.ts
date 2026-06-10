@@ -1,5 +1,4 @@
-import { size, space } from "@/app/styles/sprinkles.css";
-import { textPreset6 } from "@/app/styles/text.css";
+import { size, space, sprinkles } from "@/app/styles/sprinkles.css";
 import { colors } from "@/app/styles/tokens";
 import { style } from "@vanilla-extract/css";
 
@@ -11,7 +10,9 @@ export const error = style([
     gap: space["space-0100"],
     color: colors["red-500"],
   },
-  textPreset6,
+  sprinkles({
+    text: "6",
+  }),
 ]);
 
 export const icon = style({

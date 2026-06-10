@@ -9,14 +9,6 @@ import {
   space,
   sprinkles,
 } from "@/app/styles/sprinkles.css";
-import {
-  textPreset1,
-  textPreset2,
-  textPreset4,
-  textPreset5SemiBold,
-  textPreset6Base,
-  textPreset7Base,
-} from "@/app/styles/text.css";
 import { fromCenter, rem } from "@/app/styles/utils";
 import {
   createTheme,
@@ -67,13 +59,13 @@ export const summaryCard = styleVariants({
   orange: [summaryCardBase, card.styles.orange],
 });
 
-export const summaryTerm = style([textPreset5SemiBold]);
+export const summaryTerm = style([sprinkles({ text: "5-semiBold" })]);
 
 export const summaryDesc = style([
   sprinkles({
     marginBlockStart: "space-0400",
+    text: "1",
   }),
-  textPreset1,
 ]);
 
 export const monthlyCard = style([
@@ -94,7 +86,7 @@ export const monthlyCard = style([
   },
 ]);
 
-export const monthlyHeading = style([textPreset4]);
+export const monthlyHeading = style([sprinkles({ text: "4" })]);
 
 export const barsGrid = style([
   sprinkles({
@@ -120,16 +112,12 @@ const desktopAmount = 12;
 export const barsGridItem = style([
   {
     display: "none",
-    ...textPreset7Base,
     selectors: {
       [`&:nth-last-child(-n + ${mobileAmount})`]: {
         display: "block",
       },
     },
     "@media": {
-      [breakpoints.tablet]: {
-        ...textPreset6Base,
-      },
       [breakpoints.desktop]: {
         selectors: {
           [`&:nth-last-child(-n + ${desktopAmount})`]: {
@@ -139,6 +127,12 @@ export const barsGridItem = style([
       },
     },
   },
+  sprinkles({
+    text: {
+      mobile: "7",
+      tablet: "6",
+    },
+  }),
 ]);
 
 export const bars = style([
@@ -176,7 +170,7 @@ export const goalsContainer = style([
   },
 ]);
 
-export const goalsHeading = style([textPreset2]);
+export const goalsHeading = style([sprinkles({ text: "2" })]);
 
 export const goalCards = style([
   {

@@ -1,5 +1,4 @@
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { textPreset5 } from "@/app/styles/text.css";
 import { rem } from "@/app/styles/utils";
 import { createVar, fallbackVar, style } from "@vanilla-extract/css";
 
@@ -51,11 +50,11 @@ export const field = style([
     border: "solid",
     borderColor: "neutral-500",
     borderRadius: "radius-08",
+    text: "5",
     background: "neutral-700",
     color: {
       default: "inherit",
       placeholder: "neutral-300",
     },
   }),
-  textPreset5,
 ]);

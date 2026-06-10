@@ -1,12 +1,11 @@
-import { space } from "@/app/styles/sprinkles.css";
+import { space, sprinkles } from "@/app/styles/sprinkles.css";
 import { stack } from "@/app/styles/stack.css";
-import { textPreset2 } from "@/app/styles/text.css";
 import { colors } from "@/app/styles/tokens";
 import { style } from "@vanilla-extract/css";
 
 export const intro = style([stack("space-0200")]);
 
-export const heading = style([textPreset2]);
+export const heading = style([sprinkles({ text: "2" })]);
 
 export const paragraph = style({
   color: colors["neutral-300"],

@@ -5,9 +5,8 @@ import {
 } from "@/app/(auth)/layout.css";
 import { card } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
-import { space } from "@/app/styles/sprinkles.css";
+import { space, sprinkles } from "@/app/styles/sprinkles.css";
 import { stack } from "@/app/styles/stack.css";
-import { textPreset1, textPreset4 } from "@/app/styles/text.css";
 import { fromCenter, rem } from "@/app/styles/utils";
 import { style } from "@vanilla-extract/css";
 import { calc } from "@vanilla-extract/css-utils";
@@ -46,7 +45,9 @@ export const quoteText = style([
     gridArea: "text",
     textWrap: "balance",
   },
-  textPreset1,
+  sprinkles({
+    text: "1",
+  }),
 ]);
 
 export const quoteSource = style([
@@ -56,5 +57,7 @@ export const quoteSource = style([
     opacity: 0.8,
     alignSelf: "end",
   },
-  textPreset4,
+  sprinkles({
+    text: "4",
+  }),
 ]);

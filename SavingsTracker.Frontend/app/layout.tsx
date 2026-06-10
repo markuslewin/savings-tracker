@@ -2,7 +2,7 @@ import { html } from "@/app/layout.css";
 import "@/app/reset.css";
 import "@/app/styles/base.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import type { FontVariable } from "@/app/styles/text.css";
+import { FontVariable } from "@/app/styles/tokens";
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
 

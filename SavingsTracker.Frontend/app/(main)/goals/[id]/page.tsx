@@ -2,7 +2,6 @@ import { GoalDetails } from "@/app/(main)/goals/[id]/components/goal-details";
 import { Back } from "@/app/components/back";
 import { Button } from "@/app/components/button";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { textPreset1 } from "@/app/styles/text.css";
 import { getAuthCookie, getGoal } from "@/app/utils/api";
 import { formatDate } from "@/app/utils/locale";
 import { notFound } from "next/navigation";
@@ -61,7 +60,13 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
             </Button>
           </div>
         </header>
-        <h1 className={textPreset1}>{goal.name}</h1>
+        <h1
+          className={sprinkles({
+            text: "1",
+          })}
+        >
+          {goal.name}
+        </h1>
         <div
           className={sprinkles({
             cluster: "space-0150",

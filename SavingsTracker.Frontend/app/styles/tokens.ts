@@ -2,6 +2,22 @@ import { rem } from "@/app/styles/utils";
 
 // todo: Fix duplication in tokens/sprinkles
 
+export const fonts = {
+  bricolageGrotesque: "var(--font-bricolage-grotesque)",
+  inter: "var(--font-inter)",
+} as const;
+
+export type FontVariable =
+  (typeof fonts)[keyof typeof fonts] extends `var(${infer Variable})`
+    ? Variable
+    : never;
+
+export const weights = {
+  medium: 500,
+  semiBold: 600,
+  bold: 700,
+};
+
 export const colors = {
   transparent: "transparent",
   inherit: "inherit",

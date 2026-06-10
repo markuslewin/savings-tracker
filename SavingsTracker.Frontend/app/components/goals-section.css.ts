@@ -1,7 +1,6 @@
 import { card } from "@/app/styles/card.css";
 import { circle } from "@/app/styles/circle.css";
 import { outline, outlineOffset, sprinkles } from "@/app/styles/sprinkles.css";
-import { textPreset2, textPreset5, textPreset6 } from "@/app/styles/text.css";
 import { colors, radius } from "@/app/styles/tokens";
 import { rem } from "@/app/styles/utils";
 import { style } from "@vanilla-extract/css";
@@ -30,8 +29,8 @@ export const radioGroup = style([
 ]);
 
 export const radioGroupLabel = style([
-  textPreset6,
   sprinkles({
+    text: "6",
     textTransform: "uppercase",
     color: "neutral-300",
   }),
@@ -55,8 +54,8 @@ export const radio = style([
     gridTemplateColumns: "auto 1fr",
     alignItems: "center",
     gap: "space-0100",
+    text: "5",
   }),
-  textPreset5,
 ]);
 
 export const radioCircle = style([
@@ -153,8 +152,8 @@ export const noGoalsIcon = style([
 export const noGoalsHeading = style([
   sprinkles({
     marginBlockStart: "space-0250",
+    text: "2",
   }),
-  textPreset2,
 ]);
 
 export const noGoalsBody = style([

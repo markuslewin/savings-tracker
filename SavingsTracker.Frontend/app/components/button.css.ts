@@ -1,6 +1,5 @@
 import { transition } from "@/app/styles/animation.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { textPreset5 } from "@/app/styles/text.css";
 import { rem } from "@/app/styles/utils";
 import { style, styleVariants } from "@vanilla-extract/css";
 
@@ -11,6 +10,7 @@ const base = style([
     display: "inline-flex",
     alignItems: "center",
     gap: "space-0125",
+    text: "5",
   }),
   {
     paddingInline: rem(19),
@@ -18,7 +18,6 @@ const base = style([
     justifyContent: "center",
     textAlign: "center",
   },
-  textPreset5,
   transition,
 ]);
 

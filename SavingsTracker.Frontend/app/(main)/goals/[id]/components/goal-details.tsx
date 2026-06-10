@@ -11,11 +11,6 @@ import DollarIcon from "@/app/icons/icon-dollar.svg";
 import * as card from "@/app/styles/card.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
-import {
-  textPreset4,
-  textPreset5SemiBold,
-  textPreset6,
-} from "@/app/styles/text.css";
 import { Goal } from "@/app/utils/api";
 import { formatDate, formatPercent, formatUsd } from "@/app/utils/locale";
 import { nbsp } from "@/app/utils/unicode";
@@ -61,14 +56,14 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
           >
             <strong
               className={sprinkles({
-                text: 1,
+                text: "1",
               })}
             >
               {formatPercent(progress)}
             </strong>
             <p
               className={sprinkles({
-                text: 4,
+                text: "4",
                 color: "neutral-300",
               })}
             >
@@ -85,7 +80,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
               className={sprinkles({
                 display: "flex",
                 justifyContent: "space-between",
-                text: 6,
+                text: "6",
               })}
             >
               <p
@@ -132,7 +127,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
             }),
           )}
         >
-          <h2 className={textPreset4}>Add deposit</h2>
+          <h2 className={sprinkles({ text: "4" })}>Add deposit</h2>
           <Form
             className={sprinkles({
               stack: "space-0300",
@@ -174,25 +169,21 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
             justifyContent: "space-between",
           })}
         >
-          <h2 className={textPreset4}>Deposit history</h2>
+          <h2 className={sprinkles({ text: "4" })}>Deposit history</h2>
           <p
-            className={clsx(
-              textPreset6,
-              sprinkles({
-                color: "neutral-300",
-              }),
-            )}
+            className={sprinkles({
+              text: "6",
+              color: "neutral-300",
+            })}
           >
             {goal.deposits.length} deposits
           </p>
         </div>
         <ul
-          className={clsx(
-            textPreset6,
-            sprinkles({
-              stack: "space-0",
-            }),
-          )}
+          className={sprinkles({
+            stack: "space-0",
+            text: "6",
+          })}
           role="list"
         >
           {goal.deposits.map((deposit) => {
@@ -239,12 +230,10 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                   </p>
                 </div>
                 <p
-                  className={clsx(
-                    textPreset5SemiBold,
-                    sprinkles({
-                      color: "green-500",
-                    }),
-                  )}
+                  className={sprinkles({
+                    text: "5-semiBold",
+                    color: "green-500",
+                  })}
                 >
                   <span className={srOnly}>Amount: </span>+
                   {formatUsd(deposit.amount)}

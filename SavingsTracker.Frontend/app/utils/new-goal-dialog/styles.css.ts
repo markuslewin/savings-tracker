@@ -1,7 +1,6 @@
 import { card } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
-import { border, size, space } from "@/app/styles/sprinkles.css";
-import { textPreset4, textPreset5 } from "@/app/styles/text.css";
+import { border, size, space, sprinkles } from "@/app/styles/sprinkles.css";
 import { colors } from "@/app/styles/tokens";
 import { rem } from "@/app/styles/utils";
 import { style } from "@vanilla-extract/css";
@@ -40,7 +39,7 @@ export const header = style({
   borderColor: colors["neutral-700"],
 });
 
-export const heading = style([textPreset4]);
+export const heading = style([sprinkles({ text: "4" })]);
 
 export const close = style({
   position: "absolute",
@@ -81,7 +80,7 @@ export const textField = style({
   gap: space["space-0125"],
 });
 
-export const label = style([{}, textPreset5]);
+export const label = style([sprinkles({ text: "5" })]);
 
 export const actions = style({
   marginBlockStart: space["space-0300"],

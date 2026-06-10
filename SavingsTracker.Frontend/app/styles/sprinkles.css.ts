@@ -1,11 +1,7 @@
 import { transition } from "@/app/styles/animation.css";
 import { card } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
-import {
-  textPreset1Base,
-  textPreset4Base,
-  textPreset6Base,
-} from "@/app/styles/text.css";
+import { fonts, weights } from "@/app/styles/tokens";
 import { rem } from "@/app/styles/utils";
 import { StyleRule } from "@vanilla-extract/css";
 import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
@@ -146,6 +142,69 @@ const responsiveProperties = defineProperties({
     cardSpace: mapScale(space, (value) => ({
       vars: { [card.vars.padding]: value },
     })),
+    text: {
+      "1": {
+        fontFamily: fonts.bricolageGrotesque,
+        fontSize: rem(44),
+        fontWeight: weights.semiBold,
+        letterSpacing: rem(-2),
+        lineHeight: "100%",
+        "@media": {
+          [breakpoints.tablet]: {
+            fontSize: rem(64),
+          },
+        },
+      },
+      "2": {
+        fontFamily: fonts.inter,
+        fontSize: rem(32),
+        fontWeight: weights.bold,
+        letterSpacing: rem(0),
+        lineHeight: "120%",
+      },
+      "3": {
+        fontFamily: fonts.inter,
+        fontSize: rem(20),
+        fontWeight: weights.bold,
+        letterSpacing: rem(-0.3),
+        lineHeight: "120%",
+      },
+      "4": {
+        fontFamily: fonts.inter,
+        fontSize: rem(20),
+        fontWeight: weights.semiBold,
+        letterSpacing: rem(-0.3),
+        lineHeight: "120%",
+      },
+      "5": {
+        fontFamily: fonts.inter,
+        fontSize: rem(16),
+        fontWeight: weights.medium,
+        letterSpacing: rem(-0.3),
+        lineHeight: "150%",
+      },
+      "5-semiBold": {
+        fontFamily: fonts.inter,
+        fontSize: rem(16),
+        fontWeight: weights.semiBold,
+        letterSpacing: rem(-0.3),
+        lineHeight: "140%",
+      },
+      "6": {
+        fontFamily: fonts.inter,
+        fontSize: rem(14),
+        fontWeight: weights.semiBold,
+        letterSpacing: rem(-0.3),
+        lineHeight: "140%",
+      },
+      "7": {
+        fontFamily: fonts.inter,
+        fontSize: rem(11),
+        fontWeight: weights.semiBold,
+        letterSpacing: rem(0),
+        lineHeight: "120%",
+      },
+    },
     boxSizing: ["border-box", "content-box"],
     border: border,
     borderBlockStart: border,
@@ -241,20 +300,6 @@ const colorProperties = defineProperties({
   },
 });
 
-const textProperties = defineProperties({
-  properties: {
-    text: {
-      1: textPreset1Base,
-      4: textPreset4Base,
-      6: textPreset6Base,
-    },
-  },
-});
-
-export const sprinkles = createSprinkles(
-  responsiveProperties,
-  colorProperties,
-  textProperties,
-);
+export const sprinkles = createSprinkles(responsiveProperties, colorProperties);
 
 export type Sprinkles = Parameters<typeof sprinkles>[0];

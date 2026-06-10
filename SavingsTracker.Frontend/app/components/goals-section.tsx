@@ -40,7 +40,6 @@ import PlusIcon from "@/app/icons/icon-plus.svg";
 import SortIcon from "@/app/icons/icon-sort.svg";
 import TargetIcon from "@/app/icons/icon-target.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { textPreset1, textPreset4, textPreset7 } from "@/app/styles/text.css";
 import {
   Filter,
   filters,
@@ -276,7 +275,11 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
                       gap: "space-0200",
                     })}
                   >
-                    <h3 className={textPreset4}>
+                    <h3
+                      className={sprinkles({
+                        text: "4",
+                      })}
+                    >
                       <Link
                         className={clsx(
                           clickableContainerItem,
@@ -297,12 +300,12 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
                             border: "solid",
                             borderColor: "green-500",
                             borderRadius: "radius-full",
+                            text: "7",
                             textTransform: "uppercase",
                             background: "green-900",
                             color: "green-500",
                           }),
                           tag,
-                          textPreset7,
                         )}
                       >
                         <span
@@ -322,7 +325,12 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
                       stack: "space-0200",
                     })}
                   >
-                    <p className={clsx(goalCardPercent, textPreset1)}>
+                    <p
+                      className={clsx(
+                        goalCardPercent,
+                        sprinkles({ text: "1" }),
+                      )}
+                    >
                       {formatPercent(progress)}
                     </p>
                     <Progress value={progress} />

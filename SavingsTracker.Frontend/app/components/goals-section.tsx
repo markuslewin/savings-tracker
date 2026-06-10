@@ -10,7 +10,6 @@ import {
   goalCardPercent,
   goalCards,
   goalsContainer,
-  goalsHeading,
   inProgress,
   inProgressClose,
   noProgress,
@@ -111,7 +110,13 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
           gap: "space-0200",
         })}
       >
-        <h2 className={goalsHeading}>Your goals</h2>
+        <h2
+          className={sprinkles({
+            text: "2",
+          })}
+        >
+          Your goals
+        </h2>
         <div
           className={sprinkles({
             display: "flex",

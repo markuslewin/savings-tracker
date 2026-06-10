@@ -14,8 +14,6 @@ import {
   inProgress,
   inProgressClose,
   noProgress,
-  progressFill,
-  progressTrack,
   tag,
 } from "@/app/(main)/page.css";
 import * as buttonStyles from "@/app/components/button.css";
@@ -36,6 +34,7 @@ import {
   radioLabel,
   radios,
 } from "@/app/components/goals-section.css";
+import { Progress } from "@/app/components/progress";
 import FilterIcon from "@/app/icons/icon-filter.svg";
 import PlusIcon from "@/app/icons/icon-plus.svg";
 import SortIcon from "@/app/icons/icon-sort.svg";
@@ -317,48 +316,16 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
                       </p>
                     ) : null}
                   </div>
-                  <p
-                    className={clsx(
-                      goalCardPercent,
-                      sprinkles({
-                        marginBlockStart: "space-0400",
-                      }),
-                      textPreset1,
-                    )}
-                  >
-                    {formatPercent(progress)}
-                  </p>
                   <div
-                    className={clsx(
-                      progressTrack,
-                      sprinkles({
-                        marginBlockStart: "space-0200",
-                        border: {
-                          forcedColors: "solid",
-                        },
-                        borderRadius: "radius-full",
-                        height: "size-0150",
-                        display: "grid",
-                        overflow: "hidden",
-                      }),
-                    )}
+                    className={sprinkles({
+                      marginBlockStart: "space-0400",
+                      stack: "space-0200",
+                    })}
                   >
-                    {progress <= 0 ? null : (
-                      <div
-                        className={clsx(
-                          progressFill,
-                          sprinkles({
-                            border: "solid",
-                            borderColor: "white-alpha-30",
-                            borderRadius: "radius-full",
-                            display: "grid",
-                          }),
-                        )}
-                        style={{
-                          width: `${progress * 100}%`,
-                        }}
-                      />
-                    )}
+                    <p className={clsx(goalCardPercent, textPreset1)}>
+                      {formatPercent(progress)}
+                    </p>
+                    <Progress value={progress} />
                   </div>
                   <div
                     className={sprinkles({

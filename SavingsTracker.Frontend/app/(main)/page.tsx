@@ -54,11 +54,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
   ];
 
   return (
-    <div
-      className={sprinkles({
-        paddingBlock: "space-0600",
-      })}
-    >
+    <div>
       <h1 className={srOnly}>Dashboard</h1>
       <h2 className={srOnly}>Summary</h2>
       <dl className={summaryCards}>

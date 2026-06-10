@@ -18,7 +18,7 @@ const weights = {
   bold: 700,
 };
 
-export const textPreset1 = style({
+export const textPreset1Base: StyleRule = {
   fontFamily: fonts.bricolageGrotesque,
   fontSize: rem(44),
   fontWeight: weights.semiBold,
@@ -29,7 +29,9 @@ export const textPreset1 = style({
       fontSize: rem(64),
     },
   },
-});
+};
+
+export const textPreset1 = style(textPreset1Base);
 
 export const textPreset2 = style({
   fontFamily: fonts.inter,
@@ -47,13 +49,15 @@ export const textPreset3 = style({
   lineHeight: "120%",
 });
 
-export const textPreset4 = style({
+export const textPreset4Base = {
   fontFamily: fonts.inter,
   fontSize: rem(20),
   fontWeight: weights.semiBold,
   letterSpacing: rem(-0.3),
   lineHeight: "120%",
-});
+};
+
+export const textPreset4 = style(textPreset4Base);
 
 export const textPreset5 = style({
   fontFamily: fonts.inter,

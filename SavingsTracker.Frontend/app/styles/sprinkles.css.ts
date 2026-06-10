@@ -1,5 +1,11 @@
 import { transition } from "@/app/styles/animation.css";
+import { card } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
+import {
+  textPreset1Base,
+  textPreset4Base,
+  textPreset6Base,
+} from "@/app/styles/text.css";
 import { rem } from "@/app/styles/utils";
 import { StyleRule } from "@vanilla-extract/css";
 import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
@@ -108,6 +114,14 @@ export const underline = {
   textUnderlineOffset: rem(3),
 };
 
+const mapScale = <Key extends string>(
+  scale: Record<Key, string>,
+  f: (value: string) => StyleRule,
+) =>
+  Object.fromEntries(
+    Object.entries(space).map(([key, value]) => [key, f(value)]),
+  ) as Record<Key, StyleRule>;
+
 const responsiveProperties = defineProperties({
   conditions: {
     mobile: {},
@@ -122,14 +136,19 @@ const responsiveProperties = defineProperties({
   },
   defaultCondition: "mobile",
   properties: {
-    stack: Object.fromEntries(
-      Object.entries(space).map(([key, value]) => [
-        key,
-        { display: "grid", gap: value },
-      ]),
-    ) as Record<keyof typeof space, StyleRule>,
+    stack: mapScale(space, (value) => ({ display: "grid", gap: value })),
+    cluster: mapScale(space, (value) => ({
+      display: "flex",
+      alignItems: "center",
+      flexWrap: "wrap",
+      gap: value,
+    })),
+    cardSpace: mapScale(space, (value) => ({
+      vars: { [card.vars.padding]: value },
+    })),
     boxSizing: ["border-box", "content-box"],
     border: border,
+    borderBlockStart: border,
     borderBottom: border,
     outline: outline,
     outlineOffset: outlineOffset,
@@ -222,6 +241,20 @@ const colorProperties = defineProperties({
   },
 });
 
-export const sprinkles = createSprinkles(responsiveProperties, colorProperties);
+const textProperties = defineProperties({
+  properties: {
+    text: {
+      1: textPreset1Base,
+      4: textPreset4Base,
+      6: textPreset6Base,
+    },
+  },
+});
+
+export const sprinkles = createSprinkles(
+  responsiveProperties,
+  colorProperties,
+  textProperties,
+);
 
 export type Sprinkles = Parameters<typeof sprinkles>[0];

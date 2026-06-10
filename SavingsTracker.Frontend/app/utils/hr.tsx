@@ -1,4 +1,5 @@
-import { colors, sprinkles } from "@/app/styles/sprinkles.css";
+import { sprinkles } from "@/app/styles/sprinkles.css";
+import { colors } from "@/app/styles/tokens";
 
 type HrProps = { color: keyof typeof colors };
 

@@ -8,25 +8,35 @@ import { OptimisticSearchParams } from "@/app/utils/optimistic-search-params/com
 const MainLayout = ({ children }: LayoutProps<"/">) => {
   return (
     <OptimisticSearchParams>
-      <header className={header}>
-        <div className={container}>
-          <div
-            className={sprinkles({
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-              gap: "space-0200",
-            })}
-          >
-            <LogoLink />
-            <NewGoalButton />
+      <div>
+        <header className={header}>
+          <div className={container}>
+            <div
+              className={sprinkles({
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "space-between",
+                gap: "space-0200",
+              })}
+            >
+              <LogoLink />
+              <NewGoalButton />
+            </div>
           </div>
-        </div>
-      </header>
-      <main>
-        <div className={container}>{children}</div>
-      </main>
-      <NewGoalDialog />
+        </header>
+        <main
+          className={sprinkles({
+            paddingBlock: {
+              mobile: "space-0400",
+              tablet: "space-0500",
+              desktop: "space-0600",
+            },
+          })}
+        >
+          <div className={container}>{children}</div>
+        </main>
+        <NewGoalDialog />
+      </div>
     </OptimisticSearchParams>
   );
 };

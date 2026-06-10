@@ -1,5 +1,6 @@
+import { progressColor } from "@/app/components/progress.css";
 import { transition } from "@/app/styles/animation.css";
-import { card, fromCenter } from "@/app/styles/card.css";
+import { card } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
 import {
   colors,
@@ -16,7 +17,7 @@ import {
   textPreset6Base,
   textPreset7Base,
 } from "@/app/styles/text.css";
-import { rem } from "@/app/styles/utils";
+import { fromCenter, rem } from "@/app/styles/utils";
 import {
   createTheme,
   createThemeContract,
@@ -231,7 +232,6 @@ export const clickableContainer = style([
 
 const goalCardVars = createThemeContract({
   accent: null,
-  track: null,
   dot: null,
   deadline: null,
 });
@@ -250,7 +250,6 @@ export const noProgress = style([
   greyCard,
   createTheme(goalCardVars, {
     accent: colors["neutral-400"],
-    track: colors["neutral-700"],
     dot: colors["neutral-300"],
     deadline: colors["white-alpha-70"],
   }),
@@ -258,9 +257,9 @@ export const noProgress = style([
 
 export const inProgress = style([
   greyCard,
+  progressColor.orange,
   createTheme(goalCardVars, {
     accent: colors["orange-400"],
-    track: colors["neutral-700"],
     dot: colors["neutral-300"],
     deadline: colors["white-alpha-70"],
   }),
@@ -268,9 +267,9 @@ export const inProgress = style([
 
 export const inProgressClose = style([
   card.styles.orange,
+  progressColor.white,
   createTheme(goalCardVars, {
     accent: colors["neutral-0"],
-    track: colors["orange-800"],
     dot: colors["white-alpha-30"],
     deadline: colors["neutral-0"],
   }),
@@ -278,9 +277,9 @@ export const inProgressClose = style([
 
 export const complete = style([
   greyCard,
+  progressColor.green,
   createTheme(goalCardVars, {
     accent: colors["green-500"],
-    track: colors["neutral-700"],
     dot: colors["neutral-300"],
     deadline: colors["white-alpha-70"],
   }),
@@ -358,16 +357,6 @@ export const goalCard = style([
 export const tag = style([{ paddingBlock: rem(3), paddingInline: rem(9) }]);
 
 export const goalCardPercent = style([{ color: goalCardVars.accent }]);
-
-export const progressTrack = style([{ background: goalCardVars.track }]);
-
-export const progressFill = style([
-  {
-    backgroundColor: goalCardVars.accent,
-    backgroundImage: `repeating-linear-gradient(-60deg, hsl(0 0% 6% / 10%), hsl(0 0% 6% / 10%) ${rem(2)}, transparent ${rem(2)}, transparent ${rem(7.75)})`,
-    backgroundOrigin: "border-box",
-  },
-]);
 
 export const dot = style([
   {

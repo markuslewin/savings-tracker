@@ -1,4 +1,4 @@
-import { space } from "@/app/styles/sprinkles.css";
+import { space } from "@/app/styles/tokens";
 import { style } from "@vanilla-extract/css";
 
 export const depositLayout = style({

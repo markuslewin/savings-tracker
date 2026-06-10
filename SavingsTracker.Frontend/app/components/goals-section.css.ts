@@ -1,7 +1,7 @@
 import { card } from "@/app/styles/card.css";
 import { circle } from "@/app/styles/circle.css";
-import { outline, outlineOffset, sprinkles } from "@/app/styles/sprinkles.css";
-import { colors, radius } from "@/app/styles/tokens";
+import { sprinkles } from "@/app/styles/sprinkles.css";
+import { colors, outline, outlineOffset, radius } from "@/app/styles/tokens";
 import { rem } from "@/app/styles/utils";
 import { style } from "@vanilla-extract/css";
 import { calc } from "@vanilla-extract/css-utils";

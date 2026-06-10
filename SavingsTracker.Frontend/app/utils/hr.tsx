@@ -1,7 +1,6 @@
-import { sprinkles } from "@/app/styles/sprinkles.css";
-import { colors } from "@/app/styles/tokens";
+import { Sprinkles, sprinkles } from "@/app/styles/sprinkles.css";
 
-type HrProps = { color: keyof typeof colors };
+type HrProps = { color: Sprinkles["color"] };
 
 // Decorative `<hr />`
 export const Hr = ({ color }: HrProps) => {

@@ -1,4 +1,4 @@
-import { outline, underline } from "@/app/styles/sprinkles.css";
+import { outline, underline } from "@/app/styles/tokens";
 import { rem } from "@/app/styles/utils";
 import { globalStyle } from "@vanilla-extract/css";
 

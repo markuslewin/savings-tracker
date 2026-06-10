@@ -1,6 +1,6 @@
 import * as center from "@/app/styles/center.css";
 import { breakpoints } from "@/app/styles/media";
-import { space } from "@/app/styles/sprinkles.css";
+import { space } from "@/app/styles/tokens";
 import { rem } from "@/app/styles/utils";
 import { createVar, style } from "@vanilla-extract/css";
 

@@ -2,13 +2,8 @@ import { progressColor } from "@/app/components/progress.css";
 import { transition } from "@/app/styles/animation.css";
 import { card } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
-import {
-  colors,
-  outline,
-  outlineOffset,
-  space,
-  sprinkles,
-} from "@/app/styles/sprinkles.css";
+import { sprinkles } from "@/app/styles/sprinkles.css";
+import { colors, outline, outlineOffset, space } from "@/app/styles/tokens";
 import { fromCenter, rem } from "@/app/styles/utils";
 import {
   createTheme,

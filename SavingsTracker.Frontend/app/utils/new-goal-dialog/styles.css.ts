@@ -1,7 +1,7 @@
 import { card } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
-import { border, size, space, sprinkles } from "@/app/styles/sprinkles.css";
-import { colors } from "@/app/styles/tokens";
+import { sprinkles } from "@/app/styles/sprinkles.css";
+import { border, colors, size, space } from "@/app/styles/tokens";
 import { rem } from "@/app/styles/utils";
 import { style } from "@vanilla-extract/css";
 

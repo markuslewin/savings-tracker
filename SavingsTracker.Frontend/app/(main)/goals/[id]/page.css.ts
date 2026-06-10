@@ -1,5 +1,5 @@
 import { breakpoints } from "@/app/styles/media";
-import { space } from "@/app/styles/sprinkles.css";
+import { space } from "@/app/styles/tokens";
 import { style } from "@vanilla-extract/css";
 
 export const split = style({

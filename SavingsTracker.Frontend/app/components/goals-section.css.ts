@@ -1,4 +1,4 @@
-import { card } from "@/app/styles/card.css";
+import { borderRadius, card } from "@/app/styles/card.css";
 import { circle } from "@/app/styles/circle.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { colors, outline, outlineOffset, radius } from "@/app/styles/tokens";
@@ -7,7 +7,7 @@ import { style } from "@vanilla-extract/css";
 import { calc } from "@vanilla-extract/css-utils";
 
 export const popover = style([
-  card.styles.grey,
+  card.grey,
   sprinkles({
     width: "full",
     maxWidth: "popover",
@@ -17,7 +17,7 @@ export const popover = style([
     overflowY: "auto",
     scrollbarWidth: "thin",
     vars: {
-      [card.vars.borderRadius]: radius["radius-08"],
+      [borderRadius]: radius["radius-08"],
     },
   },
 ]);

@@ -35,7 +35,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
       >
         <div
           className={clsx(
-            card.styles.grey,
+            card.card.grey,
             sprinkles({
               cardSpace: {
                 mobile: "space-0200",
@@ -116,7 +116,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
         </div>
         <div
           className={clsx(
-            card.styles.grey,
+            card.card.grey,
             sprinkles({
               stack: "space-0300",
               cardSpace: {

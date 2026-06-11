@@ -1,6 +1,6 @@
 import { progressColor } from "@/app/components/progress.css";
 import { transition } from "@/app/styles/animation.css";
-import { card } from "@/app/styles/card.css";
+import { shapeLayer as backgroundImage, card } from "@/app/styles/card.css";
 import { columns } from "@/app/styles/columns.css";
 import { breakpoints } from "@/app/styles/media";
 import { sprinkles } from "@/app/styles/sprinkles.css";
@@ -16,8 +16,7 @@ import { calc } from "@vanilla-extract/css-utils";
 
 export const summaryCardDecoration = style({
   vars: {
-    [card.vars.shapeLayer]:
-      `no-repeat ${fromCenter(107, 74)}/${rem(200)} url(/images/pattern-star.svg)`,
+    [backgroundImage]: `no-repeat ${fromCenter(107, 74)}/${rem(200)} url(/images/pattern-star.svg)`,
   },
 });
 
@@ -159,11 +158,10 @@ const goalCardVars = createThemeContract({
 });
 
 const greyCard = style([
-  card.styles.grey,
+  card.grey,
   {
     vars: {
-      [card.vars.shapeLayer]:
-        `no-repeat top center/${rem(408)} url(/images/pattern-grid.svg)`,
+      [backgroundImage]: `no-repeat top center/${rem(408)} url(/images/pattern-grid.svg)`,
     },
   },
 ]);
@@ -188,7 +186,7 @@ export const inProgress = style([
 ]);
 
 export const inProgressClose = style([
-  card.styles.orange,
+  card.orange,
   progressColor.white,
   createTheme(goalCardVars, {
     accent: colors["neutral-0"],

@@ -19,7 +19,7 @@ export const overlay = style([
 ]);
 
 export const modal = style([
-  card.styles.grey,
+  card.grey,
   {
     position: "relative",
     isolation: "isolate",

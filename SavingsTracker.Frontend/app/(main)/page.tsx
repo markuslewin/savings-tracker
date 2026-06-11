@@ -85,7 +85,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
       </dl>
       <div
         className={clsx(
-          card.styles.grey,
+          card.grey,
           sprinkles({
             marginBlockStart: {
               mobile: "space-0200",
@@ -216,11 +216,8 @@ const SummaryCard = (props: SummaryCardProps) => {
           },
         }),
         props.highlight
-          ? [
-              card.styles.orange,
-              sprinkles({ gridColumn: { tablet: "span 2" } }),
-            ]
-          : [card.styles.grey, summaryCardDecoration],
+          ? [card.orange, sprinkles({ gridColumn: { tablet: "span 2" } })]
+          : [card.grey, summaryCardDecoration],
       )}
     >
       <dt

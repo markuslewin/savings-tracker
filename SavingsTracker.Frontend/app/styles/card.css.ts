@@ -1,31 +1,33 @@
+import {
+  box,
+  paddingBlock as boxPaddingBlock,
+  paddingInline as boxPaddingInline,
+} from "@/app/styles/box.css";
 import { colors, radius } from "@/app/styles/tokens";
-import { rem } from "@/app/styles/utils";
 import {
   createVar,
   fallbackVar,
   style,
   styleVariants,
 } from "@vanilla-extract/css";
-import { calc } from "@vanilla-extract/css-utils";
 
-const borderWidth = rem(1);
-
-const borderRadius = createVar();
+export const borderRadius = createVar();
 export const paddingBlock = createVar();
 export const paddingInline = createVar();
-const shapeLayer = createVar();
+export const shapeLayer = createVar();
 
 const base = style([
+  box,
   {
-    borderStyle: "solid",
     borderRadius: fallbackVar(borderRadius, radius["radius-16"]),
-    borderWidth,
-    paddingBlock: calc.subtract(paddingBlock, borderWidth),
-    paddingInline: calc.subtract(paddingInline, borderWidth),
+    vars: {
+      [boxPaddingBlock]: paddingBlock,
+      [boxPaddingInline]: paddingInline,
+    },
   },
 ]);
 
-export const styles = styleVariants({
+export const card = styleVariants({
   grey: [
     base,
     {
@@ -43,11 +45,3 @@ export const styles = styleVariants({
     },
   ],
 });
-
-export const card = {
-  styles,
-  vars: {
-    borderRadius,
-    shapeLayer,
-  },
-};

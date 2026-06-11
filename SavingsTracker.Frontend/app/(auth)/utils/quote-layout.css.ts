@@ -3,7 +3,7 @@ import {
   quote as layoutQuote,
   quoteBleed,
 } from "@/app/(auth)/layout.css";
-import { card } from "@/app/styles/card.css";
+import { card, shapeLayer as backgroundImage } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { fromCenter, rem } from "@/app/styles/utils";
@@ -14,12 +14,11 @@ export const article = style([layoutForm, sprinkles({ stack: "space-0400" })]);
 
 export const quote = style([
   layoutQuote,
-  card.styles.orange,
+  card.orange,
   {
     padding: calc.subtract(quoteBleed, rem(1)),
     vars: {
-      [card.vars.shapeLayer]:
-        `no-repeat ${fromCenter(166, 299)}/${rem(464)} url(/images/pattern-star-15.svg)`,
+      [backgroundImage]: `no-repeat ${fromCenter(166, 299)}/${rem(464)} url(/images/pattern-star-15.svg)`,
     },
     "@media": {
       [breakpoints.desktop]: {

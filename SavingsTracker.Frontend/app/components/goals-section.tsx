@@ -3,17 +3,12 @@
 import {
   clickableContainer,
   clickableContainerItem,
-  complete,
   dot,
   goalCard,
   goalCardDeadline,
   goalCardPercent,
   goalCards,
   goalsContainer,
-  inProgress,
-  inProgressClose,
-  noProgress,
-  tag,
 } from "@/app/(main)/page.css";
 import * as buttonStyles from "@/app/components/button.css";
 import { DashedRect } from "@/app/components/dashed";
@@ -260,14 +255,15 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
                 <li
                   key={goal.id}
                   className={clsx(
-                    goalCard,
-                    progress <= 0
-                      ? noProgress
-                      : progress < 0.76
-                        ? inProgress
-                        : progress < 1
-                          ? inProgressClose
-                          : complete,
+                    goalCard[
+                      progress <= 0
+                        ? "noProgress"
+                        : progress < 0.76
+                          ? "inProgress"
+                          : progress < 1
+                            ? "inProgressClose"
+                            : "complete"
+                    ],
                     clickableContainer,
                   )}
                 >
@@ -304,15 +300,14 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
                         className={clsx(
                           box,
                           sprinkles({
-                            border: "solid",
-                            borderColor: "green-500",
                             borderRadius: "radius-full",
+                            boxSpaceBlock: "space-0050",
+                            boxSpaceInline: "space-0125",
                             text: "7",
                             textTransform: "uppercase",
                             background: "green-900",
                             color: "green-500",
                           }),
-                          tag,
                         )}
                       >
                         <span

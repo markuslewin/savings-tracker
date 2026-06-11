@@ -1,5 +1,6 @@
 import { progressColor } from "@/app/components/progress.css";
 import { transition } from "@/app/styles/animation.css";
+import { box } from "@/app/styles/box.css";
 import { shapeLayer as backgroundImage, card } from "@/app/styles/card.css";
 import { columns } from "@/app/styles/columns.css";
 import { breakpoints } from "@/app/styles/media";
@@ -11,6 +12,7 @@ import {
   createThemeContract,
   createVar,
   style,
+  styleVariants,
 } from "@vanilla-extract/css";
 import { calc } from "@vanilla-extract/css-utils";
 
@@ -166,50 +168,17 @@ const greyCard = style([
   },
 ]);
 
-export const noProgress = style([
-  greyCard,
-  createTheme(goalCardVars, {
-    accent: colors["neutral-400"],
-    dot: colors["neutral-300"],
-    deadline: colors["white-alpha-70"],
+export const goalCardBase = style([
+  box,
+  sprinkles({
+    boxSpace: {
+      mobile: "space-0200",
+      tablet: "space-0300",
+    },
   }),
-]);
-
-export const inProgress = style([
-  greyCard,
-  progressColor.orange,
-  createTheme(goalCardVars, {
-    accent: colors["orange-400"],
-    dot: colors["neutral-300"],
-    deadline: colors["white-alpha-70"],
-  }),
-]);
-
-export const inProgressClose = style([
-  card.orange,
-  progressColor.white,
-  createTheme(goalCardVars, {
-    accent: colors["neutral-0"],
-    dot: colors["white-alpha-30"],
-    deadline: colors["neutral-0"],
-  }),
-]);
-
-export const complete = style([
-  greyCard,
-  progressColor.green,
-  createTheme(goalCardVars, {
-    accent: colors["green-500"],
-    dot: colors["neutral-300"],
-    deadline: colors["white-alpha-70"],
-  }),
-]);
-
-export const goalCard = style([
   {
     display: "flex",
     flexDirection: "column",
-    padding: rem(15),
     selectors: {
       "&:nth-child(4n - 3)": {
         minHeight: rem(260),
@@ -224,7 +193,6 @@ export const goalCard = style([
     },
     "@media": {
       [breakpoints.tablet]: {
-        padding: rem(23),
         selectors: {
           "&:nth-child(4n - 3)": {
             gridColumn: "span 2",
@@ -274,7 +242,47 @@ export const goalCard = style([
   },
 ]);
 
-export const tag = style([{ paddingBlock: rem(3), paddingInline: rem(9) }]);
+export const goalCard = styleVariants({
+  noProgress: [
+    goalCardBase,
+    greyCard,
+    createTheme(goalCardVars, {
+      accent: colors["neutral-400"],
+      dot: colors["neutral-300"],
+      deadline: colors["white-alpha-70"],
+    }),
+  ],
+  inProgress: [
+    goalCardBase,
+    greyCard,
+    progressColor.orange,
+    createTheme(goalCardVars, {
+      accent: colors["orange-400"],
+      dot: colors["neutral-300"],
+      deadline: colors["white-alpha-70"],
+    }),
+  ],
+  inProgressClose: [
+    goalCardBase,
+    card.orange,
+    progressColor.white,
+    createTheme(goalCardVars, {
+      accent: colors["neutral-0"],
+      dot: colors["white-alpha-30"],
+      deadline: colors["neutral-0"],
+    }),
+  ],
+  complete: [
+    goalCardBase,
+    greyCard,
+    progressColor.green,
+    createTheme(goalCardVars, {
+      accent: colors["green-500"],
+      dot: colors["neutral-300"],
+      deadline: colors["white-alpha-70"],
+    }),
+  ],
+});
 
 export const goalCardPercent = style([{ color: goalCardVars.accent }]);
 

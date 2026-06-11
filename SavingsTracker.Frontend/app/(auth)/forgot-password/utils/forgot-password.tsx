@@ -5,7 +5,6 @@ import { Back } from "@/app/components/back";
 import { Button } from "@/app/components/button";
 import { TextField } from "@/app/components/text-field";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import Form from "next/form";
 import Link from "next/link";
 import { startTransition, useActionState } from "react";
 
@@ -48,7 +47,7 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
           Enter your email address and we&apos;ll send you a link to reset it.
         </p>
       </div>
-      <Form
+      <form
         className={sprinkles({
           stack: "space-0250",
         })}
@@ -75,7 +74,7 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
         >
           Back to sign in
         </Link>
-      </Form>
+      </form>
     </>
   ) : (
     <>

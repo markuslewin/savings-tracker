@@ -15,7 +15,6 @@ import { Goal } from "@/app/utils/api";
 import { formatDate, formatPercent, formatUsd } from "@/app/utils/locale";
 import { nbsp } from "@/app/utils/unicode";
 import clsx from "clsx";
-import Form from "next/form";
 
 type GoalProps = {
   goal: Goal;
@@ -128,7 +127,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
           )}
         >
           <h2 className={sprinkles({ text: "4" })}>Add deposit</h2>
-          <Form
+          <form
             className={sprinkles({
               stack: "space-0300",
             })}
@@ -155,7 +154,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
             <Button type="submit" variant="primary">
               Add funds
             </Button>
-          </Form>
+          </form>
         </div>
       </div>
       <div

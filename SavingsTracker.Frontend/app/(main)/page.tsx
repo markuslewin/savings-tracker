@@ -5,15 +5,12 @@ import {
   barsAmounts,
   barsGrid,
   barsGridItem,
-  monthlyCard,
-  monthlyHeading,
-  summaryCard,
-  summaryCards,
-  summaryDesc,
-  summaryTerm,
+  summaryCardDecoration,
 } from "@/app/(main)/page.css";
 import { GoalsSection } from "@/app/components/goals-section";
-import { sprinkles } from "@/app/styles/sprinkles.css";
+import { card } from "@/app/styles/card.css";
+import { columns } from "@/app/styles/columns.css";
+import { Sprinkles, sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
 import { getAuthCookie, getGoals } from "@/app/utils/api";
 import { filterSchema } from "@/app/utils/filter";
@@ -23,6 +20,7 @@ import { sum } from "@/app/utils/math";
 import { sortSchema } from "@/app/utils/sort";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import clsx from "clsx";
+import { ReactNode } from "react";
 import * as z from "zod";
 
 const Home = async ({ searchParams }: PageProps<"/">) => {
@@ -57,51 +55,53 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
     <div>
       <h1 className={srOnly}>Dashboard</h1>
       <h2 className={srOnly}>Summary</h2>
-      <dl className={summaryCards}>
-        <div
-          className={clsx(
-            summaryCard.orange,
-            sprinkles({
-              gridColumn: {
-                tablet: "span 2",
-              },
-            }),
-          )}
-        >
-          <dt className={summaryTerm}>Total savings</dt>
-          <dd className={summaryDesc}>
-            {formatUsd(sum(goalsWithSaved.map((g) => g.saved)))}
-          </dd>
-        </div>
-        <div className={summaryCard.grey}>
-          <dt className={summaryTerm}>Active goals</dt>
-          <dd
-            className={clsx(
-              summaryDesc,
-              sprinkles({
-                color: "orange-400",
-              }),
-            )}
-          >
-            {goalsWithSaved.filter(isActive).length}
-          </dd>
-        </div>
-        <div className={summaryCard.grey}>
-          <dt className={summaryTerm}>Goals completed</dt>
-          <dd
-            className={clsx(
-              summaryDesc,
-              sprinkles({
-                color: "green-500",
-              }),
-            )}
-          >
-            {goalsWithSaved.filter(isCompleted).length}
-          </dd>
-        </div>
+      <dl
+        className={clsx([
+          columns,
+          sprinkles({
+            columnsNumber: {
+              tablet: "2",
+              desktop: "4",
+            },
+            columnsSpace: { mobile: "space-0200", tablet: "space-0300" },
+          }),
+        ])}
+      >
+        <SummaryCard
+          highlight
+          term="Total savings"
+          data={formatUsd(sum(goalsWithSaved.map((g) => g.saved)))}
+        />
+        <SummaryCard
+          color={"orange-400"}
+          term="Active goals"
+          data={goalsWithSaved.filter(isActive).length}
+        />
+        <SummaryCard
+          color={"green-500"}
+          term="Goals completed"
+          data={goalsWithSaved.filter(isCompleted).length}
+        />
       </dl>
-      <div className={monthlyCard}>
-        <h2 className={monthlyHeading}>Monthly deposits</h2>
+      <div
+        className={clsx(
+          card.styles.grey,
+          sprinkles({
+            marginBlockStart: {
+              mobile: "space-0200",
+              tablet: "space-0300",
+            },
+            cardSpace: { mobile: "space-0200", tablet: "space-0250" },
+          }),
+        )}
+      >
+        <h2
+          className={sprinkles({
+            text: "4",
+          })}
+        >
+          Monthly deposits
+        </h2>
         <ol
           className={bars}
           style={{
@@ -195,3 +195,50 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
 };
 
 export default Home;
+
+type SummaryCardProps = {
+  term: string;
+  data: ReactNode;
+} & ({ highlight: true } | { highlight?: false; color: Sprinkles["color"] });
+
+const SummaryCard = (props: SummaryCardProps) => {
+  return (
+    <div
+      className={clsx(
+        sprinkles({
+          cardSpaceInline: {
+            mobile: "space-0200",
+            tablet: "space-0250",
+          },
+          cardSpaceBlock: {
+            mobile: "space-0200",
+            desktop: "space-0250",
+          },
+        }),
+        props.highlight
+          ? [
+              card.styles.orange,
+              sprinkles({ gridColumn: { tablet: "span 2" } }),
+            ]
+          : [card.styles.grey, summaryCardDecoration],
+      )}
+    >
+      <dt
+        className={sprinkles({
+          text: "5-semiBold",
+        })}
+      >
+        {props.term}
+      </dt>
+      <dd
+        className={sprinkles({
+          marginBlockStart: "space-0400",
+          text: "1",
+          color: props.highlight ? undefined : props.color,
+        })}
+      >
+        {props.data}
+      </dd>
+    </div>
+  );
+};

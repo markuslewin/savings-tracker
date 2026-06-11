@@ -11,7 +11,8 @@ import { calc } from "@vanilla-extract/css-utils";
 const borderWidth = rem(1);
 
 const borderRadius = createVar();
-const padding = createVar();
+export const paddingBlock = createVar();
+export const paddingInline = createVar();
 const shapeLayer = createVar();
 
 const base = style([
@@ -19,7 +20,8 @@ const base = style([
     borderStyle: "solid",
     borderRadius: fallbackVar(borderRadius, radius["radius-16"]),
     borderWidth,
-    padding: calc.subtract(padding, borderWidth),
+    paddingBlock: calc.subtract(paddingBlock, borderWidth),
+    paddingInline: calc.subtract(paddingInline, borderWidth),
   },
 ]);
 
@@ -46,7 +48,6 @@ export const card = {
   styles,
   vars: {
     borderRadius,
-    padding,
     shapeLayer,
   },
 };

@@ -1,109 +1,44 @@
 import { progressColor } from "@/app/components/progress.css";
 import { transition } from "@/app/styles/animation.css";
 import { card } from "@/app/styles/card.css";
+import { columns } from "@/app/styles/columns.css";
 import { breakpoints } from "@/app/styles/media";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { colors, outline, outlineOffset, space } from "@/app/styles/tokens";
+import { colors, outline, outlineOffset } from "@/app/styles/tokens";
 import { fromCenter, rem } from "@/app/styles/utils";
 import {
   createTheme,
   createThemeContract,
   createVar,
   style,
-  styleVariants,
 } from "@vanilla-extract/css";
 import { calc } from "@vanilla-extract/css-utils";
 
-export const summaryCards = style({
-  display: "grid",
-  gap: space["space-0200"],
-  "@media": {
-    [breakpoints.tablet]: {
-      gridTemplateColumns: "repeat(2, 1fr)",
-      gap: space["space-0300"],
-    },
-    [breakpoints.desktop]: {
-      gridTemplateColumns: "repeat(4, 1fr)",
-    },
+export const summaryCardDecoration = style({
+  vars: {
+    [card.vars.shapeLayer]:
+      `no-repeat ${fromCenter(107, 74)}/${rem(200)} url(/images/pattern-star.svg)`,
   },
 });
 
-export const summaryCardBase = style({
-  padding: rem(15),
-  "@media": {
-    [breakpoints.tablet]: {
-      paddingInline: rem(19),
-    },
-    [breakpoints.desktop]: {
-      paddingBlock: rem(19),
-    },
-  },
-});
-
-export const summaryCard = styleVariants({
-  grey: [
-    summaryCardBase,
-    card.styles.grey,
-    {
-      vars: {
-        [card.vars.shapeLayer]:
-          `no-repeat ${fromCenter(107, 74)}/${rem(200)} url(/images/pattern-star.svg)`,
-      },
-    },
-  ],
-  orange: [summaryCardBase, card.styles.orange],
-});
-
-export const summaryTerm = style([sprinkles({ text: "5-semiBold" })]);
-
-export const summaryDesc = style([
-  sprinkles({
-    marginBlockStart: "space-0400",
-    text: "1",
-  }),
-]);
-
-export const monthlyCard = style([
-  card.styles.grey,
-  sprinkles({
-    marginBlockStart: {
-      mobile: "space-0200",
-      tablet: "space-0300",
-    },
-  }),
-  {
-    padding: rem(15),
-    "@media": {
-      [breakpoints.tablet]: {
-        padding: rem(19),
-      },
-    },
-  },
-]);
-
-export const monthlyHeading = style([sprinkles({ text: "4" })]);
+const mobileAmount = "6";
+const desktopAmount = "12";
 
 export const barsGrid = style([
+  columns,
   sprinkles({
-    gap: {
+    columnsNumber: {
+      mobile: mobileAmount,
+      desktop: desktopAmount,
+    },
+    columnsSpace: {
       mobile: "space-0100",
       tablet: "space-0200",
       desktop: "space-0250",
     },
   }),
-  {
-    display: "grid",
-    gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
-    "@media": {
-      [breakpoints.desktop]: {
-        gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
-      },
-    },
-  },
 ]);
 
-const mobileAmount = 6;
-const desktopAmount = 12;
 export const barsGridItem = style([
   {
     display: "none",
@@ -164,8 +99,6 @@ export const goalsContainer = style([
     marginBlockStart: rem(52),
   },
 ]);
-
-export const goalsHeading = style([sprinkles({ text: "2" })]);
 
 export const goalCards = style([
   {

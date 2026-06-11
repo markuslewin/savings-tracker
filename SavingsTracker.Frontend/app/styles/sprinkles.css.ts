@@ -1,5 +1,12 @@
 import { transition } from "@/app/styles/animation.css";
-import { card } from "@/app/styles/card.css";
+import {
+  paddingBlock as cardPaddingBlock,
+  paddingInline as cardPaddingInline,
+} from "@/app/styles/card.css";
+import {
+  gap as columnsGap,
+  number as columnsNumber,
+} from "@/app/styles/columns.css";
 import { breakpoints } from "@/app/styles/media";
 import {
   border,
@@ -22,7 +29,7 @@ const mapScale = <Key extends string>(
   f: (value: string) => StyleRule,
 ) =>
   Object.fromEntries(
-    Object.entries(space).map(([key, value]) => [key, f(value)]),
+    Object.entries<string>(scale).map(([key, value]) => [key, f(value)]),
   ) as Record<Key, StyleRule>;
 
 const responsiveProperties = defineProperties({
@@ -46,9 +53,20 @@ const responsiveProperties = defineProperties({
       flexWrap: "wrap",
       gap: value,
     })),
-    cardSpace: mapScale(space, (value) => ({
-      // vars: { [padding]: value },
-      vars: { [card.vars.padding]: value },
+    columnsNumber: mapScale(
+      { "1": "1", "2": "2", "4": "4", "6": "6", "12": "12" },
+      (value) => ({
+        vars: { [columnsNumber]: value },
+      }),
+    ),
+    columnsSpace: mapScale(space, (value) => ({
+      vars: { [columnsGap]: value },
+    })),
+    cardSpaceBlock: mapScale(space, (value) => ({
+      vars: { [cardPaddingBlock]: value },
+    })),
+    cardSpaceInline: mapScale(space, (value) => ({
+      vars: { [cardPaddingInline]: value },
     })),
     text: {
       "1": {
@@ -186,6 +204,9 @@ const responsiveProperties = defineProperties({
     transition: {
       default: transition,
     },
+  },
+  shorthands: {
+    cardSpace: ["cardSpaceBlock", "cardSpaceInline"],
   },
 });
 

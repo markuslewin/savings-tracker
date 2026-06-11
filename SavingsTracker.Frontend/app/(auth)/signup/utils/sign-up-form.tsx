@@ -12,8 +12,8 @@ type SignUpFormProps = {
 
 export const SignUpForm = ({ action }: SignUpFormProps) => {
   const [state, dispatch, isPending] = useActionState<undefined, FormData>(
-    (previousState, payload) => {
-      action(payload);
+    async (previousState, payload) => {
+      await action(payload);
     },
     undefined,
   );

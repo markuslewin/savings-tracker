@@ -1,4 +1,3 @@
-import { html } from "@/app/layout.css";
 import "@/app/reset.css";
 import "@/app/styles/base.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
@@ -29,7 +28,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={[bricolageGrotesque.variable, inter.variable, html].join(" ")}
+      className={[
+        bricolageGrotesque.variable,
+        inter.variable,
+        sprinkles({
+          text: "5",
+        }),
+      ].join(" ")}
     >
       <body
         className={sprinkles({

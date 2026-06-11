@@ -1,4 +1,3 @@
-import * as styles from "@/app/(auth)/signup/page.css";
 import QuoteLayout from "@/app/(auth)/utils/quote-layout";
 import { Button } from "@/app/components/button";
 import { TextField } from "@/app/components/text-field";
@@ -12,12 +11,18 @@ import * as z from "zod";
 const Signup = () => {
   return (
     <QuoteLayout>
-      <div className={styles.intro}>
-        <h1 className={styles.heading}>Create your account</h1>
-        <p className={styles.paragraph}>Start tracking your savings goals</p>
+      <div className={sprinkles({ stack: "space-0200" })}>
+        <h1 className={sprinkles({ text: "2" })}>Create your account</h1>
+        <p
+          className={sprinkles({
+            color: "neutral-300",
+          })}
+        >
+          Start tracking your savings goals
+        </p>
       </div>
       <Form
-        className={styles.form}
+        className={sprinkles({ stack: "space-0250" })}
         action={async (formData) => {
           "use server";
           const values = Object.fromEntries(formData);
@@ -40,7 +45,13 @@ const Signup = () => {
           name="password"
           isRequired
         />
-        <Button className={styles.submit}>Create account</Button>
+        <Button
+          className={sprinkles({
+            marginBlockStart: "space-0150",
+          })}
+        >
+          Create account
+        </Button>
         <p
           className={sprinkles({
             textAlign: "center",

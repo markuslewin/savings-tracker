@@ -6,7 +6,6 @@ import {
 import { card } from "@/app/styles/card.css";
 import { breakpoints } from "@/app/styles/media";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { space } from "@/app/styles/tokens";
 import { fromCenter, rem } from "@/app/styles/utils";
 import { style } from "@vanilla-extract/css";
 import { calc } from "@vanilla-extract/css-utils";
@@ -53,11 +52,11 @@ export const quoteText = style([
 export const quoteSource = style([
   {
     gridArea: "source",
-    marginBlockStart: space["space-0500"],
     opacity: 0.8,
     alignSelf: "end",
   },
   sprinkles({
+    marginBlockStart: "space-0500",
     text: "4",
   }),
 ]);

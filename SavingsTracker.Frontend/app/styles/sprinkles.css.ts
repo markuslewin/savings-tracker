@@ -1,8 +1,8 @@
 import { transition } from "@/app/styles/animation.css";
 import {
-  paddingBlock as cardPaddingBlock,
-  paddingInline as cardPaddingInline,
-} from "@/app/styles/card.css";
+  paddingBlock as boxPaddingBlock,
+  paddingInline as boxPaddingInline,
+} from "@/app/styles/box.css";
 import {
   gap as columnsGap,
   number as columnsNumber,
@@ -62,11 +62,11 @@ const responsiveProperties = defineProperties({
     columnsSpace: mapScale(space, (value) => ({
       vars: { [columnsGap]: value },
     })),
-    cardSpaceBlock: mapScale(space, (value) => ({
-      vars: { [cardPaddingBlock]: value },
+    boxSpaceBlock: mapScale(space, (value) => ({
+      vars: { [boxPaddingBlock]: value },
     })),
-    cardSpaceInline: mapScale(space, (value) => ({
-      vars: { [cardPaddingInline]: value },
+    boxSpaceInline: mapScale(space, (value) => ({
+      vars: { [boxPaddingInline]: value },
     })),
     text: {
       "1": {
@@ -206,7 +206,7 @@ const responsiveProperties = defineProperties({
     },
   },
   shorthands: {
-    cardSpace: ["cardSpaceBlock", "cardSpaceInline"],
+    boxSpace: ["boxSpaceBlock", "boxSpaceInline"],
   },
 });
 

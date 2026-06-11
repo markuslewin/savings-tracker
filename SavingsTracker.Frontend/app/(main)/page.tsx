@@ -91,7 +91,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
               mobile: "space-0200",
               tablet: "space-0300",
             },
-            cardSpace: { mobile: "space-0200", tablet: "space-0250" },
+            boxSpace: { mobile: "space-0200", tablet: "space-0250" },
           }),
         )}
       >
@@ -206,11 +206,11 @@ const SummaryCard = (props: SummaryCardProps) => {
     <div
       className={clsx(
         sprinkles({
-          cardSpaceInline: {
+          boxSpaceInline: {
             mobile: "space-0200",
             tablet: "space-0250",
           },
-          cardSpaceBlock: {
+          boxSpaceBlock: {
             mobile: "space-0200",
             desktop: "space-0250",
           },

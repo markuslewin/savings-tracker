@@ -38,6 +38,7 @@ import FilterIcon from "@/app/icons/icon-filter.svg";
 import PlusIcon from "@/app/icons/icon-plus.svg";
 import SortIcon from "@/app/icons/icon-sort.svg";
 import TargetIcon from "@/app/icons/icon-target.svg";
+import { box } from "@/app/styles/box.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import {
   Filter,
@@ -301,6 +302,7 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
                     {progress >= 1 ? (
                       <p
                         className={clsx(
+                          box,
                           sprinkles({
                             border: "solid",
                             borderColor: "green-500",

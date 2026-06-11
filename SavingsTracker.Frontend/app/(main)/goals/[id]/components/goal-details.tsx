@@ -8,7 +8,7 @@ import { progressColor } from "@/app/components/progress.css";
 import { TextField } from "@/app/components/text-field";
 import ArrowDownIcon from "@/app/icons/icon-arrow-down.svg";
 import DollarIcon from "@/app/icons/icon-dollar.svg";
-import * as card from "@/app/styles/card.css";
+import { card } from "@/app/styles/card.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
 import { Goal } from "@/app/utils/api";
@@ -35,9 +35,9 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
       >
         <div
           className={clsx(
-            card.card.grey,
+            card.grey,
             sprinkles({
-              cardSpace: {
+              boxSpace: {
                 mobile: "space-0200",
                 tablet: "space-0300",
               },
@@ -116,10 +116,10 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
         </div>
         <div
           className={clsx(
-            card.card.grey,
+            card.grey,
             sprinkles({
               stack: "space-0300",
-              cardSpace: {
+              boxSpace: {
                 mobile: "space-0200",
                 tablet: "space-0300",
               },

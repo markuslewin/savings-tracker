@@ -1,8 +1,4 @@
-import {
-  box,
-  paddingBlock as boxPaddingBlock,
-  paddingInline as boxPaddingInline,
-} from "@/app/styles/box.css";
+import { box } from "@/app/styles/box.css";
 import { colors, radius } from "@/app/styles/tokens";
 import {
   createVar,
@@ -12,18 +8,12 @@ import {
 } from "@vanilla-extract/css";
 
 export const borderRadius = createVar();
-export const paddingBlock = createVar();
-export const paddingInline = createVar();
 export const shapeLayer = createVar();
 
 const base = style([
   box,
   {
     borderRadius: fallbackVar(borderRadius, radius["radius-16"]),
-    vars: {
-      [boxPaddingBlock]: paddingBlock,
-      [boxPaddingInline]: paddingInline,
-    },
   },
 ]);
 

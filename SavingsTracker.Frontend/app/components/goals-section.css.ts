@@ -11,9 +11,9 @@ export const popover = style([
   sprinkles({
     width: "full",
     maxWidth: "popover",
+    boxSpace: "space-0100",
   }),
   {
-    padding: rem(7),
     overflowY: "auto",
     scrollbarWidth: "thin",
     vars: {

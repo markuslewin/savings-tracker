@@ -1,5 +1,4 @@
 import { card } from "@/app/styles/card.css";
-import { breakpoints } from "@/app/styles/media";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { border, colors, size, space } from "@/app/styles/tokens";
 import { rem } from "@/app/styles/utils";
@@ -20,16 +19,19 @@ export const overlay = style([
 
 export const modal = style([
   card.grey,
+  sprinkles({
+    boxSpaceBlock: {
+      mobile: "space-0250",
+      tablet: "space-0400",
+    },
+    boxSpaceInline: {
+      mobile: "space-0200",
+      tablet: "space-0400",
+    },
+  }),
   {
     position: "relative",
     isolation: "isolate",
-    paddingBlock: rem(19),
-    paddingInline: rem(15),
-    "@media": {
-      [breakpoints.tablet]: {
-        padding: rem(31),
-      },
-    },
   },
 ]);
 

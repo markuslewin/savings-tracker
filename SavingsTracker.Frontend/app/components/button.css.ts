@@ -1,20 +1,20 @@
 import { transition } from "@/app/styles/animation.css";
+import { box } from "@/app/styles/box.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { rem } from "@/app/styles/utils";
 import { style, styleVariants } from "@vanilla-extract/css";
 
 const base = style([
+  box,
   sprinkles({
-    border: "solid",
     borderRadius: "radius-full",
+    boxSpaceBlock: "space-0150",
+    boxSpaceInline: "space-0250",
     display: "inline-flex",
     alignItems: "center",
     gap: "space-0125",
     text: "5",
   }),
   {
-    paddingInline: rem(19),
-    paddingBlock: rem(11),
     justifyContent: "center",
     textAlign: "center",
   },
@@ -25,6 +25,7 @@ export const variants = styleVariants({
   primary: [
     base,
     sprinkles({
+      borderColor: "transparent",
       background: {
         default: "orange-400",
         hover: "orange-500",
@@ -46,6 +47,7 @@ export const variants = styleVariants({
   tertiary: [
     base,
     sprinkles({
+      borderColor: "transparent",
       background: {
         default: "transparent",
         hover: "neutral-800",

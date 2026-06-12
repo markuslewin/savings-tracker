@@ -1,5 +1,6 @@
 "use client";
 
+import { FinishedStat } from "@/app/(main)/goals/[id]/components/finished-stat";
 import { depositLayout } from "@/app/(main)/goals/[id]/components/goal-details.css";
 import { split } from "@/app/(main)/goals/[id]/page.css";
 import { Button } from "@/app/components/button";
@@ -7,7 +8,9 @@ import { Progress } from "@/app/components/progress";
 import { progressColor } from "@/app/components/progress.css";
 import { TextField } from "@/app/components/text-field";
 import ArrowDownIcon from "@/app/icons/icon-arrow-down.svg";
+import CheckmarkIcon from "@/app/icons/icon-checkmark.svg";
 import DollarIcon from "@/app/icons/icon-dollar.svg";
+import { box } from "@/app/styles/box.css";
 import { card } from "@/app/styles/card.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
@@ -22,141 +25,238 @@ type GoalProps = {
 };
 
 export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
-  const progress = 0.5;
+  const progress = 1;
   const remaining = 123;
   const saved = 321;
 
+  // todo: Fix
+  const inTimeResult =
+    goal.deadline === null
+      ? ({ type: "no-deadline" } as const)
+      : ({ type: "deadline", deadline: goal.deadline } as const);
+
   return (
     <div className={split}>
-      <div
-        className={sprinkles({
-          stack: "space-0300",
-        })}
-      >
+      {progress >= 1 ? (
         <div
           className={clsx(
-            card.grey,
+            card.orange,
             sprinkles({
-              boxSpace: {
-                mobile: "space-0200",
-                tablet: "space-0300",
-              },
-              stack: "space-0300",
+              stack: "space-0500",
+              boxSpaceBlock: "space-0600",
+              boxSpaceInline: "space-0300",
             }),
           )}
         >
-          <h2 className={srOnly}>Progress</h2>
+          <div
+            className={clsx(
+              box,
+              sprinkles({
+                borderRadius: "radius-full",
+                borderColor: "transparent",
+                width: "size-0800",
+                height: "size-0800",
+                // todo: Fix
+                boxSpaceBlock: "space-0",
+                boxSpaceInline: "space-0",
+                display: "grid",
+                placeItems: "center",
+                background: "white-alpha-30",
+                color: "neutral-0",
+              }),
+            )}
+          >
+            <CheckmarkIcon
+              className={sprinkles({
+                width: "size-0400",
+                height: "size-0400",
+              })}
+            />
+          </div>
           <div
             className={sprinkles({
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              stack: "space-0300",
             })}
           >
+            <h2 className={srOnly}>Progress</h2>
             <strong
               className={sprinkles({
                 text: "1",
               })}
             >
-              {formatPercent(progress)}
+              100%
             </strong>
-            <p
+            <div
               className={sprinkles({
-                text: "4",
-                color: "neutral-300",
+                stack: "space-0125",
               })}
             >
-              {formatUsd(remaining)} remaining
-            </p>
+              <h3
+                className={sprinkles({
+                  text: "2",
+                })}
+              >
+                Goal Complete
+              </h3>
+              <p>
+                You saved {formatUsd(350)} across {goal.deposits.length}{" "}
+                deposits.
+                {inTimeResult.type === "deadline"
+                  ? ` Finished before your ${formatDate(inTimeResult.deadline)} deadline.`
+                  : null}
+              </p>
+            </div>
           </div>
-          <div
+          <dl
             className={sprinkles({
-              stack: "space-0200",
+              cluster: {
+                mobile: "space-0250",
+                tablet: "space-0400",
+              },
             })}
           >
-            <Progress className={progressColor.orange} value={0.5} />
+            <FinishedStat term="Deposits" data={goal.deposits.length} />
+            <div
+              className={sprinkles({
+                borderInlineStart: "solid",
+                borderColor: "white-alpha-30",
+                alignSelf: "stretch",
+              })}
+            />
+            <FinishedStat term="Total saved" data={formatUsd(350)} />
+          </dl>
+        </div>
+      ) : (
+        <div
+          className={sprinkles({
+            stack: "space-0300",
+          })}
+        >
+          <div
+            className={clsx(
+              card.grey,
+              sprinkles({
+                boxSpace: {
+                  mobile: "space-0200",
+                  tablet: "space-0300",
+                },
+                stack: "space-0300",
+              }),
+            )}
+          >
+            <h2 className={srOnly}>Progress</h2>
             <div
               className={sprinkles({
                 display: "flex",
                 justifyContent: "space-between",
-                text: "6",
+                alignItems: "center",
               })}
             >
-              <p
+              <strong
                 className={sprinkles({
-                  stack: "space-0050",
+                  text: "1",
                 })}
               >
-                <span>{formatUsd(saved)}</span>
-                <span
-                  className={sprinkles({
-                    color: "neutral-300",
-                  })}
-                >
-                  Saved so far
-                </span>
-              </p>
+                {formatPercent(progress)}
+              </strong>
               <p
                 className={sprinkles({
-                  stack: "space-0050",
-                  textAlign: "end",
+                  text: "4",
+                  color: "neutral-300",
                 })}
               >
-                <span>of {formatUsd(goal.target)}</span>
-                <span
-                  className={sprinkles({
-                    color: "neutral-300",
-                  })}
-                >
-                  Target
-                </span>
+                {formatUsd(remaining)} remaining
               </p>
             </div>
-          </div>
-        </div>
-        <div
-          className={clsx(
-            card.grey,
-            sprinkles({
-              stack: "space-0300",
-              boxSpace: {
-                mobile: "space-0200",
-                tablet: "space-0300",
-              },
-            }),
-          )}
-        >
-          <h2 className={sprinkles({ text: "4" })}>Add deposit</h2>
-          <form
-            className={sprinkles({
-              stack: "space-0300",
-            })}
-            action={addDepositAction}
-          >
             <div
               className={sprinkles({
-                stack: "space-0250",
+                stack: "space-0200",
               })}
             >
-              <TextField
-                label="Amount"
-                icon={DollarIcon}
-                name="amount"
-                placeholder="0.00"
-                isRequired
-              />
-              <TextField
-                label="Note (optional)"
-                name="note"
-                placeholder="e.g. Monthly savings"
-              />
+              <Progress className={progressColor.orange} value={0.5} />
+              <div
+                className={sprinkles({
+                  display: "flex",
+                  justifyContent: "space-between",
+                  text: "6",
+                })}
+              >
+                <p
+                  className={sprinkles({
+                    stack: "space-0050",
+                  })}
+                >
+                  <span>{formatUsd(saved)}</span>
+                  <span
+                    className={sprinkles({
+                      color: "neutral-300",
+                    })}
+                  >
+                    Saved so far
+                  </span>
+                </p>
+                <p
+                  className={sprinkles({
+                    stack: "space-0050",
+                    textAlign: "end",
+                  })}
+                >
+                  <span>of {formatUsd(goal.target)}</span>
+                  <span
+                    className={sprinkles({
+                      color: "neutral-300",
+                    })}
+                  >
+                    Target
+                  </span>
+                </p>
+              </div>
             </div>
-            <Button type="submit" variant="primary">
-              Add funds
-            </Button>
-          </form>
+          </div>
+          <div
+            className={clsx(
+              card.grey,
+              sprinkles({
+                stack: "space-0300",
+                boxSpace: {
+                  mobile: "space-0200",
+                  tablet: "space-0300",
+                },
+              }),
+            )}
+          >
+            <h2 className={sprinkles({ text: "4" })}>Add deposit</h2>
+            <form
+              className={sprinkles({
+                stack: "space-0300",
+              })}
+              action={addDepositAction}
+            >
+              <div
+                className={sprinkles({
+                  stack: "space-0250",
+                })}
+              >
+                <TextField
+                  label="Amount"
+                  icon={DollarIcon}
+                  name="amount"
+                  placeholder="0.00"
+                  isRequired
+                />
+                <TextField
+                  label="Note (optional)"
+                  name="note"
+                  placeholder="e.g. Monthly savings"
+                />
+              </div>
+              <Button type="submit" variant="primary">
+                Add funds
+              </Button>
+            </form>
+          </div>
         </div>
-      </div>
+      )}
       <div
         className={sprinkles({
           stack: "space-0200",

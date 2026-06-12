@@ -134,6 +134,7 @@ const responsiveProperties = defineProperties({
     boxSizing: ["border-box", "content-box"],
     border: border,
     borderBlockStart: border,
+    borderInlineStart: border,
     borderBottom: border,
     outline: outline,
     outlineOffset: outlineOffset,
@@ -147,7 +148,7 @@ const responsiveProperties = defineProperties({
       "block",
       "inline",
     ],
-    flexDirection: ["row", "column"],
+    flexDirection: ["row", "column", "column-reverse"],
     flexWrap: ["wrap", "nowrap"],
     gridTemplateColumns: ["auto 1fr"],
     justifyContent: [

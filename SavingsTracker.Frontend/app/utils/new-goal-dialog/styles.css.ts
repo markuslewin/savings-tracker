@@ -1,10 +1,13 @@
 import { card } from "@/app/styles/card.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { border, colors, size, space } from "@/app/styles/tokens";
+import { border, colors, space } from "@/app/styles/tokens";
 import { rem } from "@/app/styles/utils";
 import { style } from "@vanilla-extract/css";
 
 export const overlay = style([
+  sprinkles({
+    padding: "space-0200",
+  }),
   {
     position: "fixed",
     inset: 0,
@@ -41,8 +44,6 @@ export const header = style({
   borderColor: colors["neutral-700"],
 });
 
-export const heading = style([sprinkles({ text: "4" })]);
-
 export const close = style({
   position: "absolute",
   insetBlockStart: space["space-0250"],
@@ -61,33 +62,4 @@ export const close = style({
       height: rem(48),
     },
   },
-});
-
-export const closeIcon = style({
-  width: size["size-0250"],
-  height: size["size-0250"],
-});
-
-export const form = style({
-  marginBlockStart: space["space-0300"],
-});
-
-export const fields = style({
-  display: "grid",
-  gap: space["space-0250"],
-});
-
-export const textField = style({
-  display: "grid",
-  gap: space["space-0125"],
-});
-
-export const label = style([sprinkles({ text: "5" })]);
-
-export const actions = style({
-  marginBlockStart: space["space-0300"],
-  display: "flex",
-  flexWrap: "wrap",
-  justifyContent: "end",
-  gap: space["space-0200"],
 });

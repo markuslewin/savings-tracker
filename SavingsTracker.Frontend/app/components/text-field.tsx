@@ -1,5 +1,5 @@
 import * as inputStyles from "@/app/components/input.css";
-import * as styles from "@/app/utils/new-goal-dialog/styles.css";
+import { sprinkles } from "@/app/styles/sprinkles.css";
 import { ReactNode } from "react";
 import {
   TextField as AriaTextField,
@@ -26,8 +26,13 @@ export const TextField = ({
   ...props
 }: TextFieldProps) => {
   return (
-    <AriaTextField className={styles.textField} {...props}>
-      <Label className={styles.label}>{label}</Label>
+    <AriaTextField
+      className={sprinkles({
+        stack: "space-0125",
+      })}
+      {...props}
+    >
+      <Label className={sprinkles({ text: "5" })}>{label}</Label>
       <span className={inputStyles.root}>
         {Icon === undefined ? null : <Icon className={inputStyles.icon} />}
         <Input className={inputStyles.field} placeholder={placeholder} />

@@ -3,17 +3,13 @@
 import { Button } from "@/app/components/button";
 import { TextField } from "@/app/components/text-field";
 import CrossIcon from "@/app/icons/icon-cross.svg";
+import { sprinkles } from "@/app/styles/sprinkles.css";
 import { createGoal } from "@/app/utils/new-goal-dialog/action";
 import { useNewGoalDialog } from "@/app/utils/new-goal-dialog/hook";
 import * as schema from "@/app/utils/new-goal-dialog/schema";
 import {
-  actions,
   close,
-  closeIcon,
-  fields,
-  form,
   header,
-  heading,
   modal,
   overlay,
 } from "@/app/utils/new-goal-dialog/styles.css";
@@ -48,7 +44,12 @@ export const NewGoalDialog = () => {
       <Modal className={modal}>
         <Dialog>
           <header className={header}>
-            <Heading className={heading} slot="title">
+            <Heading
+              className={sprinkles({
+                text: "4",
+              })}
+              slot="title"
+            >
               New goal
             </Heading>
             <AriaButton
@@ -57,15 +58,26 @@ export const NewGoalDialog = () => {
               autoFocus
               aria-label="Close"
             >
-              <CrossIcon className={closeIcon} />
+              <CrossIcon
+                className={sprinkles({
+                  width: "size-0250",
+                  height: "size-0250",
+                })}
+              />
             </AriaButton>
           </header>
           <Form
-            className={form}
+            className={sprinkles({
+              marginBlockStart: "space-0300",
+            })}
             action={formAction}
             validationErrors={state?.errors}
           >
-            <div className={fields}>
+            <div
+              className={sprinkles({
+                stack: "space-0250",
+              })}
+            >
               <TextField
                 label="Goal name"
                 name="name"
@@ -89,8 +101,16 @@ export const NewGoalDialog = () => {
                 validate={validate(schema.target)}
               />
             </div>
-            <div className={actions}>
-              <Button slot="close">Cancel</Button>
+            <div
+              className={sprinkles({
+                marginBlockStart: "space-0300",
+                cluster: "space-0200",
+                justifyContent: "end",
+              })}
+            >
+              <Button variant="secondary" slot="close">
+                Cancel
+              </Button>
               <Button type="submit">Create goal</Button>
             </div>
           </Form>

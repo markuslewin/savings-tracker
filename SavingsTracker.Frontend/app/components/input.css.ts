@@ -1,6 +1,11 @@
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { rem } from "@/app/styles/utils";
-import { createVar, fallbackVar, style } from "@vanilla-extract/css";
+import {
+  createVar,
+  fallbackVar,
+  style,
+  styleVariants,
+} from "@vanilla-extract/css";
 
 const fieldPaddingInlineStart = createVar();
 
@@ -37,7 +42,7 @@ export const root = style([
   },
 ]);
 
-export const field = style([
+const fieldBase = style([
   {
     gridArea: "field",
     gridColumn: "1 / span 2",
@@ -58,3 +63,18 @@ export const field = style([
     },
   }),
 ]);
+
+export const field = styleVariants({
+  idle: [
+    fieldBase,
+    sprinkles({
+      borderColor: "neutral-500",
+    }),
+  ],
+  invalid: [
+    fieldBase,
+    sprinkles({
+      borderColor: "red-500",
+    }),
+  ],
+});

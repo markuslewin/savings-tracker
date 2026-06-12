@@ -1,9 +1,9 @@
+import { FieldError } from "@/app/components/field-error";
 import * as inputStyles from "@/app/components/input.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { ReactNode } from "react";
 import {
   TextField as AriaTextField,
-  FieldError,
   Input,
   Label,
   type TextFieldProps as AriaTextFieldProps,
@@ -32,12 +32,19 @@ export const TextField = ({
       })}
       {...props}
     >
-      <Label className={sprinkles({ text: "5" })}>{label}</Label>
-      <span className={inputStyles.root}>
-        {Icon === undefined ? null : <Icon className={inputStyles.icon} />}
-        <Input className={inputStyles.field} placeholder={placeholder} />
-      </span>
-      <FieldError />
+      {({ isInvalid }) => (
+        <>
+          <Label className={sprinkles({ text: "5" })}>{label}</Label>
+          <span className={inputStyles.root}>
+            {Icon === undefined ? null : <Icon className={inputStyles.icon} />}
+            <Input
+              className={inputStyles.field[isInvalid ? "invalid" : "idle"]}
+              placeholder={placeholder}
+            />
+          </span>
+          <FieldError />
+        </>
+      )}
     </AriaTextField>
   );
 };

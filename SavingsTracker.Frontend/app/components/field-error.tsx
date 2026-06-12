@@ -1,6 +1,6 @@
 import ErrorIcon from "@/app/icons/icon-error.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { FieldError as AriaFieldError } from "react-aria-components/TextField";
+import { FieldError as AriaFieldError } from "react-aria-components/FieldError";
 
 export const FieldError = () => {
   return (
@@ -23,7 +23,7 @@ export const FieldError = () => {
                 width: "size-0250",
                 height: "size-0250",
               })}
-            />{" "}
+            />
             {children}
           </span>
         );

@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/app/components/button";
+import { base as buttonBase } from "@/app/components/button.css";
 import { TextField } from "@/app/components/text-field";
 import CrossIcon from "@/app/icons/icon-cross.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
@@ -14,6 +15,7 @@ import {
   overlay,
 } from "@/app/utils/new-goal-dialog/styles.css";
 import { validate } from "@/app/utils/validation";
+import clsx from "clsx";
 import { useActionState } from "react";
 import { Button as AriaButton } from "react-aria-components/Button";
 import { Form } from "react-aria-components/Form";
@@ -108,9 +110,22 @@ export const NewGoalDialog = () => {
                 justifyContent: "end",
               })}
             >
-              <Button variant="secondary" slot="close">
+              <AriaButton
+                className={clsx(
+                  buttonBase,
+                  sprinkles({
+                    borderColor: "neutral-600",
+                    background: {
+                      default: "neutral-700",
+                      hover: "neutral-800",
+                    },
+                    color: "neutral-0",
+                  }),
+                )}
+                slot="close"
+              >
                 Cancel
-              </Button>
+              </AriaButton>
               <Button type="submit">Create goal</Button>
             </div>
           </Form>

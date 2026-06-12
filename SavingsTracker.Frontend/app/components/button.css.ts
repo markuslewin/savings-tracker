@@ -3,7 +3,7 @@ import { box } from "@/app/styles/box.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { style, styleVariants } from "@vanilla-extract/css";
 
-const base = style([
+export const base = style([
   box,
   sprinkles({
     borderRadius: "radius-full",

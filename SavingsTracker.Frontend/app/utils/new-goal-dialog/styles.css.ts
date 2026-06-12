@@ -44,22 +44,30 @@ export const header = style({
   borderColor: colors["neutral-700"],
 });
 
-export const close = style({
-  position: "absolute",
-  insetBlockStart: space["space-0250"],
-  insetInlineEnd: space["space-0250"],
-  display: "grid",
-  background: "transparent",
-  color: colors["neutral-400"],
-  selectors: {
-    "&::before": {
-      content: "",
-      position: "absolute",
-      insetBlockStart: "50%",
-      insetInlineStart: "50%",
-      translate: "-50% -50%",
-      width: rem(48),
-      height: rem(48),
+export const close = style([
+  sprinkles({
+    color: {
+      default: "neutral-400",
+      hover: "neutral-0",
+    },
+    transition: "default",
+  }),
+  {
+    position: "absolute",
+    insetBlockStart: space["space-0250"],
+    insetInlineEnd: space["space-0250"],
+    display: "grid",
+    background: "transparent",
+    selectors: {
+      "&::before": {
+        content: "",
+        position: "absolute",
+        insetBlockStart: "50%",
+        insetInlineStart: "50%",
+        translate: "-50% -50%",
+        width: rem(48),
+        height: rem(48),
+      },
     },
   },
-});
+]);

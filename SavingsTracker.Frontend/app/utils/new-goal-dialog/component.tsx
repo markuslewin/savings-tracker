@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/app/components/button";
-import * as buttonStyles from "@/app/components/button.css";
 import { TextField } from "@/app/components/text-field";
 import CrossIcon from "@/app/icons/icon-cross.svg";
 import { createGoal } from "@/app/utils/new-goal-dialog/action";
@@ -20,7 +19,8 @@ import {
 } from "@/app/utils/new-goal-dialog/styles.css";
 import { validate } from "@/app/utils/validation";
 import { useActionState } from "react";
-import { Form } from "react-aria-components";
+import { Button as AriaButton } from "react-aria-components/Button";
+import { Form } from "react-aria-components/Form";
 import {
   Dialog,
   Heading,
@@ -51,9 +51,14 @@ export const NewGoalDialog = () => {
             <Heading className={heading} slot="title">
               New goal
             </Heading>
-            <Button className={close} slot="close" autoFocus aria-label="Close">
+            <AriaButton
+              className={close}
+              slot="close"
+              autoFocus
+              aria-label="Close"
+            >
               <CrossIcon className={closeIcon} />
-            </Button>
+            </AriaButton>
           </header>
           <Form
             className={form}
@@ -85,12 +90,8 @@ export const NewGoalDialog = () => {
               />
             </div>
             <div className={actions}>
-              <Button className={buttonStyles.variants.secondary} slot="close">
-                Cancel
-              </Button>
-              <Button className={buttonStyles.variants.primary} type="submit">
-                Create goal
-              </Button>
+              <Button slot="close">Cancel</Button>
+              <Button type="submit">Create goal</Button>
             </div>
           </Form>
         </Dialog>

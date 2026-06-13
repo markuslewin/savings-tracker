@@ -2,14 +2,16 @@ import { useOptimisticSearchParams } from "@/app/utils/optimistic-search-params/
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
-const dialogKey = "new";
+export type DialogId = "new-goal" | "edit-goal";
 
-export const useNewGoalDialog = () => {
+const dialogKey = "dialog";
+
+export const useDialog = ({ dialogId }: { dialogId: DialogId }) => {
   const { searchParams, setSearchParams } = useOptimisticSearchParams();
 
   return useMemo(() => {
     return {
-      open: searchParams.has(dialogKey),
+      open: searchParams.get(dialogKey) === dialogId,
       close: () => {
         const next = new URLSearchParams(searchParams);
         next.delete(dialogKey);
@@ -17,9 +19,9 @@ export const useNewGoalDialog = () => {
       },
       showModal: () => {
         const next = new URLSearchParams(searchParams);
-        next.set(dialogKey, "");
+        next.set(dialogKey, dialogId);
         setSearchParams(new ReadonlyURLSearchParams(next), { type: "push" });
       },
     };
-  }, [searchParams, setSearchParams]);
+  }, [dialogId, searchParams, setSearchParams]);
 };

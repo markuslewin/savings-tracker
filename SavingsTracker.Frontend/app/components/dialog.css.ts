@@ -20,7 +20,7 @@ export const overlay = style([
   },
 ]);
 
-export const modal = style([
+export const dialog = style([
   card.grey,
   sprinkles({
     boxSpaceBlock: {

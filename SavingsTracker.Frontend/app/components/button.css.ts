@@ -21,7 +21,7 @@ export const base = style([
   transition,
 ]);
 
-export const variants = styleVariants({
+export const button = styleVariants({
   primary: [
     base,
     sprinkles({

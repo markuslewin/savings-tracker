@@ -121,7 +121,7 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
           })}
         >
           <DialogTrigger>
-            <Button className={buttonStyles.variants.secondary}>
+            <Button className={buttonStyles.button.secondary}>
               <FilterIcon className={buttonStyles.icon} /> Filters
             </Button>
             <Popover className={popover} placement="bottom end" offset={8}>
@@ -163,7 +163,7 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
             </Popover>
           </DialogTrigger>
           <DialogTrigger>
-            <Button className={buttonStyles.variants.secondary}>
+            <Button className={buttonStyles.button.secondary}>
               <SortIcon className={buttonStyles.icon} /> Sort by
             </Button>
             <Popover className={popover} placement="bottom end" offset={8}>
@@ -219,7 +219,7 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
               </p>
               <Button
                 className={clsx(
-                  buttonStyles.variants.primary,
+                  buttonStyles.button.primary,
                   sprinkles({
                     marginInline: "auto",
                     marginBlockStart: "space-0400",

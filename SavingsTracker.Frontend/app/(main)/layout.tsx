@@ -1,6 +1,9 @@
-import { NewGoalButton } from "@/app/(main)/components/new-goal-button";
+"use client";
+
+import { DialogButton } from "@/app/(main)/components/dialog-button";
 import { container, header } from "@/app/(main)/layout.css";
 import { LogoLink } from "@/app/components/logo-link";
+import PlusIcon from "@/app/icons/icon-plus.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { NewGoalDialog } from "@/app/utils/new-goal-dialog/component";
 import { OptimisticSearchParams } from "@/app/utils/optimistic-search-params/component";
@@ -20,7 +23,9 @@ const MainLayout = ({ children }: LayoutProps<"/">) => {
               })}
             >
               <LogoLink />
-              <NewGoalButton />
+              <DialogButton dialogId="new-goal" icon={PlusIcon}>
+                New goal
+              </DialogButton>
             </div>
           </div>
         </header>

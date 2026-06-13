@@ -1,7 +1,7 @@
 import { FieldError } from "@/app/components/field-error";
 import * as inputStyles from "@/app/components/input.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { ReactNode } from "react";
+import { IconProp } from "@/app/utils/icon";
 import {
   TextField as AriaTextField,
   Input,
@@ -12,11 +12,7 @@ import {
 type TextFieldProps = AriaTextFieldProps & {
   label: string;
   placeholder?: string;
-  icon?: ({
-    className,
-  }: {
-    className: string;
-  }) => ReactNode | Promise<ReactNode>;
+  icon?: IconProp;
 };
 
 export const TextField = ({

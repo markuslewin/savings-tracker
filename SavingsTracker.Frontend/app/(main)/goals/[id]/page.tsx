@@ -2,9 +2,9 @@ import { GoalActions } from "@/app/(main)/goals/[id]/components/goal-actions";
 import { GoalDetails } from "@/app/(main)/goals/[id]/components/goal-details";
 import { Back } from "@/app/components/back";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { getAuthCookie, getGoal } from "@/app/utils/api";
+import { getAuthCookie, getGoal, updateGoal } from "@/app/utils/api";
 import { formatDate } from "@/app/utils/locale";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import * as z from "zod";
 
 const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
@@ -53,6 +53,34 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
           >
             <GoalActions
               goal={goal}
+              editAction={async (_, formData) => {
+                "use server";
+                const cookie = await getAuthCookie();
+                if (cookie === null) redirect("/signin");
+
+                const values = z
+                  .object({
+                    name: z.string(),
+                    target: z.coerce.number(),
+                  })
+                  // todo: Field errors
+                  .parse(Object.fromEntries(formData));
+                const result = await updateGoal({
+                  cookie,
+                  data: {
+                    ...values,
+                    // todo: `.bind`?
+                    id: goal.id,
+                  },
+                });
+                if (!result.success)
+                  return {
+                    values: { ...values, target: values.target.toString() },
+                    errors: undefined,
+                  };
+
+                redirect(`/goals/${goal.id}`);
+              }}
               deleteAction={async () => {
                 "use server";
                 console.log("deleting", goal.name);

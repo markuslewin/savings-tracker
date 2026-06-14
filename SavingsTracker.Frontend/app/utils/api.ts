@@ -162,3 +162,63 @@ export const createGoal = async ({
     .parse(json);
   return success(data);
 };
+
+export const updateGoal = async ({
+  cookie,
+  data: { id, name, target },
+}: {
+  cookie: string;
+  data: {
+    id: number;
+    name: string;
+    target: number;
+  };
+}) => {
+  const response = await fetch(new URL(`/goals/${id}`, getBase()), {
+    method: "patch",
+    headers: {
+      "content-type": "application/json",
+      cookie,
+    },
+    body: JSON.stringify({ name, target }),
+  });
+  if (!response.ok) return error(new Error("Unsuccessful status code"));
+
+  return success(null);
+};
+
+export const deleteGoal = async ({ cookie }: { cookie: string }) => {
+  const response = await fetch(new URL("goals", getBase()), {
+    method: "delete",
+    headers: {
+      "content-type": "application/json",
+      cookie,
+    },
+  });
+  if (!response.ok) return error(new Error("Unsuccessful status code"));
+
+  return success(null);
+};
+
+export const addDeposit = async ({
+  cookie,
+  data: { amount, goalId, note },
+}: {
+  cookie: string;
+  data: { goalId: number; amount: number; note: string };
+}) => {
+  const response = await fetch(
+    new URL(`/goals/${goalId}/deposits`, getBase()),
+    {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+        cookie,
+      },
+      body: JSON.stringify({ amount, note }),
+    },
+  );
+  if (!response.ok) return error(new Error("Unsuccessful status code"));
+
+  return success(null);
+};

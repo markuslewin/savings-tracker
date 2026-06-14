@@ -1,7 +1,10 @@
 "use client";
 
 import { DialogButton } from "@/app/(main)/components/dialog-button";
-import { EditGoalForm } from "@/app/(main)/goals/[id]/components/edit-goal-form";
+import {
+  EditGoalForm,
+  EditGoalFormProps,
+} from "@/app/(main)/goals/[id]/components/edit-goal-form";
 import { Button } from "@/app/components/button";
 import { AlertDialog, Dialog } from "@/app/components/dialog";
 import { sprinkles } from "@/app/styles/sprinkles.css";
@@ -10,17 +13,22 @@ import { DialogTrigger } from "react-aria-components";
 
 type GoalActionsProps = {
   goal: Goal;
+  editAction: EditGoalFormProps["submitAction"];
   deleteAction: () => Promise<void>;
 };
 
-export const GoalActions = ({ goal, deleteAction }: GoalActionsProps) => {
+export const GoalActions = ({
+  goal,
+  editAction,
+  deleteAction,
+}: GoalActionsProps) => {
   return (
     <>
       <DialogButton dialogId="edit-goal" variant="tertiary">
         Edit goal
       </DialogButton>
       <Dialog dialogId="edit-goal" title="Edit goal">
-        <EditGoalForm goal={goal} />
+        <EditGoalForm goal={goal} submitAction={editAction} />
       </Dialog>
       <DialogTrigger>
         <Button className={sprinkles({ color: "red-500" })} variant="tertiary">

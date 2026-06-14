@@ -51,18 +51,18 @@ app
             UserManager<User> userManager,
             GoalDbContext ctx) =>
         {
-            var userId = userManager.GetUserId(principal);
+            var user = await userManager.GetUserAsync(principal);
             IQueryable<SavingsTracker.GoalDb.Goal> query = ctx.Goals
                 .AsNoTracking()
                 .Include(g => g.Deposits)
                 .OrderByDescending(g => g.CreatedAt);
-            if (userId is null)
+            if (user is null)
             {
                 query = query.Where(g => g.User.IsDemo);
             }
             else
             {
-                query = query.Where(g => g.UserId == userId);
+                query = query.Where(g => g.UserId == user.Id);
             }
             return TypedResults.Ok(query.Select(g => new Goal(g)));
         });
@@ -116,6 +116,85 @@ app
         return TypedResults.Created(
             $"/goals/${result.Entity.Id}",
             new Goal(result.Entity));
+    })
+    .RequireAuthorization();
+
+app
+    .MapPatch("/goals/{id}", async Task<Results<NoContent, UnauthorizedHttpResult, NotFound, ForbidHttpResult>> (
+        int id,
+        PatchGoalRequest patch,
+        GoalDbContext ctx,
+        ClaimsPrincipal principal,
+        UserManager<User> userManager) =>
+    {
+        var user = await userManager.GetUserAsync(principal);
+        if (user is null) return TypedResults.Unauthorized();
+
+        var goal = await ctx.Goals.FindAsync(id);
+        if (goal is null) return TypedResults.NotFound();
+
+        if (goal.UserId != user.Id) return TypedResults.Forbid();
+
+        if (patch.Name is not null)
+        {
+            goal.Name = patch.Name;
+        }
+        if (patch.Target.HasValue)
+        {
+            goal.Target = patch.Target.Value;
+        }
+        await ctx.SaveChangesAsync();
+
+        return TypedResults.NoContent();
+    })
+    .RequireAuthorization();
+
+app
+    .MapDelete("/goals/{id}", async Task<Results<NoContent, UnauthorizedHttpResult, NotFound, ForbidHttpResult>> (
+        int id,
+        GoalDbContext ctx,
+        ClaimsPrincipal principal,
+        UserManager<User> userManager) =>
+    {
+        var user = await userManager.GetUserAsync(principal);
+        if (user is null) return TypedResults.Unauthorized();
+
+        var goal = await ctx.Goals.FindAsync(id);
+        if (goal is null) return TypedResults.NotFound();
+
+        if (goal.UserId != user.Id) return TypedResults.Forbid();
+
+        ctx.Goals.Remove(goal);
+        await ctx.SaveChangesAsync();
+
+        return TypedResults.NoContent();
+    })
+    .RequireAuthorization();
+
+app
+    .MapPost("/goals/{id}/deposits", async Task<Results<NoContent, UnauthorizedHttpResult, NotFound, ForbidHttpResult>> (
+        int id,
+        AddDepositRequest deposit,
+        ClaimsPrincipal principal,
+        UserManager<User> userManager,
+        GoalDbContext ctx) =>
+    {
+        var user = await userManager.GetUserAsync(principal);
+        if (user is null) return TypedResults.Unauthorized();
+
+        var goal = await ctx.Goals.FindAsync(id);
+        if (goal is null) return TypedResults.NotFound();
+
+        if (goal.UserId != user.Id) return TypedResults.Forbid();
+
+        goal.Deposits.Add(new SavingsTracker.GoalDb.Deposit
+        {
+            Amount = deposit.Amount,
+            Note = deposit.Note
+        });
+        await ctx.SaveChangesAsync();
+
+        return TypedResults.NoContent();
     })
     .RequireAuthorization();
 

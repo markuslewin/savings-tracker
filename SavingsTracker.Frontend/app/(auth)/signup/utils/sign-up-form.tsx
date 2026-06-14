@@ -20,7 +20,7 @@ export const SignUpForm = ({ action }: SignUpFormProps) => {
 
   return (
     <form className={sprinkles({ stack: "space-0250" })} action={dispatch}>
-      <TextField label="Full name" name="name" isRequired />
+      <TextField label="Full name" name="fullName" isRequired />
       <TextField label="Email address" name="email" isRequired />
       <TextField label="Password" type="password" name="password" isRequired />
       <Button

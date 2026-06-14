@@ -205,6 +205,9 @@ const responsiveProperties = defineProperties({
     transition: {
       default: transition,
     },
+    opacity: {
+      "0.8": 0.8,
+    },
   },
   shorthands: {
     boxSpace: ["boxSpaceBlock", "boxSpaceInline"],

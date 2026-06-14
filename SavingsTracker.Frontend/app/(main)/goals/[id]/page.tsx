@@ -51,7 +51,13 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
               cluster: "space-0100",
             })}
           >
-            <GoalActions goal={goal} />
+            <GoalActions
+              goal={goal}
+              deleteAction={async () => {
+                "use server";
+                console.log("deleting", goal.name);
+              }}
+            />
           </div>
         </header>
         <h1

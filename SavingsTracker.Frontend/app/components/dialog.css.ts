@@ -71,3 +71,13 @@ export const close = style([
     },
   },
 ]);
+
+export const alertConfirm = style({
+  "@media": {
+    "(hover: hover)": {
+      ":hover": {
+        background: "hsl(0 52% 49%)",
+      },
+    },
+  },
+});

@@ -1,8 +1,17 @@
-import { Button } from "@/app/components/button";
-import { close, dialog, header, overlay } from "@/app/components/dialog.css";
+import { ActionButton } from "@/app/components/action-button";
+import { base as buttonBase } from "@/app/components/button.css";
+import {
+  alertConfirm,
+  close,
+  dialog,
+  header,
+  overlay,
+} from "@/app/components/dialog.css";
 import CrossIcon from "@/app/icons/icon-cross.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
+import { Hr } from "@/app/utils/hr";
 import { DialogId, useDialog } from "@/app/utils/new-goal-dialog/hook";
+import clsx from "clsx";
 import { ReactNode } from "react";
 import { Button as AriaButton } from "react-aria-components/Button";
 import {
@@ -84,22 +93,89 @@ export const AlertDialog = ({
   title,
   actionLabel,
   children,
+  confirmAction,
 }: {
   title: string;
   actionLabel: string;
   children: ReactNode;
+  confirmAction: () => Promise<void>;
 }) => {
   return (
     <ModalOverlay className={overlay}>
       <AriaModal>
-        <AriaDialog className={dialog} role="alertdialog">
+        <AriaDialog
+          className={clsx(
+            dialog,
+            sprinkles({
+              stack: "space-0300",
+            }),
+          )}
+          role="alertdialog"
+        >
           <Close />
-          <Heading>{title}</Heading>
-          {children}
-          <Button variant="secondary">Cancel</Button>
-          <Button>{actionLabel}</Button>
+          <div
+            className={sprinkles({
+              stack: "space-0150",
+            })}
+          >
+            <Heading
+              className={sprinkles({
+                text: "4",
+              })}
+            >
+              {title}
+            </Heading>
+            <div
+              className={sprinkles({
+                opacity: "0.8",
+              })}
+            >
+              {children}
+            </div>
+          </div>
+          <Hr color={"neutral-700"} />
+          <div
+            className={sprinkles({
+              cluster: "space-0200",
+              justifyContent: "end",
+            })}
+          >
+            <CancelButton />
+            <ActionButton
+              className={clsx(
+                alertConfirm,
+                sprinkles({
+                  background: "red-500",
+                }),
+              )}
+              action={confirmAction}
+            >
+              {actionLabel}
+            </ActionButton>
+          </div>
         </AriaDialog>
       </AriaModal>
     </ModalOverlay>
+  );
+};
+
+export const CancelButton = () => {
+  return (
+    <AriaButton
+      className={clsx(
+        buttonBase,
+        sprinkles({
+          borderColor: "neutral-600",
+          background: {
+            default: "neutral-700",
+            hover: "neutral-800",
+          },
+          color: "neutral-0",
+        }),
+      )}
+      slot="close"
+    >
+      Cancel
+    </AriaButton>
   );
 };

@@ -10,9 +10,10 @@ import { DialogTrigger } from "react-aria-components";
 
 type GoalActionsProps = {
   goal: Goal;
+  deleteAction: () => Promise<void>;
 };
 
-export const GoalActions = ({ goal }: GoalActionsProps) => {
+export const GoalActions = ({ goal, deleteAction }: GoalActionsProps) => {
   return (
     <>
       <DialogButton dialogId="edit-goal" variant="tertiary">
@@ -25,7 +26,11 @@ export const GoalActions = ({ goal }: GoalActionsProps) => {
         <Button className={sprinkles({ color: "red-500" })} variant="tertiary">
           Delete goal
         </Button>
-        <AlertDialog title={`Delete ${goal.name}?`} actionLabel="Delete goal">
+        <AlertDialog
+          title={`Delete ${goal.name}?`}
+          actionLabel="Delete goal"
+          confirmAction={deleteAction}
+        >
           This will permanently delete this goal and all its deposit history.
           This cannot be undone.
         </AlertDialog>

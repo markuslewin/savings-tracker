@@ -1,6 +1,7 @@
 import { error, success } from "@/app/utils/result";
-import { serialize, parseSetCookie } from "cookie";
+import { parseSetCookie, serialize } from "cookie";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import * as z from "zod";
 
 const frontendAuthCookieName = "SavingsTracker.Auth";
@@ -31,6 +32,12 @@ export const getAuthCookie = async () => {
     return null;
   }
   return serialize({ ...cookie, name: apiAuthCookieName });
+};
+
+export const ensureAuthCookie = async () => {
+  const cookie = await getAuthCookie();
+  if (cookie === null) redirect("/signin");
+  return cookie;
 };
 
 export const setAuthCookie = async (
@@ -185,8 +192,14 @@ export const updateGoal = async ({
   if (!response.ok) throw new Error(`Status code ${response.status}`);
 };
 
-export const deleteGoal = async ({ cookie }: { cookie: string }) => {
-  const response = await fetch(new URL("goals", getBase()), {
+export const deleteGoal = async ({
+  cookie,
+  data: { id },
+}: {
+  cookie: string;
+  data: { id: number };
+}) => {
+  const response = await fetch(new URL(`/goals/${id}`, getBase()), {
     method: "delete",
     headers: {
       "content-type": "application/json",

@@ -2,7 +2,13 @@ import { GoalActions } from "@/app/(main)/goals/[id]/components/goal-actions";
 import { GoalDetails } from "@/app/(main)/goals/[id]/components/goal-details";
 import { Back } from "@/app/components/back";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { getAuthCookie, getGoal, updateGoal } from "@/app/utils/api";
+import {
+  deleteGoal,
+  ensureAuthCookie,
+  getAuthCookie,
+  getGoal,
+  updateGoal,
+} from "@/app/utils/api";
 import { formatDate } from "@/app/utils/locale";
 import { schema as goalSchema } from "@/app/utils/schema/goal";
 import { notFound, redirect } from "next/navigation";
@@ -56,8 +62,7 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
               goal={goal}
               editAction={async (_, formData) => {
                 "use server";
-                const cookie = await getAuthCookie();
-                if (cookie === null) redirect("/signin");
+                const cookie = await ensureAuthCookie();
 
                 const values = Object.fromEntries(formData) as Record<
                   string,
@@ -81,7 +86,11 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
               }}
               deleteAction={async () => {
                 "use server";
-                console.log("deleting", goal.name);
+                await deleteGoal({
+                  cookie: await ensureAuthCookie(),
+                  data: { id: goal.id },
+                });
+                redirect("/");
               }}
             />
           </div>

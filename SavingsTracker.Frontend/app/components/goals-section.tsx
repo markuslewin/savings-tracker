@@ -1,5 +1,6 @@
 "use client";
 
+import { DialogButton } from "@/app/(main)/components/dialog-button";
 import {
   clickableContainer,
   clickableContainerItem,
@@ -11,7 +12,6 @@ import {
   goalsContainer,
 } from "@/app/(main)/page.css";
 import { Button } from "@/app/components/button";
-import * as buttonStyles from "@/app/components/button.css";
 import { DashedRect } from "@/app/components/dashed";
 import {
   noGoalsBody,
@@ -166,18 +166,16 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
                 Start saving for something that matters. Create your first goal
                 and track your progress.
               </p>
-              <Button
-                className={clsx(
-                  buttonStyles.button.primary,
-                  sprinkles({
-                    marginInline: "auto",
-                    marginBlockStart: "space-0400",
-                  }),
-                )}
+              <DialogButton
+                className={sprinkles({
+                  marginInline: "auto",
+                  marginBlockStart: "space-0400",
+                })}
+                dialogId="new-goal"
+                icon={PlusIcon}
               >
-                <PlusIcon className={buttonStyles.icon} />
                 Create your first goal
-              </Button>
+              </DialogButton>
             </div>
           </div>
         ) : view.goals.length <= 0 ? (

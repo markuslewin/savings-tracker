@@ -1,28 +1,26 @@
 "use server";
 
-import { createGoal as _createGoal, getAuthCookie } from "@/app/utils/api";
+import { createGoal as _createGoal, ensureAuthCookie } from "@/app/utils/api";
+import { FormAction } from "@/app/utils/form";
 import { schema } from "@/app/utils/schema/goal";
 import { redirect } from "next/navigation";
 import * as z from "zod";
 
-export const createGoal = async (prevState: unknown, formData: FormData) => {
-  const values = Object.fromEntries(formData);
+export const createGoal: FormAction<"name" | "target"> = async (
+  _,
+  formData,
+) => {
+  const values = Object.fromEntries(formData) as Record<string, string>;
   const parsed = schema.safeParse(values);
-  if (!parsed.success) {
+  if (!parsed.success)
     return {
-      values: { name: values.name, target: values.target },
+      values,
       errors: z.flattenError(parsed.error).fieldErrors,
     };
-  }
 
   const result = await _createGoal({
-    cookie: await getAuthCookie(),
+    cookie: await ensureAuthCookie(),
     data: parsed.data,
   });
-  if (!result.success) {
-    // todo: Feedback
-    throw result.error;
-  }
-
   redirect(`/goals/${result.data.id}`);
 };

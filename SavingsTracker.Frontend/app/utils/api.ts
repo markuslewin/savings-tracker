@@ -145,7 +145,7 @@ export const createGoal = async ({
   cookie,
   data: { name, target },
 }: {
-  cookie: string | null;
+  cookie: string;
   data: {
     name: string;
     target: number;
@@ -155,11 +155,11 @@ export const createGoal = async ({
     method: "post",
     headers: {
       "content-type": "application/json",
-      ...(cookie === null ? {} : { cookie }),
+      cookie,
     },
     body: JSON.stringify({ name, target }),
   });
-  if (!response.ok) return error(new Error("Unsuccessful status code"));
+  if (!response.ok) throw new Error(`Status code ${response.status}`);
 
   const json = await response.json();
   const data = z

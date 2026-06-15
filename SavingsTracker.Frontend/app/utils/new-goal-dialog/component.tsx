@@ -4,14 +4,19 @@ import { Button } from "@/app/components/button";
 import { CancelButton, Dialog } from "@/app/components/dialog";
 import { TextField } from "@/app/components/text-field";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { createGoal } from "@/app/utils/new-goal-dialog/action";
-import * as schema from "@/app/utils/schema/goal";
 import { validate } from "@/app/utils/form";
+import { createGoal } from "@/app/utils/new-goal-dialog/action";
+import { name, target } from "@/app/utils/schema/goal";
 import { useActionState } from "react";
 import { Form } from "react-aria-components/Form";
 
 export const NewGoalDialog = () => {
-  const [state, formAction, isPending] = useActionState(createGoal, undefined);
+  const [state, dispatch, isPending] = useActionState(createGoal, {
+    values: {
+      name: "",
+      target: "",
+    },
+  });
 
   return (
     <Dialog dialogId="new-goal" title="New goal">
@@ -19,7 +24,7 @@ export const NewGoalDialog = () => {
         className={sprinkles({
           marginBlockStart: "space-0300",
         })}
-        action={formAction}
+        action={dispatch}
         validationErrors={state?.errors}
       >
         <div
@@ -30,24 +35,16 @@ export const NewGoalDialog = () => {
           <TextField
             label="Goal name"
             name="name"
-            defaultValue={
-              typeof state?.values.name === "string"
-                ? state.values.name
-                : undefined
-            }
+            defaultValue={state.values.name}
             isRequired
-            validate={validate(schema.name)}
+            validate={validate(name)}
           />
           <TextField
             label="Target amount"
             name="target"
-            defaultValue={
-              typeof state?.values.target === "string"
-                ? state.values.target
-                : undefined
-            }
+            defaultValue={state.values.target}
             isRequired
-            validate={validate(schema.target)}
+            validate={validate(target)}
           />
         </div>
         <div

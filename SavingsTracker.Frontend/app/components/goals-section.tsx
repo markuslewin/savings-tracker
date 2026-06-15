@@ -10,6 +10,7 @@ import {
   goalCards,
   goalsContainer,
 } from "@/app/(main)/page.css";
+import { Button } from "@/app/components/button";
 import * as buttonStyles from "@/app/components/button.css";
 import { DashedRect } from "@/app/components/dashed";
 import {
@@ -41,19 +42,21 @@ import {
   filterSchema,
   getFilterLabel,
 } from "@/app/utils/filter";
+import { IconProp } from "@/app/utils/icon";
 import { formatDate, formatPercent, formatUsd } from "@/app/utils/locale";
 import { getSortLabel, Sort, sorts, sortSchema } from "@/app/utils/sort";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useCallback, useOptimistic, useTransition } from "react";
 import {
-  Button,
   DialogTrigger,
   Label,
   Link,
   Popover,
-  Radio,
+  RadioButton,
+  RadioField,
   RadioGroup,
+  SelectionIndicator,
 } from "react-aria-components";
 
 type GoalsSectionProps = {
@@ -120,90 +123,36 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
             gap: "space-0200",
           })}
         >
-          <DialogTrigger>
-            <Button className={buttonStyles.button.secondary}>
-              <FilterIcon className={buttonStyles.icon} /> Filters
-            </Button>
-            <Popover className={popover} placement="bottom end" offset={8}>
-              <RadioGroup
-                className={radioGroup}
-                value={optimisticFilter}
-                onChange={(value) => {
-                  const filter = filterSchema.parse(value);
-                  transition(() => {
-                    setOptimisticFilter(filter);
-                    setSearchParams({ filter, sort: optimisticSort });
-                  });
-                }}
-              >
-                <Label className={radioGroupLabel}>Filter by status</Label>
-                <div className={radios}>
-                  {filters.map((filter) => {
-                    return (
-                      <Radio key={filter} className={radio} value={filter}>
-                        {({ isSelected }) => {
-                          return (
-                            <>
-                              <div className={radioCircle}>
-                                {isSelected ? (
-                                  <div className={radioDot} />
-                                ) : null}
-                              </div>
-                              <span className={radioLabel}>
-                                {getFilterLabel(filter)}
-                              </span>
-                            </>
-                          );
-                        }}
-                      </Radio>
-                    );
-                  })}
-                </div>
-              </RadioGroup>
-            </Popover>
-          </DialogTrigger>
-          <DialogTrigger>
-            <Button className={buttonStyles.button.secondary}>
-              <SortIcon className={buttonStyles.icon} /> Sort by
-            </Button>
-            <Popover className={popover} placement="bottom end" offset={8}>
-              <RadioGroup
-                className={radioGroup}
-                value={optimisticSort}
-                onChange={(value) => {
-                  const sort = sortSchema.parse(value);
-                  transition(() => {
-                    setOptimisticSort(sort);
-                    setSearchParams({ filter: optimisticFilter, sort });
-                  });
-                }}
-              >
-                <Label className={radioGroupLabel}>Sort by</Label>
-                <div className={radios}>
-                  {sorts.map((sort) => {
-                    return (
-                      <Radio key={sort} className={radio} value={sort}>
-                        {({ isSelected }) => {
-                          return (
-                            <>
-                              <div className={radioCircle}>
-                                {isSelected ? (
-                                  <div className={radioDot} />
-                                ) : null}
-                              </div>
-                              <span className={radioLabel}>
-                                {getSortLabel(sort)}
-                              </span>
-                            </>
-                          );
-                        }}
-                      </Radio>
-                    );
-                  })}
-                </div>
-              </RadioGroup>
-            </Popover>
-          </DialogTrigger>
+          <GoalsOptions
+            icon={FilterIcon}
+            label="Filters"
+            optionsLabel="Filter by status"
+            options={filters}
+            getOptionLabel={getFilterLabel}
+            value={optimisticFilter}
+            onChange={(value) => {
+              const filter = filterSchema.parse(value);
+              transition(() => {
+                setOptimisticFilter(filter);
+                setSearchParams({ sort: optimisticSort, filter });
+              });
+            }}
+          />
+          <GoalsOptions
+            icon={SortIcon}
+            label="Sort by"
+            optionsLabel="Sort by"
+            options={sorts}
+            getOptionLabel={getSortLabel}
+            value={optimisticSort}
+            onChange={(value) => {
+              const sort = sortSchema.parse(value);
+              transition(() => {
+                setOptimisticSort(sort);
+                setSearchParams({ filter: optimisticFilter, sort });
+              });
+            }}
+          />
         </div>
       </header>
       <div className={sprinkles({ marginBlockStart: "space-0300" })}>
@@ -366,5 +315,52 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
         )}
       </div>
     </section>
+  );
+};
+
+type GoalsOptionsProps<Value extends string> = {
+  icon: IconProp;
+  label: string;
+  optionsLabel: string;
+  options: Readonly<Value[]>;
+  getOptionLabel: (value: Value) => string;
+  value: Value;
+  onChange: (value: string) => void;
+};
+
+const GoalsOptions = <Value extends string>({
+  icon,
+  label,
+  optionsLabel,
+  options,
+  getOptionLabel,
+  value,
+  onChange,
+}: GoalsOptionsProps<Value>) => {
+  return (
+    <DialogTrigger>
+      <Button variant="secondary" icon={icon}>
+        {label}
+      </Button>
+      <Popover className={popover} placement="bottom end" offset={8}>
+        <RadioGroup className={radioGroup} value={value} onChange={onChange}>
+          <Label className={radioGroupLabel}>{optionsLabel}</Label>
+          <div className={radios}>
+            {options.map((option) => {
+              return (
+                <RadioField key={option} value={option}>
+                  <RadioButton className={radio}>
+                    <div className={radioCircle}>
+                      <SelectionIndicator className={radioDot} />
+                    </div>
+                    <span className={radioLabel}>{getOptionLabel(option)}</span>
+                  </RadioButton>
+                </RadioField>
+              );
+            })}
+          </div>
+        </RadioGroup>
+      </Popover>
+    </DialogTrigger>
   );
 };

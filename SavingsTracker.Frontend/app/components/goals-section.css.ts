@@ -1,3 +1,4 @@
+import { transition } from "@/app/styles/animation.css";
 import { borderRadius, card } from "@/app/styles/card.css";
 import { circle } from "@/app/styles/circle.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
@@ -92,8 +93,9 @@ export const radioLabel = style([
   {
     color: colors["neutral-300"],
     selectors: {
-      "&[data-selected]": { color: colors["neutral-0"] },
+      [`${radio}[data-selected] &`]: { color: colors["neutral-0"] },
     },
+    ...transition,
   },
 ]);
 

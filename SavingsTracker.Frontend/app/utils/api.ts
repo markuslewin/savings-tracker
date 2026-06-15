@@ -182,9 +182,7 @@ export const updateGoal = async ({
     },
     body: JSON.stringify({ name, target }),
   });
-  if (!response.ok) return error(new Error("Unsuccessful status code"));
-
-  return success(null);
+  if (!response.ok) throw new Error(`Status code ${response.status}`);
 };
 
 export const deleteGoal = async ({ cookie }: { cookie: string }) => {
@@ -195,9 +193,7 @@ export const deleteGoal = async ({ cookie }: { cookie: string }) => {
       cookie,
     },
   });
-  if (!response.ok) return error(new Error("Unsuccessful status code"));
-
-  return success(null);
+  if (!response.ok) throw new Error(`Status code ${response.status}`);
 };
 
 export const addDeposit = async ({
@@ -218,7 +214,5 @@ export const addDeposit = async ({
       body: JSON.stringify({ amount, note }),
     },
   );
-  if (!response.ok) return error(new Error("Unsuccessful status code"));
-
-  return success(null);
+  if (!response.ok) throw new Error(`Status code ${response.status}`);
 };

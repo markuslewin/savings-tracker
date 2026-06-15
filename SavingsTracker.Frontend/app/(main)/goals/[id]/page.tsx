@@ -4,6 +4,7 @@ import { Back } from "@/app/components/back";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { getAuthCookie, getGoal, updateGoal } from "@/app/utils/api";
 import { formatDate } from "@/app/utils/locale";
+import { schema as goalSchema } from "@/app/utils/schema/goal";
 import { notFound, redirect } from "next/navigation";
 import * as z from "zod";
 
@@ -58,27 +59,24 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
                 const cookie = await getAuthCookie();
                 if (cookie === null) redirect("/signin");
 
-                const values = z
-                  .object({
-                    name: z.string(),
-                    target: z.coerce.number(),
-                  })
-                  // todo: Field errors
-                  .parse(Object.fromEntries(formData));
-                const result = await updateGoal({
+                const values = Object.fromEntries(formData) as Record<
+                  string,
+                  string
+                >;
+                const parsing = goalSchema.safeParse(values);
+                if (!parsing.success)
+                  return {
+                    values,
+                    errors: z.flattenError(parsing.error).fieldErrors,
+                  };
+
+                await updateGoal({
                   cookie,
                   data: {
-                    ...values,
-                    // todo: `.bind`?
+                    ...parsing.data,
                     id: goal.id,
                   },
                 });
-                if (!result.success)
-                  return {
-                    values: { ...values, target: values.target.toString() },
-                    errors: undefined,
-                  };
-
                 redirect(`/goals/${goal.id}`);
               }}
               deleteAction={async () => {

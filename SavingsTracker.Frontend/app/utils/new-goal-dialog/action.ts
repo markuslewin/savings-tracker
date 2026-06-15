@@ -1,7 +1,7 @@
 "use server";
 
 import { createGoal as _createGoal, getAuthCookie } from "@/app/utils/api";
-import { schema } from "@/app/utils/new-goal-dialog/schema";
+import { schema } from "@/app/utils/schema/goal";
 import { redirect } from "next/navigation";
 import * as z from "zod";
 

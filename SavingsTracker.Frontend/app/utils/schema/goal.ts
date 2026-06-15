@@ -1,4 +1,4 @@
-import { requiredStringSchema } from "@/app/utils/validation";
+import { requiredStringSchema } from "@/app/utils/form";
 import z from "zod";
 
 export const name = requiredStringSchema;

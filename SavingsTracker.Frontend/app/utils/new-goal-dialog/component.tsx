@@ -5,8 +5,8 @@ import { CancelButton, Dialog } from "@/app/components/dialog";
 import { TextField } from "@/app/components/text-field";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { createGoal } from "@/app/utils/new-goal-dialog/action";
-import * as schema from "@/app/utils/new-goal-dialog/schema";
-import { validate } from "@/app/utils/validation";
+import * as schema from "@/app/utils/schema/goal";
+import { validate } from "@/app/utils/form";
 import { useActionState } from "react";
 import { Form } from "react-aria-components/Form";
 

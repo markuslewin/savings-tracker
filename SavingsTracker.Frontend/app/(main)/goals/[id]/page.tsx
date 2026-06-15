@@ -3,6 +3,7 @@ import { GoalDetails } from "@/app/(main)/goals/[id]/components/goal-details";
 import { Back } from "@/app/components/back";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import {
+  addDeposit,
   deleteGoal,
   ensureAuthCookie,
   getAuthCookie,
@@ -10,6 +11,7 @@ import {
   updateGoal,
 } from "@/app/utils/api";
 import { formatDate } from "@/app/utils/locale";
+import { schema as depositSchema } from "@/app/utils/schema/deposit";
 import { schema as goalSchema } from "@/app/utils/schema/goal";
 import { notFound, redirect } from "next/navigation";
 import * as z from "zod";
@@ -118,9 +120,23 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
       </div>
       <GoalDetails
         goal={goal}
-        addDepositAction={async (formData) => {
+        addDepositAction={async (_, formData) => {
           "use server";
-          console.log("Add", formData.get("amount"), formData.get("note"));
+          const cookie = await ensureAuthCookie();
+
+          const values = Object.fromEntries(formData) as Record<string, string>;
+          const parsing = depositSchema.safeParse(values);
+          if (!parsing.success)
+            return {
+              values,
+              errors: z.flattenError(parsing.error).fieldErrors,
+            };
+
+          await addDeposit({
+            cookie,
+            data: { ...parsing.data, goalId: goal.id },
+          });
+          redirect(`/goals/${goal.id}`);
         }}
       />
     </article>

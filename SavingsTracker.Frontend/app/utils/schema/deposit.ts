@@ -1,11 +1,11 @@
 import { floatTransform, requiredStringSchema } from "@/app/utils/form";
 import z from "zod";
 
-export const name = requiredStringSchema;
+export const amount = requiredStringSchema.transform(floatTransform);
 
-export const target = requiredStringSchema.transform(floatTransform);
+export const note = z.string();
 
 export const schema = z.object({
-  name,
-  target,
+  amount,
+  note,
 });

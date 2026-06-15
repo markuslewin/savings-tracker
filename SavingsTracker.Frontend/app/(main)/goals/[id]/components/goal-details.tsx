@@ -15,17 +15,24 @@ import { card } from "@/app/styles/card.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
 import { Goal } from "@/app/utils/api";
+import { FormAction } from "@/app/utils/form";
 import { formatDate, formatPercent, formatUsd } from "@/app/utils/locale";
 import { nbsp } from "@/app/utils/unicode";
 import clsx from "clsx";
+import { useActionState } from "react";
+import { Form } from "react-aria-components";
 
 type GoalProps = {
   goal: Goal;
-  addDepositAction: (formData: FormData) => Promise<void>;
+  addDepositAction: FormAction<"amount" | "note">;
 };
 
 export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
-  const progress = 1;
+  const [state, dispatch, isPending] = useActionState(addDepositAction, {
+    values: { amount: "", note: "" },
+  });
+
+  const progress = 0.1;
   const remaining = 123;
   const saved = 321;
 
@@ -226,11 +233,12 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
             )}
           >
             <h2 className={sprinkles({ text: "4" })}>Add deposit</h2>
-            <form
+            <Form
               className={sprinkles({
                 stack: "space-0300",
               })}
-              action={addDepositAction}
+              action={dispatch}
+              validationErrors={state.errors}
             >
               <div
                 className={sprinkles({
@@ -243,17 +251,19 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                   name="amount"
                   placeholder="0.00"
                   isRequired
+                  defaultValue={state.values.amount}
                 />
                 <TextField
                   label="Note (optional)"
                   name="note"
                   placeholder="e.g. Monthly savings"
+                  defaultValue={state.values.note}
                 />
               </div>
               <Button type="submit" variant="primary">
                 Add funds
               </Button>
-            </form>
+            </Form>
           </div>
         </div>
       )}

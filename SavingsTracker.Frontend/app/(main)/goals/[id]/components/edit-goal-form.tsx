@@ -19,7 +19,6 @@ export const EditGoalForm = ({ goal, submitAction }: EditGoalFormProps) => {
       name: goal.name,
       target: goal.target.toString(),
     },
-    errors: undefined,
   });
 
   return (

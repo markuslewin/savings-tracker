@@ -187,10 +187,11 @@ app
 
         if (goal.UserId != user.Id) return TypedResults.Forbid();
 
-        goal.Deposits.Add(new SavingsTracker.GoalDb.Deposit
+        await ctx.Deposits.AddAsync(new SavingsTracker.GoalDb.Deposit
         {
             Amount = deposit.Amount,
-            Note = deposit.Note
+            Note = deposit.Note,
+            Goal = goal
         });
         await ctx.SaveChangesAsync();
 

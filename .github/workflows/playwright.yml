@@ -8,9 +8,11 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      FRONTEND_PATH: ./SavingsTracker.Frontend
     defaults:
       run:
-        working-directory: ./SavingsTracker.Frontend
+        working-directory: ${{ env.FRONTEND_PATH }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -34,5 +36,5 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
-          path: playwright-report/
+          path: ${{ env.FRONTEND_PATH }}/playwright-report/
           retention-days: 30

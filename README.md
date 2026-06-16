@@ -1,5 +1,10 @@
 # Savings Tracker
 
+Prerequisites:
+
+- [Aspire](https://aspire.dev/get-started/prerequisites/)
+- [Node.js](https://nodejs.org/en/download)
+
 ## Development
 
 ### Run

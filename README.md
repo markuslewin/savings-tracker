@@ -2,8 +2,14 @@
 
 Prerequisites:
 
-- [Aspire](https://aspire.dev/get-started/prerequisites/)
 - [Node.js](https://nodejs.org/en/download)
+
+```sh
+# Aspire CLI
+dotnet tool install --global Aspire.Cli
+# EF Core CLI
+dotnet tool install --global dotnet-ef
+```
 
 ## Development
 
@@ -26,6 +32,5 @@ Launch via `.vscode/launch.json`.
 ### Add migration
 
 ```sh
-dotnet tool install --global dotnet-ef
 dotnet ef migrations add InitialCreate --project SavingsTracker.GoalDbManager/SavingsTracker.GoalDbManager.csproj
 ```

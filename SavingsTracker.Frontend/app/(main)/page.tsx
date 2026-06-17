@@ -71,16 +71,19 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
           highlight
           term="Total savings"
           data={formatUsd(sum(goalsWithSaved.map((g) => g.saved)))}
+          testId="total-savings"
         />
         <SummaryCard
           color={"orange-400"}
           term="Active goals"
           data={goalsWithSaved.filter(isActive).length}
+          testId="active-goals"
         />
         <SummaryCard
           color={"green-500"}
           term="Goals completed"
           data={goalsWithSaved.filter(isCompleted).length}
+          testId="goals-completed"
         />
       </dl>
       <div
@@ -199,6 +202,7 @@ export default Home;
 type SummaryCardProps = {
   term: string;
   data: ReactNode;
+  testId: string;
 } & ({ highlight: true } | { highlight?: false; color: Sprinkles["color"] });
 
 const SummaryCard = (props: SummaryCardProps) => {
@@ -233,6 +237,7 @@ const SummaryCard = (props: SummaryCardProps) => {
           text: "1",
           color: props.highlight ? undefined : props.color,
         })}
+        data-testid={props.testId}
       >
         {props.data}
       </dd>

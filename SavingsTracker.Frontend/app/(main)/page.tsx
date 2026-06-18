@@ -6,6 +6,7 @@ import { columns } from "@/app/styles/columns.css";
 import { Sprinkles, sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
 import { getAuthCookie, getGoals } from "@/app/utils/api";
+import { getNow } from "@/app/utils/date";
 import { filterSchema } from "@/app/utils/filter";
 import { addSaved, isActive, isCompleted } from "@/app/utils/goal";
 import { formatUsd } from "@/app/utils/locale";
@@ -23,6 +24,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
     })
     .parse(await searchParams);
 
+  const now = getNow();
   const goals = await getGoals({
     cookie: await getAuthCookie(),
   });
@@ -85,7 +87,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
         >
           Monthly deposits
         </h2>
-        <MonthlyDeposits deposits={deposits} />
+        <MonthlyDeposits now={now} deposits={deposits} />
       </div>
       <GoalsSection
         filter={filter}

@@ -18,6 +18,14 @@ export const formatDate = (date: Date) => {
   return dateFormatter.format(date);
 };
 
+const monthFormatter = Intl.DateTimeFormat(locale, {
+  month: "short",
+});
+
+export const formatMonth = (date: Date) => {
+  return monthFormatter.format(date);
+};
+
 const usdFormatter = Intl.NumberFormat(locale, {
   style: "currency",
   currency: "USD",

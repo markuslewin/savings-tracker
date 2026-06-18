@@ -11,13 +11,15 @@ import {
   fallback,
   noDeposits,
 } from "@/app/(main)/components/monthly-deposits.css";
+import { getDepositsByMonth } from "@/app/(main)/utils/deposits";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
 import { Deposit } from "@/app/utils/api";
-import { formatUsd } from "@/app/utils/locale";
+import { formatMonth, formatUsd } from "@/app/utils/locale";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import clsx from "clsx";
 import dynamic from "next/dynamic";
+import { useMemo } from "react";
 
 export const MonthlyDeposits = dynamic(
   async () => {
@@ -33,27 +35,19 @@ export const MonthlyDeposits = dynamic(
 );
 
 type MonthlyDepositsProps = {
+  now: Date;
   deposits: Deposit[];
 };
 
-export const MonthlyDepositsImpl = ({ deposits }: MonthlyDepositsProps) => {
-  // todo: Fix
-  const monthlyDeposits = [
-    { month: "Apr", amount: 0 },
-    { month: "May", amount: 0 },
-    { month: "Jun", amount: 500 },
-    { month: "Jul", amount: 400 },
-    { month: "Aug", amount: 400 },
-    { month: "Sep", amount: 1150 },
-    { month: "Oct", amount: 1149 },
-    { month: "Nov", amount: 1550 },
-    { month: "Dec", amount: 2350 },
-    { month: "Jan", amount: 1025 },
-    { month: "Feb", amount: 1550 },
-    { month: "Mar", amount: 1550 },
-  ];
+export const MonthlyDepositsImpl = ({
+  now,
+  deposits,
+}: MonthlyDepositsProps) => {
+  const result = useMemo(() => {
+    return getDepositsByMonth(now, deposits);
+  }, [deposits, now]);
 
-  return deposits.length <= 0 ? (
+  return result.type === "empty" ? (
     <p
       className={clsx(
         noDeposits,
@@ -71,7 +65,7 @@ export const MonthlyDepositsImpl = ({ deposits }: MonthlyDepositsProps) => {
         className={bars}
         style={{
           ...assignInlineVars({
-            [barsAmounts]: monthlyDeposits
+            [barsAmounts]: result.values
               .map((deposit) => {
                 return deposit.amount;
               })
@@ -80,7 +74,7 @@ export const MonthlyDepositsImpl = ({ deposits }: MonthlyDepositsProps) => {
         }}
         role="list"
       >
-        {monthlyDeposits.map((deposit, i) => {
+        {result.values.map((deposit, i) => {
           return (
             <li
               key={i}
@@ -103,7 +97,7 @@ export const MonthlyDepositsImpl = ({ deposits }: MonthlyDepositsProps) => {
               }}
             >
               <span className={srOnly}>
-                {deposit.month}: {formatUsd(deposit.amount)}
+                {formatMonth(deposit.month)}: {formatUsd(deposit.amount)}
               </span>
             </li>
           );
@@ -119,7 +113,7 @@ export const MonthlyDepositsImpl = ({ deposits }: MonthlyDepositsProps) => {
         // Values are accessible via list of bars
         aria-hidden="true"
       >
-        {monthlyDeposits.map((deposit, i) => {
+        {result.values.map((deposit, i) => {
           return (
             <div
               key={i}
@@ -140,7 +134,7 @@ export const MonthlyDepositsImpl = ({ deposits }: MonthlyDepositsProps) => {
                 {/* todo: Mobile text preset 7 */}
                 {formatUsd(deposit.amount)}
               </div>
-              <div>{deposit.month}</div>
+              <div>{formatMonth(deposit.month)}</div>
             </div>
           );
         })}

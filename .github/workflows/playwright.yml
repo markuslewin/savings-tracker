@@ -4,12 +4,26 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+env:
+  FRONTEND_PATH: ./SavingsTracker.Frontend
 jobs:
+  vitest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.FRONTEND_PATH }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Vitest tests
+        run: npm run test
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    env:
-      FRONTEND_PATH: ./SavingsTracker.Frontend
     defaults:
       run:
         working-directory: ${{ env.FRONTEND_PATH }}
@@ -28,7 +42,7 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npm run test:e2e
       - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:

@@ -23,6 +23,7 @@ const goalSchema = z.object({
   ),
 });
 export type Goal = z.infer<typeof goalSchema>;
+export type Deposit = Goal["deposits"][number];
 
 const goalsSchema = z.array(goalSchema);
 

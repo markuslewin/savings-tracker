@@ -72,6 +72,12 @@ test("new user has no goals", async ({ page }) => {
   await page.goto("/");
 
   await expect(page.getByTestId("total-savings")).toHaveText("$0");
+  await expect(page.getByTestId("active-goals")).toHaveText("0");
+  await expect(page.getByTestId("goals-completed")).toHaveText("0");
+  await expect(page.getByTestId("deposits")).toHaveText(/no deposits/i);
+  await expect(
+    page.getByTestId("goals").getByRole("heading", { name: "no goals" }),
+  ).toBeAttached();
 });
 
 const signIn = async (page: Page) => {
@@ -80,6 +86,8 @@ const signIn = async (page: Page) => {
   await page.getByRole("textbox", { name: "email" }).fill(user.email);
   await page.getByRole("textbox", { name: "password" }).fill(validPassword);
   await page.getByRole("button", { name: "sign in" }).click();
+  // Wait for cookie
+  await page.waitForURL("/");
 
   return user;
 };

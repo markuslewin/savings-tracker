@@ -1,3 +1,4 @@
+// Assume british locale to match the design
 const locale = "en-GB";
 
 const percentFormatter = Intl.NumberFormat(locale, {

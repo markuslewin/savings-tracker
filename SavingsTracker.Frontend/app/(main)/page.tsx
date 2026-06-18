@@ -1,12 +1,5 @@
-import {
-  bar,
-  barAmount,
-  bars,
-  barsAmounts,
-  barsGrid,
-  barsGridItem,
-  summaryCardDecoration,
-} from "@/app/(main)/page.css";
+import { MonthlyDeposits } from "@/app/(main)/components/monthly-deposits";
+import { summaryCardDecoration } from "@/app/(main)/page.css";
 import { GoalsSection } from "@/app/components/goals-section";
 import { card } from "@/app/styles/card.css";
 import { columns } from "@/app/styles/columns.css";
@@ -18,7 +11,6 @@ import { addSaved, isActive, isCompleted } from "@/app/utils/goal";
 import { formatUsd } from "@/app/utils/locale";
 import { sum } from "@/app/utils/math";
 import { sortSchema } from "@/app/utils/sort";
-import { assignInlineVars } from "@vanilla-extract/dynamic";
 import clsx from "clsx";
 import { ReactNode } from "react";
 import * as z from "zod";
@@ -35,21 +27,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
     cookie: await getAuthCookie(),
   });
   const goalsWithSaved = addSaved(goals);
-
-  const monthlyDeposits = [
-    { month: "Apr", amount: 0 },
-    { month: "May", amount: 0 },
-    { month: "Jun", amount: 500 },
-    { month: "Jul", amount: 400 },
-    { month: "Aug", amount: 400 },
-    { month: "Sep", amount: 1150 },
-    { month: "Oct", amount: 1149 },
-    { month: "Nov", amount: 1550 },
-    { month: "Dec", amount: 2350 },
-    { month: "Jan", amount: 1025 },
-    { month: "Feb", amount: 1550 },
-    { month: "Mar", amount: 1550 },
-  ];
+  const deposits = goals.flatMap((g) => g.deposits);
 
   return (
     <div>
@@ -95,8 +73,10 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
               tablet: "space-0300",
             },
             boxSpace: { mobile: "space-0200", tablet: "space-0250" },
+            stack: "space-0250",
           }),
         )}
+        data-testid="deposits"
       >
         <h2
           className={sprinkles({
@@ -105,84 +85,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
         >
           Monthly deposits
         </h2>
-        <ol
-          className={bars}
-          style={{
-            ...assignInlineVars({
-              [barsAmounts]: monthlyDeposits
-                .map((deposit) => {
-                  return deposit.amount;
-                })
-                .join(", "),
-            }),
-          }}
-          role="list"
-        >
-          {monthlyDeposits.map((deposit, i) => {
-            return (
-              <li
-                key={i}
-                className={clsx(
-                  barsGridItem,
-                  bar,
-                  deposit.amount > 0
-                    ? sprinkles({
-                        border: "solid",
-                        borderColor: "white-alpha-30",
-                        borderRadius: "radius-08",
-                        background: "orange-400",
-                      })
-                    : null,
-                )}
-                style={{
-                  ...assignInlineVars({
-                    [barAmount]: deposit.amount.toString(),
-                  }),
-                }}
-              >
-                <span className={srOnly}>
-                  {deposit.month}: {formatUsd(deposit.amount)}
-                </span>
-              </li>
-            );
-          })}
-        </ol>
-        <div
-          className={clsx(
-            barsGrid,
-            sprinkles({
-              marginBlockStart: "space-0125",
-            }),
-          )}
-          // Values are accessible via list of bars
-          aria-hidden="true"
-        >
-          {monthlyDeposits.map((deposit, i) => {
-            return (
-              <div
-                key={i}
-                className={clsx(
-                  barsGridItem,
-                  sprinkles({
-                    display: "grid",
-                    gap: "space-0050",
-                    textAlign: "center",
-                  }),
-                )}
-              >
-                <div
-                  className={sprinkles({
-                    color: "neutral-300",
-                  })}
-                >
-                  {/* todo: Mobile text preset 7 */}
-                  {formatUsd(deposit.amount)}
-                </div>
-                <div>{deposit.month}</div>
-              </div>
-            );
-          })}
-        </div>
+        <MonthlyDeposits deposits={deposits} />
       </div>
       <GoalsSection
         filter={filter}

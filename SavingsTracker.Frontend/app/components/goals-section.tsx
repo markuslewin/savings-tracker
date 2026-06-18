@@ -155,7 +155,10 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
           />
         </div>
       </header>
-      <div className={sprinkles({ marginBlockStart: "space-0300" })}>
+      <div
+        className={sprinkles({ marginBlockStart: "space-0300" })}
+        data-testid="goals"
+      >
         {view.type === "no-goals" ? (
           <div className={noGoalsContainer}>
             <DashedRect className={noGoalsBorder} />

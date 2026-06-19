@@ -80,6 +80,23 @@ test("new user has no goals", async ({ page }) => {
   ).toBeAttached();
 });
 
+test("new user can create their first goal", async ({ page }) => {
+  const name = faker.food.dish();
+
+  await signIn(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: "first goal" }).click();
+
+  const dialog = page.getByRole("dialog", { name: "new goal" });
+  await dialog.getByRole("textbox", { name: "name" }).fill(name);
+  await dialog.getByRole("textbox", { name: "target" }).fill("1234");
+  await dialog.getByRole("button", { name: "create" }).click();
+
+  await expect(page).toHaveURL(new URLPattern({ pathname: "/goals/*" }));
+  await expect(page.getByRole("heading", { name })).toBeAttached();
+  await expect(page.getByTestId("target")).toHaveText(/\$1,234/i);
+});
+
 const signIn = async (page: Page) => {
   const user = await register(page);
   await page.goto("/signin");

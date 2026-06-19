@@ -207,6 +207,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                     stack: "space-0050",
                     textAlign: "end",
                   })}
+                  data-testid="target"
                 >
                   <span>of {formatUsd(goal.target)}</span>
                   <span

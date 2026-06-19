@@ -168,7 +168,7 @@ namespace SavingsTracker.GoalDbManager.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Target = table.Column<int>(type: "integer", nullable: false),
                     Deadline = table.Column<DateOnly>(type: "date", nullable: true),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                     UserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -190,7 +190,7 @@ namespace SavingsTracker.GoalDbManager.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Amount = table.Column<int>(type: "integer", nullable: false),
                     Note = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                     GoalId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>

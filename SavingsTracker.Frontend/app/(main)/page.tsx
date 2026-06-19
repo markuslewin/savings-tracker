@@ -20,14 +20,14 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
   const { filter, sort } = z
     .object({
       filter: filterSchema.default("All").catch("All"),
-      sort: sortSchema.default("recently-added").catch("recently-added"),
+      sort: sortSchema.default("RecentlyAdded").catch("RecentlyAdded"),
     })
     .parse(await searchParams);
 
   const now = getNow();
   const goals = await getGoals({
     cookie: await getAuthCookie(),
-    data: { filter },
+    data: { filter, sort },
   });
   const goalsWithSaved = addSaved(goals);
   const deposits = goals.flatMap((g) => g.deposits);

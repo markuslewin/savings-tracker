@@ -1,5 +1,6 @@
 import { Filter } from "@/app/utils/filter";
 import { error, success } from "@/app/utils/result";
+import { Sort } from "@/app/utils/sort";
 import { parseSetCookie, serialize } from "cookie";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -114,13 +115,13 @@ export const logIn = async ({
 
 export const getGoals = async ({
   cookie,
-  data: { filter },
+  data: { filter, sort },
 }: {
   cookie: string | null;
-  data: { filter: Filter };
+  data: { filter: Filter; sort: Sort };
 }) => {
   const response = await fetch(
-    new URL(`goals?${new URLSearchParams({ filter })}`, getBase()),
+    new URL(`goals?${new URLSearchParams({ filter, sort })}`, getBase()),
     {
       headers: {
         ...(cookie === null ? {} : { cookie }),

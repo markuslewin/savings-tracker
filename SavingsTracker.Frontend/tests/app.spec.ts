@@ -154,6 +154,65 @@ test("filter goals", async ({ page }) => {
   await expect(goals).toHaveText(["In progress", "Completed", "Not started"]);
 });
 
+test("sort goals", async ({ page }) => {
+  await signIn(page);
+  await createGoal(page, { name: "A", target: 100 });
+  await addDeposit(page, { amount: 50 }); // Progress: 0.5
+  await createGoal(page, { name: "B", target: 5 });
+  await addDeposit(page, { amount: 4 }); // Progress: 0.8
+  await createGoal(page, { name: "C", target: 100 });
+  await addDeposit(page, { amount: 10 }); // Progress: 0.1
+
+  await page.goto("/");
+
+  const goals = page
+    .getByRole("list", { name: "your goals" })
+    .getByRole("heading");
+  await expect(goals).toHaveText(["C", "B", "A"]);
+
+  // todo: Deadline
+
+  await page.getByRole("button", { name: "sort" }).click();
+  await page
+    .getByRole("radio", { name: "progress (highest first)" })
+    .click({ force: true });
+  await page.keyboard.press("Escape");
+
+  await expect(goals).toHaveText(["B", "A", "C"]);
+
+  await page.getByRole("button", { name: "sort" }).click();
+  await page
+    .getByRole("radio", { name: "progress (lowest first)" })
+    .click({ force: true });
+  await page.keyboard.press("Escape");
+
+  await expect(goals).toHaveText(["C", "A", "B"]);
+
+  await page.getByRole("button", { name: "sort" }).click();
+  await page
+    .getByRole("radio", { name: "amount saved" })
+    .click({ force: true });
+  await page.keyboard.press("Escape");
+
+  await expect(goals).toHaveText(["A", "C", "B"]);
+
+  await page.getByRole("button", { name: "sort" }).click();
+  await page
+    .getByRole("radio", { name: "alphabetical" })
+    .click({ force: true });
+  await page.keyboard.press("Escape");
+
+  await expect(goals).toHaveText(["A", "B", "C"]);
+
+  await page.getByRole("button", { name: "sort" }).click();
+  await page
+    .getByRole("radio", { name: "recently added" })
+    .click({ force: true });
+  await page.keyboard.press("Escape");
+
+  await expect(goals).toHaveText(["C", "B", "A"]);
+});
+
 const signIn = async (page: Page) => {
   const user = await register(page);
   await page.goto("/signin");

@@ -48,6 +48,7 @@ app
     .MapGet("/goals",
         async Task<Results<Ok<IQueryable<Goal>>, UnauthorizedHttpResult>> (
             Filter filter,
+            Sort sort,
             ClaimsPrincipal principal,
             UserManager<User> userManager,
             GoalDbContext ctx) =>
@@ -70,13 +71,28 @@ app
                 Filter.Completed =>
                     query.Where(g => g.Deposits.Sum(d => d.Amount) >= g.Target),
                 Filter.InProgress =>
-                    query
-                        .Where(g =>
-                            0 < g.Deposits.Sum(d => d.Amount)
-                            && g.Deposits.Sum(d => d.Amount) < g.Target),
+                    query.Where(g =>
+                        0 < g.Deposits.Sum(d => d.Amount)
+                        && g.Deposits.Sum(d => d.Amount) < g.Target),
                 Filter.NotStarted =>
                     query.Where(g => g.Deposits.Sum(d => d.Amount) <= 0),
                 _ => throw new Exception("Invalid filter"),
+            };
+
+            query = sort switch
+            {
+                Sort.RecentlyAdded => query.OrderByDescending(g => g.CreatedAt),
+                Sort.DeadlineAscending => throw new NotImplementedException(),
+                Sort.ProgressDescending =>
+                    query.OrderByDescending(g =>
+                        g.Deposits.Sum(d => (double)d.Amount) / g.Target),
+                Sort.ProgressAscending =>
+                    query.OrderBy(g =>
+                        g.Deposits.Sum(d => (double)d.Amount) / g.Target),
+                Sort.AmountSavedDescending =>
+                    query.OrderByDescending(g => g.Deposits.Sum(d => d.Amount)),
+                Sort.AlphabeticalAscending => query.OrderBy(g => g.Name),
+                _ => throw new Exception("Invalid sort"),
             };
 
             return TypedResults.Ok(query.Select(g => new Goal(g)));

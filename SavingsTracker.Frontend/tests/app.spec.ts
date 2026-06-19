@@ -97,6 +97,63 @@ test("new user can create their first goal", async ({ page }) => {
   await expect(page.getByTestId("target")).toHaveText(/\$1,234/i);
 });
 
+test("user can create goal", async ({ page }) => {
+  const name = faker.food.dish();
+
+  await signIn(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: "new goal" }).click();
+
+  const dialog = page.getByRole("dialog", { name: "new goal" });
+  await dialog.getByRole("textbox", { name: "name" }).fill(name);
+  await dialog.getByRole("textbox", { name: "target" }).fill("100");
+  await dialog.getByRole("button", { name: "create" }).click();
+
+  await expect(page).toHaveURL(new URLPattern({ pathname: "/goals/*" }));
+  await expect(page.getByRole("heading", { name })).toBeAttached();
+  await expect(page.getByTestId("target")).toHaveText(/\$100/i);
+});
+
+test("filter goals", async ({ page }) => {
+  await signIn(page);
+  await createGoal(page, { name: "In progress", target: 10 });
+  await addDeposit(page, { amount: 5 });
+  await createGoal(page, { name: "Completed", target: 10 });
+  await addDeposit(page, { amount: 10 });
+  await createGoal(page, { name: "Not started", target: 10 });
+
+  await page.goto("/");
+
+  const goals = page
+    .getByRole("list", { name: "your goals" })
+    .getByRole("heading");
+  await expect(goals).toHaveText(["In progress", "Completed", "Not started"]);
+
+  await page.getByRole("button", { name: "filters" }).click();
+  await page.getByRole("radio", { name: "in progress" }).click({ force: true });
+  await page.keyboard.press("Escape");
+
+  await expect(goals).toHaveText(["In progress"]);
+
+  await page.getByRole("button", { name: "filters" }).click();
+  await page.getByRole("radio", { name: "completed" }).click({ force: true });
+  await page.keyboard.press("Escape");
+
+  await expect(goals).toHaveText(["Completed"]);
+
+  await page.getByRole("button", { name: "filters" }).click();
+  await page.getByRole("radio", { name: "not started" }).click({ force: true });
+  await page.keyboard.press("Escape");
+
+  await expect(goals).toHaveText(["Not started"]);
+
+  await page.getByRole("button", { name: "filters" }).click();
+  await page.getByRole("radio", { name: "all goals" }).click({ force: true });
+  await page.keyboard.press("Escape");
+
+  await expect(goals).toHaveText(["In progress", "Completed", "Not started"]);
+});
+
 const signIn = async (page: Page) => {
   const user = await register(page);
   await page.goto("/signin");
@@ -120,4 +177,22 @@ const register = async (page: Page) => {
   await page.getByRole("button", { name: "create" }).click();
 
   return { fullName, email };
+};
+
+const createGoal = async (
+  page: Page,
+  { name, target }: { name: string; target: number },
+) => {
+  await page.goto("/?dialog=new-goal");
+
+  const dialog = page.getByRole("dialog", { name: "new goal" });
+  await dialog.getByRole("textbox", { name: "name" }).fill(name);
+  await dialog.getByRole("textbox", { name: "target" }).fill(target.toString());
+  await dialog.getByRole("button", { name: "create" }).click();
+  await page.waitForURL(new URLPattern({ pathname: "/goals/*" }));
+};
+
+const addDeposit = async (page: Page, { amount }: { amount: number }) => {
+  await page.getByRole("textbox", { name: "amount" }).fill(amount.toString());
+  await page.getByRole("button", { name: "add" }).click();
 };

@@ -197,6 +197,7 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
             className={goalCards}
             role="list"
             data-pending={isPending ? "true" : undefined}
+            aria-label="Your goals"
           >
             {view.goals.map((goal) => {
               const progress = goal.saved / goal.target;

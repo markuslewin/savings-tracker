@@ -19,7 +19,7 @@ import * as z from "zod";
 const Home = async ({ searchParams }: PageProps<"/">) => {
   const { filter, sort } = z
     .object({
-      filter: filterSchema.default("all").catch("all"),
+      filter: filterSchema.default("All").catch("All"),
       sort: sortSchema.default("recently-added").catch("recently-added"),
     })
     .parse(await searchParams);
@@ -27,6 +27,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
   const now = getNow();
   const goals = await getGoals({
     cookie: await getAuthCookie(),
+    data: { filter },
   });
   const goalsWithSaved = addSaved(goals);
   const deposits = goals.flatMap((g) => g.deposits);

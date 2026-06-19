@@ -47,6 +47,7 @@ app.UseHttpsRedirection();
 app
     .MapGet("/goals",
         async Task<Results<Ok<IQueryable<Goal>>, UnauthorizedHttpResult>> (
+            Filter filter,
             ClaimsPrincipal principal,
             UserManager<User> userManager,
             GoalDbContext ctx) =>
@@ -56,14 +57,28 @@ app
                 .AsNoTracking()
                 .Include(g => g.Deposits)
                 .OrderByDescending(g => g.CreatedAt);
-            if (user is null)
+
+            query = user switch
             {
-                query = query.Where(g => g.User.IsDemo);
-            }
-            else
+                null => query.Where(g => g.User.IsDemo),
+                User => query.Where(g => g.UserId == user.Id)
+            };
+
+            query = filter switch
             {
-                query = query.Where(g => g.UserId == user.Id);
-            }
+                Filter.All => query,
+                Filter.Completed =>
+                    query.Where(g => g.Deposits.Sum(d => d.Amount) >= g.Target),
+                Filter.InProgress =>
+                    query
+                        .Where(g =>
+                            0 < g.Deposits.Sum(d => d.Amount)
+                            && g.Deposits.Sum(d => d.Amount) < g.Target),
+                Filter.NotStarted =>
+                    query.Where(g => g.Deposits.Sum(d => d.Amount) <= 0),
+                _ => throw new Exception("Invalid filter"),
+            };
+
             return TypedResults.Ok(query.Select(g => new Goal(g)));
         });
 

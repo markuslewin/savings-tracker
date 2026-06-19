@@ -1,25 +1,25 @@
 import * as z from "zod";
 
 export const filters = [
-  "all",
-  "in-progress",
-  "completed",
-  "not-started",
+  "All",
+  "InProgress",
+  "Completed",
+  "NotStarted",
 ] as const;
 
 export const filterSchema = z.enum(filters);
 
-export type Filter = (typeof filters)[number];
+export type Filter = z.infer<typeof filterSchema>;
 
 export const getFilterLabel = (filter: Filter) => {
   switch (filter) {
-    case "all":
+    case "All":
       return "All goals";
-    case "in-progress":
+    case "InProgress":
       return "In progress";
-    case "completed":
+    case "Completed":
       return "Completed";
-    case "not-started":
+    case "NotStarted":
       return "Not started";
     default:
       throw new Error("Not implemented");

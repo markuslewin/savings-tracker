@@ -1,3 +1,4 @@
+import { Filter } from "@/app/utils/filter";
 import { error, success } from "@/app/utils/result";
 import { parseSetCookie, serialize } from "cookie";
 import { cookies } from "next/headers";
@@ -111,12 +112,23 @@ export const logIn = async ({
   return error(new Error("No Set-Cookie found."));
 };
 
-export const getGoals = async ({ cookie }: { cookie: string | null }) => {
-  const response = await fetch(new URL("goals", getBase()), {
-    headers: {
-      ...(cookie === null ? {} : { cookie }),
+export const getGoals = async ({
+  cookie,
+  data: { filter },
+}: {
+  cookie: string | null;
+  data: { filter: Filter };
+}) => {
+  const response = await fetch(
+    new URL(`goals?${new URLSearchParams({ filter })}`, getBase()),
+    {
+      headers: {
+        ...(cookie === null ? {} : { cookie }),
+      },
     },
-  });
+  );
+  if (!response.ok) throw new Error(`Status code ${response.status}`);
+
   const json = await response.json();
   const goals = goalsSchema.parse(json);
   return goals;

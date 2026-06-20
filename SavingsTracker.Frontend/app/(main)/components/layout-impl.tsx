@@ -1,14 +1,31 @@
 "use client";
 
 import { DialogButton } from "@/app/(main)/components/dialog-button";
+import { Popover } from "@/app/(main)/components/popover";
 import { container, header } from "@/app/(main)/layout.css";
+import { getInitial } from "@/app/(main)/utils/avatar";
+import { avatar } from "@/app/(main)/utils/avatar.css";
 import { LogoLink } from "@/app/components/logo-link";
 import PlusIcon from "@/app/icons/icon-plus.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
+import { srOnly } from "@/app/styles/srOnly.css";
+import { User } from "@/app/utils/api";
+import { Hr } from "@/app/utils/hr";
 import { NewGoalDialog } from "@/app/utils/new-goal-dialog/component";
 import { OptimisticSearchParams } from "@/app/utils/optimistic-search-params/component";
+import Link from "next/link";
+import { Button, DialogTrigger } from "react-aria-components";
 
-export const LayoutImpl = ({ children }: LayoutProps<"/">) => {
+type LayoutImplProps = LayoutProps<"/"> & {
+  user: User | null;
+  logOutAction: () => Promise<void>;
+};
+
+export const LayoutImpl = ({
+  user,
+  children,
+  logOutAction,
+}: LayoutImplProps) => {
   return (
     <OptimisticSearchParams>
       <div>
@@ -16,16 +33,101 @@ export const LayoutImpl = ({ children }: LayoutProps<"/">) => {
           <div className={container}>
             <div
               className={sprinkles({
-                display: "flex",
-                flexWrap: "wrap",
+                cluster: "space-0200",
                 justifyContent: "space-between",
-                gap: "space-0200",
               })}
             >
               <LogoLink />
-              <DialogButton dialogId="new-goal" icon={PlusIcon}>
-                New goal
-              </DialogButton>
+              <div
+                className={sprinkles({
+                  cluster: "space-0200",
+                })}
+              >
+                <DialogButton dialogId="new-goal" icon={PlusIcon}>
+                  New goal
+                </DialogButton>
+                {user === null ? null : (
+                  <DialogTrigger>
+                    <Button className={avatar}>
+                      <span className={srOnly}>Signed in as {user.email}</span>
+                      <span aria-hidden="true">
+                        {getInitial(user.fullName)}
+                      </span>
+                    </Button>
+                    <Popover
+                      className={sprinkles({
+                        stack: "space-0150",
+                        color: "neutral-300",
+                      })}
+                      placement="bottom end"
+                    >
+                      <div
+                        className={sprinkles({
+                          display: "grid",
+                          gridTemplateColumns: "auto 1fr",
+                          alignItems: "center",
+                          gap: "space-0100",
+                        })}
+                      >
+                        <div className={avatar} aria-hidden="true">
+                          {getInitial(user.fullName)}
+                        </div>
+                        <div>
+                          <h2
+                            className={sprinkles({
+                              color: "neutral-0",
+                            })}
+                          >
+                            {user.fullName}
+                          </h2>
+                          <p className={sprinkles({ text: "6" })}>
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
+                      <Hr color={"neutral-700"} />
+                      <div className={sprinkles({ stack: "space-0" })}>
+                        {/* todo */}
+                        <Link
+                          className={sprinkles({
+                            padding: "space-0100",
+                            textDecoration: "none",
+                          })}
+                          href={"/forgot-password"}
+                        >
+                          Edit profile
+                        </Link>
+                        <Link
+                          className={sprinkles({
+                            padding: "space-0100",
+                            textDecoration: "none",
+                          })}
+                          href={"/forgot-password"}
+                        >
+                          Change password
+                        </Link>
+                      </div>
+                      <Hr color={"neutral-700"} />
+                      <form
+                        className={sprinkles({ display: "grid" })}
+                        action={logOutAction}
+                      >
+                        <Button
+                          className={sprinkles({
+                            padding: "space-0100",
+                            textAlign: "start",
+                            background: "transparent",
+                            color: "red-500",
+                          })}
+                          type="submit"
+                        >
+                          Sign out
+                        </Button>
+                      </form>
+                    </Popover>
+                  </DialogTrigger>
+                )}
+              </div>
             </div>
           </div>
         </header>

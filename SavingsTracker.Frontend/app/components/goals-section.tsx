@@ -52,12 +52,12 @@ import {
   DialogTrigger,
   Label,
   Link,
-  Popover,
   RadioButton,
   RadioField,
   RadioGroup,
   SelectionIndicator,
 } from "react-aria-components";
+import { Popover } from "@/app/(main)/components/popover";
 
 type GoalsSectionProps = {
   filter: Filter;
@@ -344,7 +344,7 @@ const GoalsOptions = <Value extends string>({
       <Button variant="secondary" icon={icon}>
         {label}
       </Button>
-      <Popover className={popover} placement="bottom end" offset={8}>
+      <Popover>
         <RadioGroup className={radioGroup} value={value} onChange={onChange}>
           <Label className={radioGroupLabel}>{optionsLabel}</Label>
           <div className={radios}>

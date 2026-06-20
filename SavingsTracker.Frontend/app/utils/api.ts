@@ -9,6 +9,12 @@ import * as z from "zod";
 const frontendAuthCookieName = "SavingsTracker.Auth";
 const apiAuthCookieName = ".AspNetCore.Identity.Application";
 
+const userSchema = z.object({
+  fullName: z.string(),
+  email: z.string(),
+});
+export type User = z.infer<typeof userSchema>;
+
 const goalSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -111,6 +117,35 @@ export const logIn = async ({
     }
   }
   return error(new Error("No Set-Cookie found."));
+};
+
+export const logOut = async ({ cookie }: { cookie: string }) => {
+  const response = await fetch(new URL("accounts/logout", getBase()), {
+    method: "post",
+  });
+  if (!response.ok) throw new Error(`Status code ${response.status}`);
+
+  const setCookies = response.headers.getSetCookie();
+  for (const setCookie of setCookies) {
+    const parsed = parseSetCookie(setCookie);
+    if (parsed.name === apiAuthCookieName) {
+      return success({ setCookie: parsed });
+    }
+  }
+  return error(new Error("No Set-Cookie found."));
+};
+
+export const getUser = async ({ cookie }: { cookie: string }) => {
+  const response = await fetch(new URL("accounts/info", getBase()), {
+    headers: {
+      cookie,
+    },
+  });
+  if (!response.ok) throw new Error(`Status code ${response.status}`);
+
+  const json = await response.json();
+  const user = userSchema.parse(json);
+  return user;
 };
 
 export const getGoals = async ({

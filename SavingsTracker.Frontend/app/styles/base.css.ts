@@ -41,6 +41,7 @@ globalStyle("dl", {
 globalStyle("button", {
   border: "none",
   padding: 0,
+  lineHeight: "inherit",
 });
 
 globalStyle("a", {

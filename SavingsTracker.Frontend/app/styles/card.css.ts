@@ -8,6 +8,7 @@ import {
 } from "@vanilla-extract/css";
 
 export const borderRadius = createVar();
+export const borderColor = createVar();
 export const shapeLayer = createVar();
 
 const base = style([
@@ -21,7 +22,7 @@ export const card = styleVariants({
   grey: [
     base,
     {
-      borderColor: colors["neutral-600"],
+      borderColor: fallbackVar(borderColor, colors["neutral-600"]),
       background: `${fallbackVar(shapeLayer, "none")}, ${colors["neutral-800"]}`,
       color: colors["neutral-0"],
     },

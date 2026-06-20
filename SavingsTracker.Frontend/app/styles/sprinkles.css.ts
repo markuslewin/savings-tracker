@@ -189,7 +189,7 @@ const responsiveProperties = defineProperties({
     pointerEvents: ["none"],
     isolation: ["isolate"],
     fontWeight: ["inherit"],
-    textAlign: ["center", "end"],
+    textAlign: ["start", "center", "end"],
     textTransform: ["uppercase"],
     textDecoration: ["none"],
     line: {

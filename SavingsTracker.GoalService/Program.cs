@@ -312,4 +312,28 @@ accountGroup.MapPost("/login",
         return TypedResults.Empty;
     });
 
+accountGroup
+    .MapPost("/logout",
+        async Task<EmptyHttpResult> (SignInManager<User> signInManager) =>
+        {
+            await signInManager.SignOutAsync();
+            return TypedResults.Empty;
+        })
+    .RequireAuthorization();
+
+accountGroup
+    .MapGet("/info",
+        async Task<Results<Ok<UserResponse>, UnauthorizedHttpResult>> (
+            ClaimsPrincipal principal, UserManager<User> userManager) =>
+    {
+        var user = await userManager.GetUserAsync(principal);
+        if (user is null) return TypedResults.Unauthorized();
+
+        return TypedResults.Ok(new UserResponse
+        {
+            FullName = user.FullName,
+            Email = user.Email ?? throw new Exception("User must have email")
+        });
+    }).RequireAuthorization();
+
 app.Run();

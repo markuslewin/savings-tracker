@@ -1,27 +1,10 @@
 import { transition } from "@/app/styles/animation.css";
-import { borderRadius, card } from "@/app/styles/card.css";
 import { circle } from "@/app/styles/circle.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { colors, outline, outlineOffset, radius } from "@/app/styles/tokens";
+import { colors, outline, outlineOffset } from "@/app/styles/tokens";
 import { rem } from "@/app/styles/utils";
 import { style } from "@vanilla-extract/css";
 import { calc } from "@vanilla-extract/css-utils";
-
-export const popover = style([
-  card.grey,
-  sprinkles({
-    width: "full",
-    maxWidth: "popover",
-    boxSpace: "space-0100",
-  }),
-  {
-    overflowY: "auto",
-    scrollbarWidth: "thin",
-    vars: {
-      [borderRadius]: radius["radius-08"],
-    },
-  },
-]);
 
 export const radioGroup = style([
   sprinkles({

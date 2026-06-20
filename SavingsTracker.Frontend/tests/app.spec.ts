@@ -127,7 +127,7 @@ test("filter goals", async ({ page }) => {
   const goals = page
     .getByRole("list", { name: "your goals" })
     .getByRole("heading");
-  await expect(goals).toHaveText(["In progress", "Completed", "Not started"]);
+  await expect(goals).toHaveText(["Not started", "Completed", "In progress"]);
 
   await page.getByRole("button", { name: "filters" }).click();
   await page.getByRole("radio", { name: "in progress" }).click({ force: true });
@@ -151,7 +151,7 @@ test("filter goals", async ({ page }) => {
   await page.getByRole("radio", { name: "all goals" }).click({ force: true });
   await page.keyboard.press("Escape");
 
-  await expect(goals).toHaveText(["In progress", "Completed", "Not started"]);
+  await expect(goals).toHaveText(["Not started", "Completed", "In progress"]);
 });
 
 test("sort goals", async ({ page }) => {

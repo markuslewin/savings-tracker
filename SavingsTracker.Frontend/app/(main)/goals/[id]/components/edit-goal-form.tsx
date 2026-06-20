@@ -3,6 +3,7 @@ import { CancelButton } from "@/app/components/dialog";
 import { TextField } from "@/app/components/text-field";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { Goal } from "@/app/utils/api";
+import { toDollarValue } from "@/app/utils/currency";
 import { FormAction, validate } from "@/app/utils/form";
 import { name, target } from "@/app/utils/schema/goal";
 import { useActionState } from "react";
@@ -17,7 +18,7 @@ export const EditGoalForm = ({ goal, submitAction }: EditGoalFormProps) => {
   const [state, dispatch, isPending] = useActionState(submitAction, {
     values: {
       name: goal.name,
-      target: goal.target.toString(),
+      target: toDollarValue(goal.target),
     },
   });
 

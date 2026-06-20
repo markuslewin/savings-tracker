@@ -116,11 +116,11 @@ test("user can create goal", async ({ page }) => {
 
 test("filter goals", async ({ page }) => {
   await signIn(page);
-  await createGoal(page, { name: "In progress", target: 10 });
+  await createGoal(page, { name: "In progress", target: "10" });
   await addDeposit(page, { amount: 5 });
-  await createGoal(page, { name: "Completed", target: 10 });
+  await createGoal(page, { name: "Completed", target: "10" });
   await addDeposit(page, { amount: 10 });
-  await createGoal(page, { name: "Not started", target: 10 });
+  await createGoal(page, { name: "Not started", target: "10" });
 
   await page.goto("/");
 
@@ -156,11 +156,11 @@ test("filter goals", async ({ page }) => {
 
 test("sort goals", async ({ page }) => {
   await signIn(page);
-  await createGoal(page, { name: "A", target: 100 });
+  await createGoal(page, { name: "A", target: "100" });
   await addDeposit(page, { amount: 50 }); // Progress: 0.5
-  await createGoal(page, { name: "B", target: 5 });
+  await createGoal(page, { name: "B", target: "5" });
   await addDeposit(page, { amount: 4 }); // Progress: 0.8
-  await createGoal(page, { name: "C", target: 100 });
+  await createGoal(page, { name: "C", target: "100" });
   await addDeposit(page, { amount: 10 }); // Progress: 0.1
 
   await page.goto("/");
@@ -213,6 +213,21 @@ test("sort goals", async ({ page }) => {
   await expect(goals).toHaveText(["C", "B", "A"]);
 });
 
+test("can go to goal", async ({ page }) => {
+  const name = faker.food.dish();
+
+  await signIn(page);
+  await createGoal(page, { name });
+  await page.goto("/");
+  await page
+    .getByRole("list", { name: "your goals" })
+    .getByRole("link", { name })
+    .click();
+
+  await expect(page).toHaveURL(new URLPattern({ pathname: "/goals/*" }));
+  await expect(page.getByRole("heading", { name, level: 1 })).toBeAttached();
+});
+
 const signIn = async (page: Page) => {
   const user = await register(page);
   await page.goto("/signin");
@@ -240,13 +255,13 @@ const register = async (page: Page) => {
 
 const createGoal = async (
   page: Page,
-  { name, target }: { name: string; target: number },
+  { name, target = faker.finance.amount() }: { name: string; target?: string },
 ) => {
   await page.goto("/?dialog=new-goal");
 
   const dialog = page.getByRole("dialog", { name: "new goal" });
   await dialog.getByRole("textbox", { name: "name" }).fill(name);
-  await dialog.getByRole("textbox", { name: "target" }).fill(target.toString());
+  await dialog.getByRole("textbox", { name: "target" }).fill(target);
   await dialog.getByRole("button", { name: "create" }).click();
   await page.waitForURL(new URLPattern({ pathname: "/goals/*" }));
 };

@@ -15,7 +15,7 @@ import { getDepositsByMonth } from "@/app/(main)/utils/deposits";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
 import { Deposit } from "@/app/utils/api";
-import { formatMonth, formatUsd } from "@/app/utils/locale";
+import { formatMonth, formatCents } from "@/app/utils/locale";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import clsx from "clsx";
 import dynamic from "next/dynamic";
@@ -97,7 +97,7 @@ export const MonthlyDepositsImpl = ({
               }}
             >
               <span className={srOnly}>
-                {formatMonth(deposit.month)}: {formatUsd(deposit.amount)}
+                {formatMonth(deposit.month)}: {formatCents(deposit.amount)}
               </span>
             </li>
           );
@@ -132,7 +132,7 @@ export const MonthlyDepositsImpl = ({
                 })}
               >
                 {/* todo: Mobile text preset 7 */}
-                {formatUsd(deposit.amount)}
+                {formatCents(deposit.amount)}
               </div>
               <div>{formatMonth(deposit.month)}</div>
             </div>

@@ -1,9 +1,10 @@
-import { floatTransform, requiredStringSchema } from "@/app/utils/form";
+import { centsSchema } from "@/app/utils/currency";
+import { requiredStringSchema } from "@/app/utils/form";
 import z from "zod";
 
 export const name = requiredStringSchema;
 
-export const target = requiredStringSchema.transform(floatTransform);
+export const target = centsSchema;
 
 export const schema = z.object({
   name,

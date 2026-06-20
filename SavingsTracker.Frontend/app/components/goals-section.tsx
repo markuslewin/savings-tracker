@@ -43,7 +43,7 @@ import {
   getFilterLabel,
 } from "@/app/utils/filter";
 import { IconProp } from "@/app/utils/icon";
-import { formatDate, formatPercent, formatUsd } from "@/app/utils/locale";
+import { formatDate, formatPercent, formatCents } from "@/app/utils/locale";
 import { getSortLabel, Sort, sorts, sortSchema } from "@/app/utils/sort";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
@@ -301,7 +301,7 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
                     })}
                   >
                     <p>
-                      {formatUsd(goal.saved)} of {formatUsd(goal.target)}
+                      {formatCents(goal.saved)} of {formatCents(goal.target)}
                     </p>
                     <div className={dot} />
                     <p className={goalCardDeadline}>

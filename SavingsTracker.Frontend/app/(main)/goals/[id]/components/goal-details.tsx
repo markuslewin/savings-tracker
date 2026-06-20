@@ -16,7 +16,7 @@ import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
 import { Goal } from "@/app/utils/api";
 import { FormAction } from "@/app/utils/form";
-import { formatDate, formatPercent, formatUsd } from "@/app/utils/locale";
+import { formatDate, formatPercent, formatCents } from "@/app/utils/locale";
 import { nbsp } from "@/app/utils/unicode";
 import clsx from "clsx";
 import { useActionState } from "react";
@@ -106,7 +106,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                 Goal Complete
               </h3>
               <p>
-                You saved {formatUsd(350)} across {goal.deposits.length}{" "}
+                You saved {formatCents(35000)} across {goal.deposits.length}{" "}
                 deposits.
                 {inTimeResult.type === "deadline"
                   ? ` Finished before your ${formatDate(inTimeResult.deadline)} deadline.`
@@ -130,7 +130,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                 alignSelf: "stretch",
               })}
             />
-            <FinishedStat term="Total saved" data={formatUsd(350)} />
+            <FinishedStat term="Total saved" data={formatCents(35000)} />
           </dl>
         </div>
       ) : (
@@ -172,7 +172,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                   color: "neutral-300",
                 })}
               >
-                {formatUsd(remaining)} remaining
+                {formatCents(remaining)} remaining
               </p>
             </div>
             <div
@@ -193,7 +193,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                     stack: "space-0050",
                   })}
                 >
-                  <span>{formatUsd(saved)}</span>
+                  <span>{formatCents(saved)}</span>
                   <span
                     className={sprinkles({
                       color: "neutral-300",
@@ -209,7 +209,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                   })}
                   data-testid="target"
                 >
-                  <span>of {formatUsd(goal.target)}</span>
+                  <span>of {formatCents(goal.target)}</span>
                   <span
                     className={sprinkles({
                       color: "neutral-300",
@@ -346,7 +346,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                   })}
                 >
                   <span className={srOnly}>Amount: </span>+
-                  {formatUsd(deposit.amount)}
+                  {formatCents(deposit.amount)}
                 </p>
               </li>
             );

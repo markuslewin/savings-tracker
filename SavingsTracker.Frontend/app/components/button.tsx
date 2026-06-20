@@ -1,5 +1,5 @@
 import { button, icon } from "@/app/components/button.css";
-import { IconProp } from "@/app/utils/icon";
+import { IconProp } from "@/app/utils/_icon";
 import clsx from "clsx";
 import {
   Button as AriaButton,

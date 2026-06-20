@@ -42,7 +42,7 @@ import {
   filterSchema,
   getFilterLabel,
 } from "@/app/utils/filter";
-import { IconProp } from "@/app/utils/icon";
+import { IconProp } from "@/app/utils/_icon";
 import { formatDate, formatPercent, formatCents } from "@/app/utils/locale";
 import { getSortLabel, Sort, sorts, sortSchema } from "@/app/utils/sort";
 import clsx from "clsx";

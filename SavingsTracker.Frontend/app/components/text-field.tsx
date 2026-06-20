@@ -1,7 +1,7 @@
 import { FieldError } from "@/app/components/field-error";
 import * as inputStyles from "@/app/components/input.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { IconProp } from "@/app/utils/icon";
+import { IconProp } from "@/app/utils/_icon";
 import {
   TextField as AriaTextField,
   Input,

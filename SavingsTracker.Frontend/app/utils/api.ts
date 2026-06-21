@@ -122,6 +122,7 @@ export const logIn = async ({
 export const logOut = async ({ cookie }: { cookie: string }) => {
   const response = await fetch(new URL("accounts/logout", getBase()), {
     method: "post",
+    headers: { cookie },
   });
   if (!response.ok) throw new Error(`Status code ${response.status}`);
 

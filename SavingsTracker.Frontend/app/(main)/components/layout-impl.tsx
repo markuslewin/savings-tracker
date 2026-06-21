@@ -1,6 +1,7 @@
 "use client";
 
 import { DialogButton } from "@/app/(main)/components/dialog-button";
+import { userOption } from "@/app/(main)/components/layout-impl.css";
 import { Popover } from "@/app/(main)/components/popover";
 import { container, header } from "@/app/(main)/layout.css";
 import { getInitial } from "@/app/(main)/utils/avatar";
@@ -80,28 +81,30 @@ export const LayoutImpl = ({
                           >
                             {user.fullName}
                           </h2>
-                          <p className={sprinkles({ text: "6" })}>
+                          <p
+                            className={sprinkles({
+                              text: "6",
+                              color: "neutral-300",
+                            })}
+                          >
                             {user.email}
                           </p>
                         </div>
                       </div>
                       <Hr color={"neutral-700"} />
-                      <div className={sprinkles({ stack: "space-0" })}>
-                        {/* todo */}
+                      <div
+                        className={sprinkles({
+                          stack: "space-0",
+                        })}
+                      >
                         <Link
-                          className={sprinkles({
-                            padding: "space-0100",
-                            textDecoration: "none",
-                          })}
+                          className={userOption.grey}
                           href={"/forgot-password"}
                         >
                           Edit profile
                         </Link>
                         <Link
-                          className={sprinkles({
-                            padding: "space-0100",
-                            textDecoration: "none",
-                          })}
+                          className={userOption.grey}
                           href={"/forgot-password"}
                         >
                           Change password
@@ -112,15 +115,7 @@ export const LayoutImpl = ({
                         className={sprinkles({ display: "grid" })}
                         action={logOutAction}
                       >
-                        <Button
-                          className={sprinkles({
-                            padding: "space-0100",
-                            textAlign: "start",
-                            background: "transparent",
-                            color: "red-500",
-                          })}
-                          type="submit"
-                        >
+                        <Button className={userOption.red} type="submit">
                           Sign out
                         </Button>
                       </form>

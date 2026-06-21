@@ -64,7 +64,23 @@ test("sign in", async ({ page }) => {
   await page.getByRole("button", { name: "sign in" }).click();
 
   await expect(page).toHaveURL("/");
-  // todo: Check avatar
+  await expect(
+    page.getByRole("button", { name: `signed in as ${email}` }),
+  ).toBeAttached();
+});
+
+test("sign out", async ({ page }) => {
+  await signIn(page);
+  await page.getByRole("button", { name: "signed in as" }).click();
+  await page.getByRole("button", { name: "sign out" }).click();
+
+  await expect(page).toHaveURL("/signin");
+
+  await page.goto("/");
+
+  await expect(
+    page.getByRole("button", { name: "signed in as" }),
+  ).not.toBeAttached();
 });
 
 test("new user has no goals", async ({ page }) => {

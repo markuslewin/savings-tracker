@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using SavingsTracker.GoalDb;
 using SavingsTracker.GoalService;
+using SavingsTracker.GoalService.Helpers;
 using SavingsTracker.GoalService.Models;
 using SavingsTracker.GoalService.Services;
 
@@ -25,7 +26,8 @@ builder.Services.AddAuthorization();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-// builder.AddServiceDefaults();
+builder.AddServiceDefaults();
+
 builder.AddNpgsqlDbContext<GoalDbContext>("goaldb");
 
 builder.Services.AddTransient<IEmailSender, LoggerEmailSender>();
@@ -342,16 +344,31 @@ accountGroup
         async Task<Results<EmptyHttpResult, NotFound, UnauthorizedHttpResult>> (
             ChangePasswordRequest changePasswordRequest,
             ClaimsPrincipal principal,
-            UserManager<User> userManager) =>
+            UserManager<User> userManager,
+            IUserStore<User> userStore) =>
         {
             var user = await userManager.GetUserAsync(principal);
             if (user is null) return TypedResults.NotFound();
 
-            var result = await userManager.ChangePasswordAsync(user, "", changePasswordRequest.Password);
-            // validate, setpasswordhash
-            // (userManager as IUserPasswordStore).SetPasswordHashAsync
-            // todo: Validation problem
-            if (!result.Succeeded) return TypedResults.NotFound();
+            // `UserManager.ChangePasswordAsync` requires the current password.
+            // The design doesn't include that text field, so we bypass the manager here.
+            if (userStore is not IUserPasswordStore<User> passwordStore)
+                throw new Exception("User store is not a password store");
+
+            var result =
+                await PasswordHelper.Validate(
+                    userManager, user, changePasswordRequest.Password);
+            if (!result.Succeeded)
+            {
+                throw new NotImplementedException();
+            }
+
+            var hash =
+                userManager.PasswordHasher.HashPassword(
+                    user, changePasswordRequest.Password);
+            await passwordStore.SetPasswordHashAsync(
+                user, hash, CancellationToken.None);
+            await userManager.UpdateSecurityStampAsync(user);
 
             return TypedResults.Empty;
         })

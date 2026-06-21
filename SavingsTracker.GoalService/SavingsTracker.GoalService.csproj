@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SavingsTracker.GoalDb\SavingsTracker.GoalDb.csproj" />
+    <ProjectReference Include="..\SavingsTracker.ServiceDefaults\SavingsTracker.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

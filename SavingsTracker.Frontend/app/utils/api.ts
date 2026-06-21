@@ -105,9 +105,7 @@ export const logIn = async ({
   if (response.status === 401) {
     return error(new Error("Invalid email or password"));
   }
-  if (!response.ok) {
-    throw new Error("Failed to login.");
-  }
+  if (!response.ok) throw new Error(`Status code ${response.status}`);
 
   const setCookies = response.headers.getSetCookie();
   for (const setCookie of setCookies) {

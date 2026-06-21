@@ -6,6 +6,7 @@ import {
   TextField as AriaTextField,
   Input,
   Label,
+  Text,
   type TextFieldProps as AriaTextFieldProps,
 } from "react-aria-components/TextField";
 
@@ -13,12 +14,14 @@ type TextFieldProps = AriaTextFieldProps & {
   label: string;
   placeholder?: string;
   icon?: IconProp;
+  description?: string;
 };
 
 export const TextField = ({
   label,
   placeholder,
   icon: Icon,
+  description,
   ...props
 }: TextFieldProps) => {
   return (
@@ -38,6 +41,17 @@ export const TextField = ({
               placeholder={placeholder}
             />
           </span>
+          {description === undefined ? null : (
+            <Text
+              className={sprinkles({
+                text: "6",
+                color: "neutral-300",
+              })}
+              slot="description"
+            >
+              {description}
+            </Text>
+          )}
           <FieldError />
         </>
       )}

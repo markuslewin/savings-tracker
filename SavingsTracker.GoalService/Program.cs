@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using SavingsTracker.GoalDb;
+using SavingsTracker.GoalService;
 using SavingsTracker.GoalService.Models;
 using SavingsTracker.GoalService.Services;
 
@@ -335,5 +336,25 @@ accountGroup
             Email = user.Email ?? throw new Exception("User must have email")
         });
     }).RequireAuthorization();
+
+accountGroup
+    .MapPost("/changePassword",
+        async Task<Results<EmptyHttpResult, NotFound, UnauthorizedHttpResult>> (
+            ChangePasswordRequest changePasswordRequest,
+            ClaimsPrincipal principal,
+            UserManager<User> userManager) =>
+        {
+            var user = await userManager.GetUserAsync(principal);
+            if (user is null) return TypedResults.NotFound();
+
+            var result = await userManager.ChangePasswordAsync(user, "", changePasswordRequest.Password);
+            // validate, setpasswordhash
+            // (userManager as IUserPasswordStore).SetPasswordHashAsync
+            // todo: Validation problem
+            if (!result.Succeeded) return TypedResults.NotFound();
+
+            return TypedResults.Empty;
+        })
+    .RequireAuthorization();
 
 app.Run();

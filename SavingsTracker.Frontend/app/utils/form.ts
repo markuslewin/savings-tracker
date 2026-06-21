@@ -6,15 +6,15 @@ type ValidationError =
     ? T | undefined
     : never;
 
-type State<K extends string> = {
+export type FormState<K extends string> = {
   values: Record<K, string>;
   errors?: Partial<Record<K, ValidationError>>;
 };
 
 export type FormAction<K extends string> = (
-  previousState: State<K>,
+  previousState: FormState<K>,
   formData: FormData,
-) => Promise<State<K>>;
+) => Promise<FormState<K>>;
 
 export const requiredStringSchema = z.string().refine(
   (val) => {

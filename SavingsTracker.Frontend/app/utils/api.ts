@@ -149,6 +149,24 @@ export const getUser = async ({ cookie }: { cookie: string }) => {
   return user;
 };
 
+export const changePassword = async ({
+  cookie,
+  data: { password },
+}: {
+  cookie: string;
+  data: { password: string };
+}) => {
+  const response = await fetch(new URL("accounts/changePassword", getBase()), {
+    method: "post",
+    headers: {
+      "content-type": "application/json",
+      cookie,
+    },
+    body: JSON.stringify({ password }),
+  });
+  if (!response.ok) throw new Error(`Status code ${response.status}`);
+};
+
 export const getGoals = async ({
   cookie,
   data: { filter, sort },

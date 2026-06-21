@@ -13,6 +13,7 @@ export const base = style([
     alignItems: "center",
     gap: "space-0125",
     text: "5",
+    textDecoration: "none",
   }),
   {
     justifyContent: "center",

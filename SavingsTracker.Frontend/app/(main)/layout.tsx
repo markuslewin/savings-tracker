@@ -1,19 +1,13 @@
 import { LayoutImpl } from "@/app/(main)/components/layout-impl";
-import {
-  ensureAuthCookie,
-  getAuthCookie,
-  getUser,
-  logOut,
-  setAuthCookie,
-} from "@/app/utils/api";
+import { getUser } from "@/app/(main)/utils/user";
+import { ensureAuthCookie, logOut, setAuthCookie } from "@/app/utils/api";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 // We have to opt out of SSR because layouts don't receive `searchParams`
 // We need `searchParams` to route the dialog included in the layout
 const MainLayout = async (props: LayoutProps<"/">) => {
-  const cookie = await getAuthCookie();
-  const user = cookie === null ? null : await getUser({ cookie });
+  const user = await getUser();
 
   return (
     <Suspense>

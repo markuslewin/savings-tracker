@@ -83,6 +83,54 @@ test("sign out", async ({ page }) => {
   ).not.toBeAttached();
 });
 
+test.fixme("edit profile", async ({ page }) => {
+  await signIn(page);
+  await page.getByRole("button", { name: "signed in as" }).click();
+  await page.getByRole("link", { name: "edit profile" }).click();
+});
+
+test("anonymous user can't change password", async ({ page }) => {
+  await page.goto("/new-password");
+
+  await expect(page).toHaveURL("/signin");
+});
+
+test.fixme("user can change password", async ({ page }) => {
+  const oldPassword = validPassword;
+  const newPassword = "P@ssw0rd1";
+
+  const { email } = await signIn(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: "signed in as" }).click();
+  await page.getByRole("link", { name: "change password" }).click();
+  await page
+    .getByRole("textbox", { name: "new password" })
+    .first()
+    .fill(newPassword);
+  await page
+    .getByRole("textbox", { name: "confirm new password" })
+    .fill(newPassword);
+  await page.getByRole("button", { name: "reset password" }).click();
+
+  await expect(
+    page.getByRole("heading", { name: "password reset" }),
+  ).toBeAttached();
+
+  await page.getByRole("link", { name: "sign in" }).click();
+  await page.getByRole("textbox", { name: "email" }).fill(email);
+  await page.getByRole("textbox", { name: "password" }).fill(oldPassword);
+  await page.getByRole("button", { name: "sign in" }).click();
+
+  // todo: Expect error message
+
+  await page.getByRole("textbox", { name: "password" }).fill(newPassword);
+  await page.getByRole("button", { name: "sign in" }).click();
+
+  await expect(
+    page.getByRole("button", { name: "signed in as" }),
+  ).toBeAttached();
+});
+
 test("new user has no goals", async ({ page }) => {
   await signIn(page);
   await page.goto("/");

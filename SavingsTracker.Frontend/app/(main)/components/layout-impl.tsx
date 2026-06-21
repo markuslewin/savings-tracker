@@ -97,15 +97,12 @@ export const LayoutImpl = ({
                           stack: "space-0",
                         })}
                       >
-                        <Link
-                          className={userOption.grey}
-                          href={"/forgot-password"}
-                        >
+                        <Link className={userOption.grey} href={"/profile"}>
                           Edit profile
                         </Link>
                         <Link
                           className={userOption.grey}
-                          href={"/forgot-password"}
+                          href={"/new-password"}
                         >
                           Change password
                         </Link>

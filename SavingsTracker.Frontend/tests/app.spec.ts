@@ -34,8 +34,26 @@ test("/signin a11y", async ({ page }) => {
   expect(accessibilityScanResults.violations).toEqual([]);
 });
 
+test("/new-password a11y", async ({ page }) => {
+  await signIn(page);
+  await page.goto("/new-password");
+
+  const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
+
+  expect(accessibilityScanResults.violations).toEqual([]);
+});
+
 test("/goals a11y", async ({ page }) => {
   await page.goto("/goals/1");
+
+  const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
+
+  expect(accessibilityScanResults.violations).toEqual([]);
+});
+
+test("/profile a11y", async ({ page }) => {
+  await signIn(page);
+  await page.goto("/profile");
 
   const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
 
@@ -83,13 +101,7 @@ test("sign out", async ({ page }) => {
   ).not.toBeAttached();
 });
 
-test.fixme("edit profile", async ({ page }) => {
-  await signIn(page);
-  await page.getByRole("button", { name: "signed in as" }).click();
-  await page.getByRole("link", { name: "edit profile" }).click();
-});
-
-test("anonymous user can't view profile", async ({ page }) => {
+test("anonymous user gets redirected from profile", async ({ page }) => {
   await page.goto("/profile");
 
   await expect(page).toHaveURL("/signin");
@@ -112,7 +124,7 @@ test("user can edit profile", async ({ page }) => {
   await expect(popover.getByTestId("email")).toHaveText(email);
 });
 
-test("anonymous user can't change password", async ({ page }) => {
+test("anonymous user gets redirected from new password", async ({ page }) => {
   await page.goto("/new-password");
 
   await expect(page).toHaveURL("/signin");

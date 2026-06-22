@@ -327,6 +327,71 @@ test("can go to goal", async ({ page }) => {
   await expect(page.getByRole("heading", { name, level: 1 })).toBeAttached();
 });
 
+test.fixme("anonymous user gets redirected when trying to edit a goal", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page
+    .getByRole("list", { name: "your goals" })
+    .getByRole("link")
+    .first()
+    .click();
+  await page.getByRole("button", { name: "edit goal" }).click();
+
+  await expect(page).toHaveURL("/signin");
+});
+
+test.fixme("can edit goal", async ({ page }) => {
+  const name = faker.food.dish();
+  const target = faker.finance.amount();
+
+  await signIn(page);
+  const goal = await createGoal(page);
+  await page.getByRole("button", { name: "edit" }).click();
+
+  const dialog = page.getByRole("dialog", { name: "edit goal" });
+  await expect(dialog.getByRole("textbox", { name: "name" })).toHaveValue(
+    goal.name,
+  );
+  await expect(dialog.getByRole("textbox", { name: "target" })).toHaveValue(
+    goal.target,
+  );
+
+  await dialog.getByRole("textbox", { name: "name" }).fill(name);
+  await dialog.getByRole("textbox", { name: "target" }).fill(target);
+  await dialog.getByRole("button", { name: "save" }).click();
+
+  await expect(page.getByRole("heading", { name, level: 1 })).toBeAttached();
+  await expect(page.getByTestId("target")).toHaveText(new RegExp(target));
+});
+
+test("anonymous user gets redirected when trying to delete a goal", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page
+    .getByRole("list", { name: "your goals" })
+    .getByRole("link")
+    .first()
+    .click();
+  await page.getByRole("button", { name: "delete goal" }).click();
+
+  await expect(page).toHaveURL("/signin");
+});
+
+test("can delete goal", async ({ page }) => {
+  await signIn(page);
+  await createGoal(page);
+  await page.getByRole("button", { name: "delete goal" }).click();
+
+  const dialog = page.getByRole("alertdialog", { name: "delete" });
+  await dialog.getByRole("button", { name: "delete goal" }).click();
+
+  await expect(
+    page.getByRole("heading", { name: "no goals yet" }),
+  ).toBeAttached();
+});
+
 const signIn = async (page: Page) => {
   const user = await register(page);
   await page.goto("/signin");
@@ -355,8 +420,11 @@ const register = async (page: Page) => {
 
 const createGoal = async (
   page: Page,
-  { name, target = faker.finance.amount() }: { name: string; target?: string },
+  options?: { name?: string; target?: string },
 ) => {
+  const name = options?.name ?? faker.food.dish();
+  const target = options?.target ?? faker.finance.amount();
+
   await page.goto("/?dialog=new-goal");
 
   const dialog = page.getByRole("dialog", { name: "new goal" });
@@ -364,6 +432,8 @@ const createGoal = async (
   await dialog.getByRole("textbox", { name: "target" }).fill(target);
   await dialog.getByRole("button", { name: "create" }).click();
   await page.waitForURL(new URLPattern({ pathname: "/goals/*" }));
+
+  return { name, target };
 };
 
 const addDeposit = async (page: Page, { amount }: { amount: number }) => {

@@ -1,5 +1,6 @@
 import { GoalActions } from "@/app/(main)/goals/[id]/components/goal-actions";
 import { GoalDetails } from "@/app/(main)/goals/[id]/components/goal-details";
+import { getUser } from "@/app/(main)/utils/user";
 import { Back } from "@/app/components/back";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import {
@@ -34,6 +35,8 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
   const { data: goal } = result;
   if (goal === null) return notFound();
 
+  const user = await getUser();
+
   return (
     <article
       className={sprinkles({
@@ -61,6 +64,7 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
             })}
           >
             <GoalActions
+              user={user}
               goal={goal}
               editAction={async (_, formData) => {
                 "use server";

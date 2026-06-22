@@ -8,20 +8,27 @@ import {
 import { Button } from "@/app/components/button";
 import { AlertDialog, Dialog } from "@/app/components/dialog";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import { Goal } from "@/app/utils/api";
+import { Goal, User } from "@/app/utils/api";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { DialogTrigger } from "react-aria-components";
 
 type GoalActionsProps = {
+  user: User | null;
   goal: Goal;
   editAction: EditGoalFormProps["submitAction"];
   deleteAction: () => Promise<void>;
 };
 
 export const GoalActions = ({
+  user,
   goal,
   editAction,
   deleteAction,
 }: GoalActionsProps) => {
+  const router = useRouter();
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   return (
     <>
       <DialogButton dialogId="edit-goal" variant="tertiary">
@@ -30,7 +37,16 @@ export const GoalActions = ({
       <Dialog dialogId="edit-goal" title="Edit goal">
         <EditGoalForm goal={goal} submitAction={editAction} />
       </Dialog>
-      <DialogTrigger>
+      <DialogTrigger
+        isOpen={isDeleteOpen}
+        onOpenChange={(isOpen) => {
+          if (user === null && isOpen) {
+            router.push("/signin");
+            return;
+          }
+          setIsDeleteOpen(isOpen);
+        }}
+      >
         <Button className={sprinkles({ color: "red-500" })} variant="tertiary">
           Delete goal
         </Button>

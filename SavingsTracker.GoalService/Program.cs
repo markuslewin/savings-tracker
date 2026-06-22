@@ -102,29 +102,24 @@ app
         });
 
 app
-    .MapGet("/goals/{id}", async Task<Results<Ok<Goal>, NotFound>> (
+    .MapGet("/goals/{id}", async Task<Results<Ok<Goal>, NotFound, UnauthorizedHttpResult, ForbidHttpResult>> (
         int id,
         ClaimsPrincipal principal,
         UserManager<User> userManager,
         GoalDbContext ctx) =>
     {
-        IQueryable<SavingsTracker.GoalDb.Goal> query = ctx
-            .Goals
-            .Include(g => g.Deposits);
+        var goal = await ctx.Goals
+            .Include(g => g.User)
+            .Include(g => g.Deposits)
+            .FirstOrDefaultAsync(g => g.Id == id);
+        if (goal is null) return TypedResults.NotFound();
+
+        if (goal.User.IsDemo) return TypedResults.Ok(new Goal(goal));
 
         var user = await userManager.GetUserAsync(principal);
-        Expression<Func<SavingsTracker.GoalDb.Goal, bool>> predicate;
-        if (user is null)
-        {
-            predicate = g => g.User.IsDemo && g.Id == id;
-        }
-        else
-        {
-            predicate = g => g.UserId == user.Id && g.Id == id;
-        }
+        if (user is null) return TypedResults.Unauthorized();
 
-        var goal = await query.FirstOrDefaultAsync(predicate);
-        if (goal is null) return TypedResults.NotFound();
+        if (goal.UserId != user.Id) return TypedResults.Forbid();
 
         return TypedResults.Ok(new Goal(goal));
     });

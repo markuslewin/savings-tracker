@@ -89,6 +89,29 @@ test.fixme("edit profile", async ({ page }) => {
   await page.getByRole("link", { name: "edit profile" }).click();
 });
 
+test("anonymous user can't view profile", async ({ page }) => {
+  await page.goto("/profile");
+
+  await expect(page).toHaveURL("/signin");
+});
+
+test("user can edit profile", async ({ page }) => {
+  const fullName = faker.person.fullName();
+  const email = faker.internet.email();
+
+  await signIn(page);
+  await page.getByRole("button", { name: "signed in as" }).click();
+  await page.getByRole("link", { name: "edit profile" }).click();
+  await page.getByRole("textbox", { name: "full name" }).fill(fullName);
+  await page.getByRole("textbox", { name: "email" }).fill(email);
+  await page.getByRole("button", { name: "edit profile" }).click();
+  await page.getByRole("button", { name: "signed in as" }).click();
+
+  const popover = page.getByRole("dialog");
+  await expect(popover.getByTestId("fullName")).toHaveText(fullName);
+  await expect(popover.getByTestId("email")).toHaveText(email);
+});
+
 test("anonymous user can't change password", async ({ page }) => {
   await page.goto("/new-password");
 

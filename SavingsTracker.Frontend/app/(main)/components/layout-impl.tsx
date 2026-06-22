@@ -15,6 +15,7 @@ import { Hr } from "@/app/utils/hr";
 import { NewGoalDialog } from "@/app/utils/new-goal-dialog/component";
 import { OptimisticSearchParams } from "@/app/utils/optimistic-search-params/component";
 import Link from "next/link";
+import { useState } from "react";
 import { Button, DialogTrigger } from "react-aria-components";
 
 type LayoutImplProps = LayoutProps<"/"> & {
@@ -27,6 +28,8 @@ export const LayoutImpl = ({
   children,
   logOutAction,
 }: LayoutImplProps) => {
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
   return (
     <OptimisticSearchParams>
       <div>
@@ -48,7 +51,10 @@ export const LayoutImpl = ({
                   New goal
                 </DialogButton>
                 {user === null ? null : (
-                  <DialogTrigger>
+                  <DialogTrigger
+                    isOpen={isPopoverOpen}
+                    onOpenChange={setIsPopoverOpen}
+                  >
                     <Button className={avatar}>
                       <span className={srOnly}>Signed in as {user.email}</span>
                       <span aria-hidden="true">
@@ -78,6 +84,7 @@ export const LayoutImpl = ({
                             className={sprinkles({
                               color: "neutral-0",
                             })}
+                            data-testid="fullName"
                           >
                             {user.fullName}
                           </h2>
@@ -86,6 +93,7 @@ export const LayoutImpl = ({
                               text: "6",
                               color: "neutral-300",
                             })}
+                            data-testid="email"
                           >
                             {user.email}
                           </p>
@@ -97,7 +105,13 @@ export const LayoutImpl = ({
                           stack: "space-0",
                         })}
                       >
-                        <Link className={userOption.grey} href={"/profile"}>
+                        <Link
+                          className={userOption.grey}
+                          href={"/profile"}
+                          onNavigate={() => {
+                            setIsPopoverOpen(false);
+                          }}
+                        >
                           Edit profile
                         </Link>
                         <Link

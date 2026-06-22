@@ -243,8 +243,7 @@ accountGroup.MapPost("/register", async Task<Results<Ok, ValidationProblem>> (
     LinkGenerator linkGenerator,
     HttpContext httpContext) =>
 {
-    if (string.IsNullOrEmpty(registration.Email)
-        || !new EmailAddressAttribute().IsValid(registration.Email))
+    if (!IdentityHelper.ValidateEmail(registration.Email))
     {
         var error = userManager.ErrorDescriber.InvalidEmail(registration.Email);
         return TypedResults.ValidationProblem(new Dictionary<string, string[]>
@@ -337,7 +336,46 @@ accountGroup
             FullName = user.FullName,
             Email = user.Email ?? throw new Exception("User must have email")
         });
-    }).RequireAuthorization();
+    })
+    .RequireAuthorization();
+
+accountGroup
+    .MapPost("/info",
+        async Task<
+            Results<EmptyHttpResult, UnauthorizedHttpResult, ValidationProblem>
+        > (
+            PostUserRequest postUserRequest,
+            ClaimsPrincipal principal,
+            UserManager<User> userManager) =>
+        {
+            var user = await userManager.GetUserAsync(principal);
+            if (user is null) return TypedResults.Unauthorized();
+
+            if (!IdentityHelper.ValidateEmail(postUserRequest.Email))
+            {
+                var error = userManager.ErrorDescriber.InvalidEmail(postUserRequest.Email);
+                return TypedResults.ValidationProblem(new Dictionary<string, string[]>
+                {
+                    [error.Code] = [error.Description]
+                });
+            }
+
+            if (user.FullName != postUserRequest.FullName)
+            {
+                user.FullName = postUserRequest.FullName;
+            }
+
+            if (user.Email != postUserRequest.Email)
+            {
+                await userManager.SetEmailAsync(user, postUserRequest.Email);
+                await userManager.SetUserNameAsync(user, postUserRequest.Email);
+            }
+
+            await userManager.UpdateAsync(user);
+
+            return TypedResults.Empty;
+        })
+    .RequireAuthorization();
 
 accountGroup
     .MapPost("/changePassword",
@@ -356,7 +394,7 @@ accountGroup
                 throw new Exception("User store is not a password store");
 
             var result =
-                await PasswordHelper.Validate(
+                await IdentityHelper.ValidatePassword(
                     userManager, user, changePasswordRequest.Password);
             if (!result.Succeeded)
             {

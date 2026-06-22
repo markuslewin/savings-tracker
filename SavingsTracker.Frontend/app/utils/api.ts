@@ -147,6 +147,21 @@ export const getUser = async ({ cookie }: { cookie: string }) => {
   return user;
 };
 
+export const updateUser = async ({
+  cookie,
+  data: { fullName, email },
+}: {
+  cookie: string;
+  data: { fullName: string; email: string };
+}) => {
+  const response = await fetch(new URL("/accounts/info", getBase()), {
+    method: "post",
+    headers: { cookie, "content-type": "application/json" },
+    body: JSON.stringify({ fullName, email }),
+  });
+  if (!response.ok) throw new Error(`Status code: ${response.status}`);
+};
+
 export const changePassword = async ({
   cookie,
   data: { password },

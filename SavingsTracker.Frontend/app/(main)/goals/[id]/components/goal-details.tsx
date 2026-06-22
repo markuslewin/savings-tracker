@@ -295,6 +295,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
             text: "6",
           })}
           role="list"
+          aria-label="Deposits"
         >
           {goal.deposits.map((deposit) => {
             return (
@@ -333,7 +334,9 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                     stack: "space-0025",
                   })}
                 >
-                  <h3>{deposit.note.length <= 0 ? nbsp : deposit.note}</h3>
+                  <h3 data-testid="note">
+                    {deposit.note.length <= 0 ? nbsp : deposit.note}
+                  </h3>
                   <p>
                     <span className={srOnly}>Created at: </span>
                     {formatDate(deposit.createdAt)}
@@ -344,6 +347,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                     text: "5-semiBold",
                     color: "green-500",
                   })}
+                  data-testid="amount"
                 >
                   <span className={srOnly}>Amount: </span>+
                   {formatCents(deposit.amount)}

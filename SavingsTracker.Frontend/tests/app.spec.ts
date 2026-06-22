@@ -392,6 +392,59 @@ test("can delete goal", async ({ page }) => {
   ).toBeAttached();
 });
 
+test("anonymous user gets redirected when trying to add a deposit", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page
+    .getByRole("list", { name: "your goals" })
+    .getByRole("link")
+    .first()
+    .click();
+  // Ideally, we don't redirect _after_ they fill the form, but the form is right there, so...
+  await page
+    .getByRole("textbox", { name: "amount" })
+    .fill(faker.finance.amount());
+  await page.getByRole("button", { name: "add funds" }).click();
+
+  await expect(page).toHaveURL("/signin");
+});
+
+test("can add deposit", async ({ page }) => {
+  const amount = faker.finance.amount();
+  const note = faker.lorem.sentence();
+
+  await signIn(page);
+  await createGoal(page);
+  await page.getByRole("textbox", { name: "amount" }).fill(amount);
+  await page.getByRole("textbox", { name: "note" }).fill(note);
+  await page.getByRole("button", { name: "add funds" }).click();
+
+  const deposit = page
+    .getByRole("list", { name: "deposits" })
+    .getByRole("listitem")
+    .first();
+  await expect(deposit.getByTestId("note")).toHaveText(note);
+  await expect(deposit.getByTestId("amount")).toHaveText(new RegExp(amount));
+});
+
+test("deposits are ordered", async ({ page }) => {
+  await signIn(page);
+  await createGoal(page);
+  await addDeposit(page, { amount: 1 });
+
+  const deposits = page
+    .getByRole("list", { name: "deposits" })
+    .getByTestId("amount");
+  await expect(deposits).toHaveText([/1/]);
+
+  await addDeposit(page, { amount: 2 });
+
+  await expect(
+    page.getByRole("list", { name: "deposits" }).getByTestId("amount"),
+  ).toHaveText([/2/, /1/]);
+});
+
 const signIn = async (page: Page) => {
   const user = await register(page);
   await page.goto("/signin");

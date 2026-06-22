@@ -110,7 +110,7 @@ app
     {
         var goal = await ctx.Goals
             .Include(g => g.User)
-            .Include(g => g.Deposits)
+            .Include(g => g.Deposits.OrderByDescending(d => d.CreatedAt))
             .FirstOrDefaultAsync(g => g.Id == id);
         if (goal is null) return TypedResults.NotFound();
 

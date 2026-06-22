@@ -9,6 +9,7 @@ import {
 } from "@/app/components/dialog.css";
 import CrossIcon from "@/app/icons/icon-cross.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
+import { User } from "@/app/utils/api";
 import { Hr } from "@/app/utils/hr";
 import { DialogId, useDialog } from "@/app/utils/new-goal-dialog/hook";
 import clsx from "clsx";
@@ -23,11 +24,12 @@ import {
 
 type ModalProps = {
   dialogId: DialogId;
+  user: User | null;
   children: ReactNode;
 };
 
-const Modal = ({ dialogId, children }: ModalProps) => {
-  const dialog = useDialog({ dialogId });
+const Modal = ({ dialogId, user, children }: ModalProps) => {
+  const dialog = useDialog({ dialogId, user });
 
   return (
     <ModalOverlay
@@ -62,15 +64,17 @@ const Close = () => {
 
 export const Dialog = ({
   dialogId,
+  user,
   title,
   children,
 }: {
   dialogId: DialogId;
+  user: User | null;
   title: string;
   children: ReactNode;
 }) => {
   return (
-    <Modal dialogId={dialogId}>
+    <Modal dialogId={dialogId} user={user}>
       <AriaDialog className={dialog}>
         <header className={header}>
           <Heading

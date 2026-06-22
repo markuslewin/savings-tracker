@@ -4,13 +4,18 @@ import { Button } from "@/app/components/button";
 import { CancelButton, Dialog } from "@/app/components/dialog";
 import { TextField } from "@/app/components/text-field";
 import { sprinkles } from "@/app/styles/sprinkles.css";
+import { User } from "@/app/utils/api";
 import { validate } from "@/app/utils/form";
 import { createGoal } from "@/app/utils/new-goal-dialog/action";
 import { name, target } from "@/app/utils/schema/goal";
 import { useActionState } from "react";
 import { Form } from "react-aria-components/Form";
 
-export const NewGoalDialog = () => {
+type NewGoalDialogProps = {
+  user: User | null;
+};
+
+export const NewGoalDialog = ({ user }: NewGoalDialogProps) => {
   const [state, dispatch, isPending] = useActionState(createGoal, {
     values: {
       name: "",
@@ -19,7 +24,7 @@ export const NewGoalDialog = () => {
   });
 
   return (
-    <Dialog dialogId="new-goal" title="New goal">
+    <Dialog dialogId="new-goal" user={user} title="New goal">
       <Form
         className={sprinkles({
           marginBlockStart: "space-0300",

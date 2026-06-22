@@ -47,7 +47,7 @@ export const LayoutImpl = ({
                   cluster: "space-0200",
                 })}
               >
-                <DialogButton dialogId="new-goal" icon={PlusIcon}>
+                <DialogButton dialogId="new-goal" user={user} icon={PlusIcon}>
                   New goal
                 </DialogButton>
                 {user === null ? null : (
@@ -148,7 +148,7 @@ export const LayoutImpl = ({
         >
           <div className={container}>{children}</div>
         </main>
-        <NewGoalDialog />
+        <NewGoalDialog user={user} />
       </div>
     </OptimisticSearchParams>
   );

@@ -31,10 +31,10 @@ export const GoalActions = ({
 
   return (
     <>
-      <DialogButton dialogId="edit-goal" variant="tertiary">
+      <DialogButton dialogId="edit-goal" user={user} variant="tertiary">
         Edit goal
       </DialogButton>
-      <Dialog dialogId="edit-goal" title="Edit goal">
+      <Dialog dialogId="edit-goal" user={user} title="Edit goal">
         <EditGoalForm goal={goal} submitAction={editAction} />
       </Dialog>
       <DialogTrigger

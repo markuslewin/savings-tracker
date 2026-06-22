@@ -327,7 +327,7 @@ test("can go to goal", async ({ page }) => {
   await expect(page.getByRole("heading", { name, level: 1 })).toBeAttached();
 });
 
-test.fixme("anonymous user gets redirected when trying to edit a goal", async ({
+test("anonymous user gets redirected when trying to edit a goal", async ({
   page,
 }) => {
   await page.goto("/");
@@ -341,7 +341,7 @@ test.fixme("anonymous user gets redirected when trying to edit a goal", async ({
   await expect(page).toHaveURL("/signin");
 });
 
-test.fixme("can edit goal", async ({ page }) => {
+test("can edit goal", async ({ page }) => {
   const name = faker.food.dish();
   const target = faker.finance.amount();
 

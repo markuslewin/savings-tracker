@@ -1,6 +1,7 @@
 "use client";
 
 import { DialogButton } from "@/app/(main)/components/dialog-button";
+import { Popover } from "@/app/(main)/components/popover";
 import {
   clickableContainer,
   clickableContainerItem,
@@ -20,7 +21,6 @@ import {
   noGoalsContent,
   noGoalsHeading,
   noGoalsIcon,
-  popover,
   radio,
   radioCircle,
   radioDot,
@@ -36,14 +36,15 @@ import SortIcon from "@/app/icons/icon-sort.svg";
 import TargetIcon from "@/app/icons/icon-target.svg";
 import { box } from "@/app/styles/box.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
+import { IconProp } from "@/app/utils/_icon";
+import { User } from "@/app/utils/api";
 import {
   Filter,
   filters,
   filterSchema,
   getFilterLabel,
 } from "@/app/utils/filter";
-import { IconProp } from "@/app/utils/_icon";
-import { formatDate, formatPercent, formatCents } from "@/app/utils/locale";
+import { formatCents, formatDate, formatPercent } from "@/app/utils/locale";
 import { getSortLabel, Sort, sorts, sortSchema } from "@/app/utils/sort";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
@@ -57,9 +58,9 @@ import {
   RadioGroup,
   SelectionIndicator,
 } from "react-aria-components";
-import { Popover } from "@/app/(main)/components/popover";
 
 type GoalsSectionProps = {
+  user: User | null;
   filter: Filter;
   sort: Sort;
   view:
@@ -76,7 +77,12 @@ type GoalsSectionProps = {
       };
 };
 
-export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
+export const GoalsSection = ({
+  user,
+  filter,
+  sort,
+  view,
+}: GoalsSectionProps) => {
   const [optimisticFilter, setOptimisticFilter] = useOptimistic(filter);
   const [optimisticSort, setOptimisticSort] = useOptimistic(sort);
   const [isPending, transition] = useTransition();
@@ -175,6 +181,7 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
                   marginBlockStart: "space-0400",
                 })}
                 dialogId="new-goal"
+                user={user}
                 icon={PlusIcon}
               >
                 Create your first goal

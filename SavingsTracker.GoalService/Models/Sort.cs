@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace SavingsTracker.GoalService.Models;
 
-[JsonConverter(typeof(JsonStringEnumConverter<Filter>))]
+[JsonConverter(typeof(JsonStringEnumConverter<Sort>))]
 public enum Sort
 {
   RecentlyAdded,

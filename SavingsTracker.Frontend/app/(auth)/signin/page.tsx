@@ -14,7 +14,13 @@ const Signin = () => {
           stack: "space-0100",
         })}
       >
-        <h1>Welcome back</h1>
+        <h1
+          className={sprinkles({
+            text: "2",
+          })}
+        >
+          Welcome back
+        </h1>
         <p className={sprinkles({ color: "neutral-300" })}>
           Sign in to your account
         </p>

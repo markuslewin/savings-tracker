@@ -42,7 +42,13 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
           stack: "space-0200",
         })}
       >
-        <h1>Forgot your password?</h1>
+        <h1
+          className={sprinkles({
+            text: "2",
+          })}
+        >
+          Forgot your password?
+        </h1>
         <p className={paragraph}>
           Enter your email address and we&apos;ll send you a link to reset it.
         </p>
@@ -83,7 +89,7 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
           stack: "space-0100",
         })}
       >
-        <h1>Check your inbox</h1>
+        <h1 className={sprinkles({ text: "2" })}>Check your inbox</h1>
         <p
           className={sprinkles({
             color: "neutral-300",

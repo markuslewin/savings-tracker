@@ -253,6 +253,40 @@ test("filter goals", async ({ page }) => {
   await expect(goals).toHaveText(["Not started", "Completed", "In progress"]);
 });
 
+test("always aggregate on total goals", async ({ page }) => {
+  await signIn(page);
+  // 2 goals in progress
+  await createGoal(page, { name: "One", target: "10" });
+  await addDeposit(page, { amount: 1 });
+  await createGoal(page, { name: "Two", target: "10" });
+  await addDeposit(page, { amount: 1 });
+
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "filters" }).click();
+  await page.getByRole("radio", { name: "not started" }).click({ force: true });
+  await page.keyboard.press("Escape");
+
+  await expect(page.getByTestId("total-savings")).toHaveText("$2");
+  await expect(page.getByTestId("active-goals")).toHaveText("2");
+  await expect(
+    page.getByRole("list", { name: "monthly deposits" }).getByRole("listitem"),
+  ).toHaveText([
+    new RegExp("\\$0"),
+    new RegExp("\\$0"),
+    new RegExp("\\$0"),
+    new RegExp("\\$0"),
+    new RegExp("\\$0"),
+    new RegExp("\\$0"),
+    new RegExp("\\$0"),
+    new RegExp("\\$0"),
+    new RegExp("\\$0"),
+    new RegExp("\\$0"),
+    new RegExp("\\$0"),
+    new RegExp("\\$2"),
+  ]);
+});
+
 test("sort goals", async ({ page }) => {
   await signIn(page);
   await createGoal(page, { name: "A", target: "100" });

@@ -50,7 +50,6 @@ app.UseHttpsRedirection();
 app
     .MapGet("/goals",
         async Task<Results<Ok<IQueryable<Goal>>, UnauthorizedHttpResult>> (
-            Filter filter,
             Sort sort,
             ClaimsPrincipal principal,
             UserManager<User> userManager,
@@ -66,20 +65,6 @@ app
             {
                 null => query.Where(g => g.User.IsDemo),
                 User => query.Where(g => g.UserId == user.Id)
-            };
-
-            query = filter switch
-            {
-                Filter.All => query,
-                Filter.Completed =>
-                    query.Where(g => g.Deposits.Sum(d => d.Amount) >= g.Target),
-                Filter.InProgress =>
-                    query.Where(g =>
-                        0 < g.Deposits.Sum(d => d.Amount)
-                        && g.Deposits.Sum(d => d.Amount) < g.Target),
-                Filter.NotStarted =>
-                    query.Where(g => g.Deposits.Sum(d => d.Amount) <= 0),
-                _ => throw new Exception("Invalid filter"),
             };
 
             query = sort switch

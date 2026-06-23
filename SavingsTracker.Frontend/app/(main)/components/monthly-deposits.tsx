@@ -73,6 +73,7 @@ export const MonthlyDepositsImpl = ({
           }),
         }}
         role="list"
+        aria-label="Monthly deposits"
       >
         {result.values.map((deposit, i) => {
           return (

@@ -8,7 +8,7 @@ import { Sprinkles, sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
 import { getAuthCookie, getGoals } from "@/app/utils/api";
 import { getNow } from "@/app/utils/date";
-import { filterSchema } from "@/app/utils/filter";
+import { filterSchema, getFilterFn } from "@/app/utils/filter";
 import { addSaved, isActive, isCompleted } from "@/app/utils/goal";
 import { formatCents } from "@/app/utils/locale";
 import { sum } from "@/app/utils/math";
@@ -29,9 +29,10 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
   const user = await getUser();
   const goals = await getGoals({
     cookie: await getAuthCookie(),
-    data: { filter, sort },
+    data: { sort },
   });
   const goalsWithSaved = addSaved(goals);
+  const filteredGoals = goalsWithSaved.filter(getFilterFn(filter));
   const deposits = goals.flatMap((g) => g.deposits);
 
   return (
@@ -98,7 +99,8 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
         view={
           goalsWithSaved.length <= 0
             ? { type: "no-goals", user }
-            : { type: "goals", goals: goalsWithSaved }
+            : // todo: "No goals matched this filter"
+              { type: "goals", goals: filteredGoals }
         }
       />
     </div>

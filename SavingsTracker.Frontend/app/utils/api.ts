@@ -182,13 +182,13 @@ export const changePassword = async ({
 
 export const getGoals = async ({
   cookie,
-  data: { filter, sort },
+  data: { sort },
 }: {
   cookie: string | null;
-  data: { filter: Filter; sort: Sort };
+  data: { sort: Sort };
 }) => {
   const response = await fetch(
-    new URL(`goals?${new URLSearchParams({ filter, sort })}`, getBase()),
+    new URL(`goals?${new URLSearchParams({ sort })}`, getBase()),
     {
       headers: {
         ...(cookie === null ? {} : { cookie }),

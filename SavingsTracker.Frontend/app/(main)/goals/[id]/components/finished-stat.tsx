@@ -4,9 +4,10 @@ import { ReactNode } from "react";
 type FinishedStatProps = {
   term: string;
   data: ReactNode;
+  testId: string;
 };
 
-export const FinishedStat = ({ term, data }: FinishedStatProps) => {
+export const FinishedStat = ({ term, data, testId }: FinishedStatProps) => {
   return (
     <div
       className={sprinkles({
@@ -21,6 +22,7 @@ export const FinishedStat = ({ term, data }: FinishedStatProps) => {
         className={sprinkles({
           text: "2",
         })}
+        data-testid={testId}
       >
         {data}
       </dd>

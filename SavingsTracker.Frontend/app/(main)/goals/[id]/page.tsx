@@ -14,7 +14,7 @@ import {
 import { formatDate } from "@/app/utils/locale";
 import { schema as depositSchema } from "@/app/utils/schema/deposit";
 import { schema as goalSchema } from "@/app/utils/schema/goal";
-import { notFound, redirect } from "next/navigation";
+import { forbidden, notFound, redirect, unauthorized } from "next/navigation";
 import * as z from "zod";
 
 const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
@@ -24,18 +24,18 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
     })
     .parse(await params);
 
-  const result = await getGoal({
+  const response = await getGoal({
     cookie: await getAuthCookie(),
     data: {
       id,
     },
   });
-  if (!result.success) throw result.error;
-
-  const { data: goal } = result;
-  if (goal === null) return notFound();
+  if (response.status === 401) unauthorized();
+  if (response.status === 403) forbidden();
+  if (response.status === 404) notFound();
 
   const user = await getUser();
+  const { json: goal } = response;
 
   return (
     <article

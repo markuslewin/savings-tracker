@@ -44,6 +44,7 @@ import {
   filterSchema,
   getFilterLabel,
 } from "@/app/utils/filter";
+import { getProgress } from "@/app/utils/goal";
 import { formatCents, formatDate, formatPercent } from "@/app/utils/locale";
 import { getSortLabel, Sort, sorts, sortSchema } from "@/app/utils/sort";
 import clsx from "clsx";
@@ -201,12 +202,13 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
             aria-label="Your goals"
           >
             {view.goals.map((goal) => {
-              const progress = goal.saved / goal.target;
+              const progress = getProgress(goal);
 
               return (
                 <li
                   key={goal.id}
                   className={clsx(
+                    // todo: Utils
                     goalCard[
                       progress <= 0
                         ? "noProgress"

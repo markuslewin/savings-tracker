@@ -214,12 +214,14 @@ export const getGoal = async ({
       ...(cookie === null ? {} : { cookie }),
     },
   });
-  if (response.status === 404) return success(null);
-  if (!response.ok) return error(new Error("Unsuccessful status code"));
+  if (response.status === 401) return { status: response.status } as const;
+  if (response.status === 403) return { status: response.status } as const;
+  if (response.status === 404) return { status: response.status } as const;
+  if (!response.ok) throw new Error(`Status code ${response.status}`);
 
   const json = await response.json();
   const goal = goalSchema.parse(json);
-  return success(goal);
+  return { status: 200, json: goal } as const;
 };
 
 export const createGoal = async ({

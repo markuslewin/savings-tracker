@@ -21,5 +21,14 @@ export const addSaved = <T extends { deposits: { amount: number }[] }>(
 ) =>
   goals.map((g) => ({
     ...g,
-    saved: sum(g.deposits.map((d) => d.amount)),
+    saved: getSaved(g),
   }));
+
+export const getSaved = (goal: { deposits: { amount: number }[] }) =>
+  sum(goal.deposits.map((d) => d.amount));
+
+export const getRemaining = (goal: { target: number; saved: number }) =>
+  Math.max(0, goal.target - goal.saved);
+
+export const getProgress = (goal: { target: number; saved: number }) =>
+  Math.min(1, goal.saved / goal.target);

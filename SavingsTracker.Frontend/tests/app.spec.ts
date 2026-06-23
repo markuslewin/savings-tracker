@@ -444,13 +444,17 @@ test("anonymous user gets redirected when trying to add a deposit", async ({
   await expect(page).toHaveURL("/signin");
 });
 
-test("can add deposit", async ({ page }) => {
-  const amount = faker.finance.amount();
+test("can add deposits", async ({ page }) => {
   const note = faker.lorem.sentence();
 
   await signIn(page);
-  await createGoal(page);
-  await page.getByRole("textbox", { name: "amount" }).fill(amount);
+  await createGoal(page, { target: "100" });
+
+  await expect(page.getByTestId("progress")).toHaveText("0%");
+  await expect(page.getByTestId("remaining")).toHaveText(/\$100/);
+  await expect(page.getByTestId("saved")).toHaveText(/\$0/);
+
+  await page.getByRole("textbox", { name: "amount" }).fill("10.53");
   await page.getByRole("textbox", { name: "note" }).fill(note);
   await page.getByRole("button", { name: "add funds" }).click();
 
@@ -459,24 +463,40 @@ test("can add deposit", async ({ page }) => {
     .getByRole("listitem")
     .first();
   await expect(deposit.getByTestId("note")).toHaveText(note);
-  await expect(deposit.getByTestId("amount")).toHaveText(new RegExp(amount));
-});
+  await expect(deposit.getByTestId("amount")).toHaveText(/\$10.53/);
 
-test("deposits are ordered", async ({ page }) => {
-  await signIn(page);
-  await createGoal(page);
-  await addDeposit(page, { amount: 1 });
+  await expect(page.getByTestId("progress")).toHaveText("10%");
+  await expect(page.getByTestId("remaining")).toHaveText(/\$89\.47/);
+  await expect(page.getByTestId("saved")).toHaveText(/\$10\.53/);
 
-  const deposits = page
-    .getByRole("list", { name: "deposits" })
-    .getByTestId("amount");
-  await expect(deposits).toHaveText([/1/]);
-
-  await addDeposit(page, { amount: 2 });
+  await page.getByRole("textbox", { name: "amount" }).fill("89.46");
+  await page
+    .getByRole("textbox", { name: "note" })
+    .fill(faker.lorem.sentence());
+  await page.getByRole("button", { name: "add funds" }).click();
 
   await expect(
     page.getByRole("list", { name: "deposits" }).getByTestId("amount"),
-  ).toHaveText([/2/, /1/]);
+  ).toHaveText([new RegExp("\\$89.46"), new RegExp("\\$10.53")]);
+  await expect(page.getByTestId("progress")).toHaveText("99%");
+  await expect(page.getByTestId("remaining")).toHaveText(/\$0\.01/);
+  await expect(page.getByTestId("saved")).toHaveText(/\$99\.99/);
+
+  await page.getByRole("textbox", { name: "amount" }).fill("0.01");
+  await page.getByRole("button", { name: "add funds" }).click();
+
+  await expect(
+    page.getByRole("heading", { name: "goal complete" }),
+  ).toBeAttached();
+  await expect(page.getByTestId("saved")).toHaveText(["$100", "$100"]);
+  await expect(page.getByTestId("deposits-count")).toHaveText(["3", "3"]);
+  await expect(
+    page.getByRole("list", { name: "deposits" }).getByTestId("amount"),
+  ).toHaveText([
+    new RegExp("\\$0.01"),
+    new RegExp("\\$89.46"),
+    new RegExp("\\$10.53"),
+  ]);
 });
 
 const signIn = async (page: Page) => {

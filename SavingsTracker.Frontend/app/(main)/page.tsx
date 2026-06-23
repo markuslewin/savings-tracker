@@ -99,8 +99,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
         view={
           goalsWithSaved.length <= 0
             ? { type: "no-goals", user }
-            : // todo: "No goals matched this filter"
-              { type: "goals", goals: filteredGoals }
+            : { type: "goals", goals: filteredGoals }
         }
       />
     </div>

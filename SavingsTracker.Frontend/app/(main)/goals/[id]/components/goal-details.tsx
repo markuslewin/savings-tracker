@@ -16,7 +16,8 @@ import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
 import { Goal } from "@/app/utils/api";
 import { FormAction } from "@/app/utils/form";
-import { formatDate, formatPercent, formatCents } from "@/app/utils/locale";
+import { getProgress, getRemaining, getSaved } from "@/app/utils/goal";
+import { formatCents, formatDate, formatPercent } from "@/app/utils/locale";
 import { nbsp } from "@/app/utils/unicode";
 import clsx from "clsx";
 import { useActionState } from "react";
@@ -32,108 +33,13 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
     values: { amount: "", note: "" },
   });
 
-  const progress = 0.1;
-  const remaining = 123;
-  const saved = 321;
-
-  // todo: Fix
-  const inTimeResult =
-    goal.deadline === null
-      ? ({ type: "no-deadline" } as const)
-      : ({ type: "deadline", deadline: goal.deadline } as const);
+  const saved = getSaved(goal);
+  const progress = getProgress({ ...goal, saved });
+  const remaining = getRemaining({ ...goal, saved });
 
   return (
     <div className={split}>
-      {progress >= 1 ? (
-        <div
-          className={clsx(
-            card.orange,
-            sprinkles({
-              stack: "space-0500",
-              boxSpaceBlock: "space-0600",
-              boxSpaceInline: "space-0300",
-            }),
-          )}
-        >
-          <div
-            className={clsx(
-              box,
-              sprinkles({
-                borderRadius: "radius-full",
-                borderColor: "transparent",
-                width: "size-0800",
-                height: "size-0800",
-                // todo: Fix
-                boxSpaceBlock: "space-0",
-                boxSpaceInline: "space-0",
-                display: "grid",
-                placeItems: "center",
-                background: "white-alpha-30",
-                color: "neutral-0",
-              }),
-            )}
-          >
-            <CheckmarkIcon
-              className={sprinkles({
-                width: "size-0400",
-                height: "size-0400",
-              })}
-            />
-          </div>
-          <div
-            className={sprinkles({
-              stack: "space-0300",
-            })}
-          >
-            <h2 className={srOnly}>Progress</h2>
-            <strong
-              className={sprinkles({
-                text: "1",
-              })}
-            >
-              100%
-            </strong>
-            <div
-              className={sprinkles({
-                stack: "space-0125",
-              })}
-            >
-              <h3
-                className={sprinkles({
-                  text: "2",
-                })}
-              >
-                Goal Complete
-              </h3>
-              <p>
-                You saved {formatCents(35000)} across {goal.deposits.length}{" "}
-                deposits.
-                {inTimeResult.type === "deadline"
-                  ? ` Finished before your ${formatDate(inTimeResult.deadline)} deadline.`
-                  : null}
-              </p>
-            </div>
-          </div>
-          <dl
-            className={sprinkles({
-              cluster: {
-                mobile: "space-0250",
-                tablet: "space-0400",
-              },
-            })}
-          >
-            <FinishedStat term="Deposits" data={goal.deposits.length} />
-            <div
-              className={sprinkles({
-                borderInlineStart: "solid",
-                borderColor: "white-alpha-30",
-                alignSelf: "stretch",
-              })}
-            />
-            <FinishedStat term="Total saved" data={formatCents(35000)} />
-          </dl>
-        </div>
-      ) : (
+      {progress < 1 ? (
         <div
           className={sprinkles({
             stack: "space-0300",
@@ -163,6 +69,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                 className={sprinkles({
                   text: "1",
                 })}
+                data-testid="progress"
               >
                 {formatPercent(progress)}
               </strong>
@@ -171,6 +78,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                   text: "4",
                   color: "neutral-300",
                 })}
+                data-testid="remaining"
               >
                 {formatCents(remaining)} remaining
               </p>
@@ -180,7 +88,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                 stack: "space-0200",
               })}
             >
-              <Progress className={progressColor.orange} value={0.5} />
+              <Progress className={progressColor.orange} value={progress} />
               <div
                 className={sprinkles({
                   display: "flex",
@@ -192,6 +100,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                   className={sprinkles({
                     stack: "space-0050",
                   })}
+                  data-testid="saved"
                 >
                   <span>{formatCents(saved)}</span>
                   <span
@@ -266,6 +175,106 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
               </Button>
             </Form>
           </div>
+        </div>
+      ) : (
+        <div
+          className={clsx(
+            card.orange,
+            sprinkles({
+              stack: "space-0500",
+              boxSpaceBlock: "space-0600",
+              boxSpaceInline: "space-0300",
+            }),
+          )}
+        >
+          <div
+            className={clsx(
+              box,
+              sprinkles({
+                borderRadius: "radius-full",
+                borderColor: "transparent",
+                width: "size-0800",
+                height: "size-0800",
+                // todo: Fix
+                boxSpaceBlock: "space-0",
+                boxSpaceInline: "space-0",
+                display: "grid",
+                placeItems: "center",
+                background: "white-alpha-30",
+                color: "neutral-0",
+              }),
+            )}
+          >
+            <CheckmarkIcon
+              className={sprinkles({
+                width: "size-0400",
+                height: "size-0400",
+              })}
+            />
+          </div>
+          <div
+            className={sprinkles({
+              stack: "space-0300",
+            })}
+          >
+            <h2 className={srOnly}>Progress</h2>
+            <strong
+              className={sprinkles({
+                text: "1",
+              })}
+            >
+              100%
+            </strong>
+            <div
+              className={sprinkles({
+                stack: "space-0125",
+              })}
+            >
+              <h3
+                className={sprinkles({
+                  text: "2",
+                })}
+              >
+                Goal Complete
+              </h3>
+              <p>
+                You saved <span data-testid="saved">{formatCents(saved)}</span>{" "}
+                across{" "}
+                <span data-testid="deposits-count">{goal.deposits.length}</span>{" "}
+                deposits.
+                {/* todo: Fix */}
+                {goal.deadline !== null && true
+                  ? ` Finished before your ${formatDate(goal.deadline)} deadline.`
+                  : null}
+              </p>
+            </div>
+          </div>
+          <dl
+            className={sprinkles({
+              cluster: {
+                mobile: "space-0250",
+                tablet: "space-0400",
+              },
+            })}
+          >
+            <FinishedStat
+              term="Deposits"
+              data={goal.deposits.length}
+              testId="deposits-count"
+            />
+            <div
+              className={sprinkles({
+                borderInlineStart: "solid",
+                borderColor: "white-alpha-30",
+                alignSelf: "stretch",
+              })}
+            />
+            <FinishedStat
+              term="Total saved"
+              data={formatCents(saved)}
+              testId="saved"
+            />
+          </dl>
         </div>
       )}
       <div

@@ -1,5 +1,6 @@
 import { MonthlyDeposits } from "@/app/(main)/components/monthly-deposits";
 import { summaryCardDecoration } from "@/app/(main)/page.css";
+import { getUser } from "@/app/(main)/utils/user";
 import { GoalsSection } from "@/app/components/goals-section";
 import { card } from "@/app/styles/card.css";
 import { columns } from "@/app/styles/columns.css";
@@ -25,6 +26,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
     .parse(await searchParams);
 
   const now = getNow();
+  const user = await getUser();
   const goals = await getGoals({
     cookie: await getAuthCookie(),
     data: { filter, sort },
@@ -95,7 +97,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
         sort={sort}
         view={
           goalsWithSaved.length <= 0
-            ? { type: "no-goals" }
+            ? { type: "no-goals", user }
             : { type: "goals", goals: goalsWithSaved }
         }
       />

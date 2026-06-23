@@ -60,11 +60,10 @@ import {
 } from "react-aria-components";
 
 type GoalsSectionProps = {
-  user: User | null;
   filter: Filter;
   sort: Sort;
   view:
-    | { type: "no-goals" }
+    | { type: "no-goals"; user: User | null }
     | {
         type: "goals";
         goals: {
@@ -77,12 +76,7 @@ type GoalsSectionProps = {
       };
 };
 
-export const GoalsSection = ({
-  user,
-  filter,
-  sort,
-  view,
-}: GoalsSectionProps) => {
+export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
   const [optimisticFilter, setOptimisticFilter] = useOptimistic(filter);
   const [optimisticSort, setOptimisticSort] = useOptimistic(sort);
   const [isPending, transition] = useTransition();
@@ -181,7 +175,7 @@ export const GoalsSection = ({
                   marginBlockStart: "space-0400",
                 })}
                 dialogId="new-goal"
-                user={user}
+                user={view.user}
                 icon={PlusIcon}
               >
                 Create your first goal

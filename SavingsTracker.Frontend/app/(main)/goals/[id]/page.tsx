@@ -14,7 +14,7 @@ import {
 import { formatDate } from "@/app/utils/locale";
 import { schema as depositSchema } from "@/app/utils/schema/deposit";
 import { schema as goalSchema } from "@/app/utils/schema/goal";
-import { forbidden, notFound, redirect, unauthorized } from "next/navigation";
+import { notFound, redirect, unauthorized } from "next/navigation";
 import * as z from "zod";
 
 const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
@@ -31,7 +31,6 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
     },
   });
   if (response.status === 401) unauthorized();
-  if (response.status === 403) forbidden();
   if (response.status === 404) notFound();
 
   const user = await getUser();

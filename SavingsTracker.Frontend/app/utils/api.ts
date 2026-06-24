@@ -1,4 +1,3 @@
-import { Filter } from "@/app/utils/filter";
 import { error, success } from "@/app/utils/result";
 import { Sort } from "@/app/utils/sort";
 import { parseSetCookie, serialize } from "cookie";
@@ -215,7 +214,6 @@ export const getGoal = async ({
     },
   });
   if (response.status === 401) return { status: response.status } as const;
-  if (response.status === 403) return { status: response.status } as const;
   if (response.status === 404) return { status: response.status } as const;
   if (!response.ok) throw new Error(`Status code ${response.status}`);
 

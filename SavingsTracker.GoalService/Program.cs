@@ -87,7 +87,7 @@ app
         });
 
 app
-    .MapGet("/goals/{id}", async Task<Results<Ok<Goal>, NotFound, UnauthorizedHttpResult, ForbidHttpResult>> (
+    .MapGet("/goals/{id}", async Task<Results<Ok<Goal>, NotFound, UnauthorizedHttpResult>> (
         int id,
         ClaimsPrincipal principal,
         UserManager<User> userManager,
@@ -104,7 +104,7 @@ app
         var user = await userManager.GetUserAsync(principal);
         if (user is null) return TypedResults.Unauthorized();
 
-        if (goal.UserId != user.Id) return TypedResults.Forbid();
+        if (goal.UserId != user.Id) return TypedResults.Unauthorized();
 
         return TypedResults.Ok(new Goal(goal));
     });
@@ -134,7 +134,7 @@ app
     .RequireAuthorization();
 
 app
-    .MapPatch("/goals/{id}", async Task<Results<NoContent, UnauthorizedHttpResult, NotFound, ForbidHttpResult>> (
+    .MapPatch("/goals/{id}", async Task<Results<NoContent, UnauthorizedHttpResult, NotFound>> (
         int id,
         PatchGoalRequest patch,
         GoalDbContext ctx,
@@ -147,7 +147,7 @@ app
         var goal = await ctx.Goals.FindAsync(id);
         if (goal is null) return TypedResults.NotFound();
 
-        if (goal.UserId != user.Id) return TypedResults.Forbid();
+        if (goal.UserId != user.Id) return TypedResults.Unauthorized();
 
         if (patch.Name is not null)
         {
@@ -164,7 +164,7 @@ app
     .RequireAuthorization();
 
 app
-    .MapDelete("/goals/{id}", async Task<Results<NoContent, UnauthorizedHttpResult, NotFound, ForbidHttpResult>> (
+    .MapDelete("/goals/{id}", async Task<Results<NoContent, UnauthorizedHttpResult, NotFound>> (
         int id,
         GoalDbContext ctx,
         ClaimsPrincipal principal,
@@ -176,7 +176,7 @@ app
         var goal = await ctx.Goals.FindAsync(id);
         if (goal is null) return TypedResults.NotFound();
 
-        if (goal.UserId != user.Id) return TypedResults.Forbid();
+        if (goal.UserId != user.Id) return TypedResults.Unauthorized();
 
         ctx.Goals.Remove(goal);
         await ctx.SaveChangesAsync();
@@ -186,7 +186,7 @@ app
     .RequireAuthorization();
 
 app
-    .MapPost("/goals/{id}/deposits", async Task<Results<NoContent, UnauthorizedHttpResult, NotFound, ForbidHttpResult>> (
+    .MapPost("/goals/{id}/deposits", async Task<Results<NoContent, UnauthorizedHttpResult, NotFound>> (
         int id,
         AddDepositRequest deposit,
         ClaimsPrincipal principal,
@@ -199,7 +199,7 @@ app
         var goal = await ctx.Goals.FindAsync(id);
         if (goal is null) return TypedResults.NotFound();
 
-        if (goal.UserId != user.Id) return TypedResults.Forbid();
+        if (goal.UserId != user.Id) return TypedResults.Unauthorized();
 
         await ctx.Deposits.AddAsync(new SavingsTracker.GoalDb.Deposit
         {

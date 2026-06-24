@@ -76,7 +76,7 @@ export const register = async ({
   password: string;
 }) => {
   const response = await fetch(new URL("accounts/register", getBase()), {
-    method: "post",
+    method: "POST",
     headers: {
       "content-type": "application/json",
     },
@@ -95,7 +95,7 @@ export const logIn = async ({
   password: string;
 }) => {
   const response = await fetch(new URL("accounts/login", getBase()), {
-    method: "post",
+    method: "POST",
     headers: {
       "content-type": "application/json",
     },
@@ -118,7 +118,7 @@ export const logIn = async ({
 
 export const logOut = async ({ cookie }: { cookie: string }) => {
   const response = await fetch(new URL("accounts/logout", getBase()), {
-    method: "post",
+    method: "POST",
     headers: { cookie },
   });
   if (!response.ok) throw new Error(`Status code ${response.status}`);
@@ -154,7 +154,7 @@ export const updateUser = async ({
   data: { fullName: string; email: string };
 }) => {
   const response = await fetch(new URL("/accounts/info", getBase()), {
-    method: "post",
+    method: "POST",
     headers: { cookie, "content-type": "application/json" },
     body: JSON.stringify({ fullName, email }),
   });
@@ -169,7 +169,7 @@ export const changePassword = async ({
   data: { password: string };
 }) => {
   const response = await fetch(new URL("accounts/changePassword", getBase()), {
-    method: "post",
+    method: "POST",
     headers: {
       "content-type": "application/json",
       cookie,
@@ -233,7 +233,7 @@ export const createGoal = async ({
   };
 }) => {
   const response = await fetch(new URL("goals", getBase()), {
-    method: "post",
+    method: "POST",
     headers: {
       "content-type": "application/json",
       cookie,
@@ -263,7 +263,7 @@ export const updateGoal = async ({
   };
 }) => {
   const response = await fetch(new URL(`/goals/${id}`, getBase()), {
-    method: "patch",
+    method: "PATCH",
     headers: {
       "content-type": "application/json",
       cookie,
@@ -281,7 +281,7 @@ export const deleteGoal = async ({
   data: { id: number };
 }) => {
   const response = await fetch(new URL(`/goals/${id}`, getBase()), {
-    method: "delete",
+    method: "DELETE",
     headers: {
       "content-type": "application/json",
       cookie,
@@ -300,7 +300,7 @@ export const addDeposit = async ({
   const response = await fetch(
     new URL(`/goals/${goalId}/deposits`, getBase()),
     {
-      method: "post",
+      method: "POST",
       headers: {
         "content-type": "application/json",
         cookie,

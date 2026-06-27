@@ -33,6 +33,6 @@ const centsFormatter = Intl.NumberFormat(locale, {
   trailingZeroDisplay: "stripIfInteger",
 });
 
-export const formatCents = (value: number) => {
-  return centsFormatter.format(value / 100);
+export const formatDollars = (value: number) => {
+  return centsFormatter.format(value);
 };

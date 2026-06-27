@@ -17,7 +17,7 @@ import { srOnly } from "@/app/styles/srOnly.css";
 import { Goal } from "@/app/utils/api";
 import { FormAction } from "@/app/utils/form";
 import { getProgress, getRemaining, getSaved } from "@/app/utils/goal";
-import { formatCents, formatDate, formatPercent } from "@/app/utils/locale";
+import { formatDate, formatDollars, formatPercent } from "@/app/utils/locale";
 import { nbsp } from "@/app/utils/unicode";
 import clsx from "clsx";
 import { useActionState } from "react";
@@ -80,7 +80,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                 })}
                 data-testid="remaining"
               >
-                {formatCents(remaining)} remaining
+                {formatDollars(remaining)} remaining
               </p>
             </div>
             <div
@@ -102,7 +102,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                   })}
                   data-testid="saved"
                 >
-                  <span>{formatCents(saved)}</span>
+                  <span>{formatDollars(saved)}</span>
                   <span
                     className={sprinkles({
                       color: "neutral-300",
@@ -118,7 +118,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                   })}
                   data-testid="target"
                 >
-                  <span>of {formatCents(goal.target)}</span>
+                  <span>of {formatDollars(goal.target)}</span>
                   <span
                     className={sprinkles({
                       color: "neutral-300",
@@ -238,8 +238,8 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                 Goal Complete
               </h3>
               <p>
-                You saved <span data-testid="saved">{formatCents(saved)}</span>{" "}
-                across{" "}
+                You saved{" "}
+                <span data-testid="saved">{formatDollars(saved)}</span> across{" "}
                 <span data-testid="deposits-count">{goal.deposits.length}</span>{" "}
                 deposits.
                 {/* todo: Fix */}
@@ -271,7 +271,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
             />
             <FinishedStat
               term="Total saved"
-              data={formatCents(saved)}
+              data={formatDollars(saved)}
               testId="saved"
             />
           </dl>
@@ -359,7 +359,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                   data-testid="amount"
                 >
                   <span className={srOnly}>Amount: </span>+
-                  {formatCents(deposit.amount)}
+                  {formatDollars(deposit.amount)}
                 </p>
               </li>
             );

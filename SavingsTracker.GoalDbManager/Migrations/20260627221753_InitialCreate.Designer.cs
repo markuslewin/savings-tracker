@@ -12,7 +12,7 @@ using SavingsTracker.GoalDb;
 namespace SavingsTracker.GoalDbManager.Migrations
 {
     [DbContext(typeof(GoalDbContext))]
-    [Migration("20260619213610_InitialCreate")]
+    [Migration("20260627221753_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -165,8 +165,8 @@ namespace SavingsTracker.GoalDbManager.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -207,8 +207,8 @@ namespace SavingsTracker.GoalDbManager.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Target")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("Target")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("UserId")
                         .IsRequired()

@@ -162,8 +162,8 @@ namespace SavingsTracker.GoalDbManager.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -204,8 +204,8 @@ namespace SavingsTracker.GoalDbManager.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Target")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("Target")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("UserId")
                         .IsRequired()

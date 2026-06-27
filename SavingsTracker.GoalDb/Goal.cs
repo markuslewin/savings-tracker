@@ -4,7 +4,7 @@ public class Goal
 {
   public int Id { get; set; }
   public string Name { get; set; }
-  public int Target { get; set; }
+  public decimal Target { get; set; }
   public DateOnly? Deadline { get; set; }
 
   public DateTimeOffset CreatedAt { get; set; }

@@ -1,4 +1,4 @@
-import { formatCents, formatPercent } from "@/app/utils/locale";
+import { formatDollars, formatPercent } from "@/app/utils/locale";
 import { expect, test } from "vitest";
 
 test.each([
@@ -13,10 +13,10 @@ test.each([
 
 test.each([
   [0, "$0"],
-  [35000, "$350"],
-  [190000, "$1,900"],
-  [10, "$0.10"],
-  [1, "$0.01"],
-])("formatCents(%d) -> %s", (value, expected) => {
-  expect(formatCents(value)).toBe(expected);
+  [350, "$350"],
+  [1900, "$1,900"],
+  [0.1, "$0.10"],
+  [0.01, "$0.01"],
+])("formatDollars(%d) -> %s", (value, expected) => {
+  expect(formatDollars(value)).toBe(expected);
 });

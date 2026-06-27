@@ -45,7 +45,7 @@ import {
   getFilterLabel,
 } from "@/app/utils/filter";
 import { getProgress } from "@/app/utils/goal";
-import { formatCents, formatDate, formatPercent } from "@/app/utils/locale";
+import { formatDate, formatDollars, formatPercent } from "@/app/utils/locale";
 import { getSortLabel, Sort, sorts, sortSchema } from "@/app/utils/sort";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
@@ -304,7 +304,8 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
                     })}
                   >
                     <p>
-                      {formatCents(goal.saved)} of {formatCents(goal.target)}
+                      {formatDollars(goal.saved)} of{" "}
+                      {formatDollars(goal.target)}
                     </p>
                     <div className={dot} />
                     <p className={goalCardDeadline}>

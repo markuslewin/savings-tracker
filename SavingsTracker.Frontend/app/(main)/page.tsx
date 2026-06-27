@@ -10,7 +10,7 @@ import { getAuthCookie, getGoals } from "@/app/utils/api";
 import { getNow } from "@/app/utils/date";
 import { filterSchema, getFilterFn } from "@/app/utils/filter";
 import { addSaved, isActive, isCompleted } from "@/app/utils/goal";
-import { formatCents } from "@/app/utils/locale";
+import { formatDollars } from "@/app/utils/locale";
 import { sum } from "@/app/utils/math";
 import { sortSchema } from "@/app/utils/sort";
 import clsx from "clsx";
@@ -54,7 +54,7 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
         <SummaryCard
           highlight
           term="Total savings"
-          data={formatCents(sum(goalsWithSaved.map((g) => g.saved)))}
+          data={formatDollars(sum(goalsWithSaved.map((g) => g.saved)))}
           testId="total-savings"
         />
         <SummaryCard

@@ -36,7 +36,7 @@ public static class Seeder
     ctx.Goals.AddRange(data.Goals.Select(g => new GoalDb.Goal
     {
       Name = g.Name,
-      Target = g.Target * 100,
+      Target = g.Target,
       Deadline = g.Deadline,
       CreatedAt = g.CreatedAt,
       User = owner,
@@ -44,7 +44,7 @@ public static class Seeder
         {
           return new GoalDb.Deposit
           {
-            Amount = deposit.Amount * 100,
+            Amount = deposit.Amount,
             Note = deposit.Note,
             CreatedAt = deposit.CreatedAt
           };

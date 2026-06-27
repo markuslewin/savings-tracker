@@ -1,12 +1,10 @@
-import { centsSchema } from "@/app/utils/currency";
-import { requiredStringSchema } from "@/app/utils/form";
 import z from "zod";
 
-export const name = requiredStringSchema;
+export const name = z.string();
 
-export const target = centsSchema;
+export const target = z.string();
 
 export const schema = z.object({
-  name,
-  target,
+  name: z.string(),
+  target: z.string(),
 });

@@ -229,7 +229,7 @@ export const createGoal = async ({
   cookie: string;
   data: {
     name: string;
-    target: number;
+    target: string;
   };
 }) => {
   const response = await fetch(new URL("goals", getBase()), {
@@ -259,7 +259,7 @@ export const updateGoal = async ({
   data: {
     id: number;
     name: string;
-    target: number;
+    target: string;
   };
 }) => {
   const response = await fetch(new URL(`/goals/${id}`, getBase()), {
@@ -270,6 +270,19 @@ export const updateGoal = async ({
     },
     body: JSON.stringify({ name, target }),
   });
+  if (response.status === 400) {
+    const json = z
+      .object({
+        errors: z
+          .object({
+            name: z.array(z.string()),
+            target: z.array(z.string()),
+          })
+          .partial(),
+      })
+      .parse(await response.json());
+    return { status: response.status, json } as const;
+  }
   if (!response.ok) throw new Error(`Status code ${response.status}`);
 };
 

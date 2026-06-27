@@ -80,13 +80,19 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
                     errors: z.flattenError(parsing.error).fieldErrors,
                   };
 
-                await updateGoal({
+                const response = await updateGoal({
                   cookie,
                   data: {
                     ...parsing.data,
                     id: goal.id,
                   },
                 });
+                if (response?.status === 400)
+                  return {
+                    values,
+                    errors: response.json.errors,
+                  };
+
                 redirect(`/goals/${goal.id}`);
               }}
               deleteAction={async () => {

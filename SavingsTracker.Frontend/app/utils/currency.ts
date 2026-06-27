@@ -37,6 +37,6 @@ const toCents = (dollars: string) => {
   return new Big(dollars).mul("100").toNumber();
 };
 
-export const toDollarValue = (cents: number) => {
-  return Big(String(cents)).div("100").toString();
+export const toDollarValue = (value: number) => {
+  return value.toFixed(2);
 };

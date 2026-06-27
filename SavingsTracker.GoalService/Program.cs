@@ -1,13 +1,13 @@
-using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using SavingsTracker.GoalDb;
 using SavingsTracker.GoalService;
 using SavingsTracker.GoalService.Helpers;
@@ -21,6 +21,35 @@ const string confirmEmailEndpointName = "ConfirmEmail";
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddValidation();
+
+// Apply JSON naming policy to `HttpValidationProblemDetails.Errors`
+// https://github.com/captainsafia/minapi-validation-support/blob/d2aa17b79fc620b36c5a777f8da3508216852217/api/Program.cs#L34
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = context =>
+    {
+        if (context.ProblemDetails is HttpValidationProblemDetails problemDetails)
+        {
+            var jsonNamingPolicy = context
+                .HttpContext
+                .RequestServices
+                .GetRequiredService<IOptions<JsonOptions>>()
+                .Value
+                .SerializerOptions
+                .PropertyNamingPolicy;
+            if (jsonNamingPolicy is not null)
+            {
+                problemDetails.Errors =
+                    problemDetails.Errors.ToDictionary(
+                        kvp => jsonNamingPolicy.ConvertName(kvp.Key),
+                        kvp => kvp.Value);
+            }
+
+        }
+    };
+});
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -73,10 +102,10 @@ app
                 Sort.DeadlineAscending => throw new NotImplementedException(),
                 Sort.ProgressDescending =>
                     query.OrderByDescending(g =>
-                        g.Deposits.Sum(d => (double)d.Amount) / g.Target),
+                        g.Deposits.Sum(d => d.Amount) / g.Target),
                 Sort.ProgressAscending =>
                     query.OrderBy(g =>
-                        g.Deposits.Sum(d => (double)d.Amount) / g.Target),
+                        g.Deposits.Sum(d => d.Amount) / g.Target),
                 Sort.AmountSavedDescending =>
                     query.OrderByDescending(g => g.Deposits.Sum(d => d.Amount)),
                 Sort.AlphabeticalAscending => query.OrderBy(g => g.Name),
@@ -153,9 +182,9 @@ app
         {
             goal.Name = patch.Name;
         }
-        if (patch.Target.HasValue)
+        if (patch.ParsedTarget is decimal { } target)
         {
-            goal.Target = patch.Target.Value;
+            goal.Target = target;
         }
         await ctx.SaveChangesAsync();
 

@@ -4,8 +4,7 @@ import { TextField } from "@/app/components/text-field";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { Goal } from "@/app/utils/api";
 import { toDollarValue } from "@/app/utils/currency";
-import { FormAction, validate } from "@/app/utils/form";
-import { name, target } from "@/app/utils/schema/goal";
+import { FormAction } from "@/app/utils/form";
 import { useActionState } from "react";
 import { Form } from "react-aria-components/Form";
 
@@ -40,14 +39,12 @@ export const EditGoalForm = ({ goal, submitAction }: EditGoalFormProps) => {
           name="name"
           defaultValue={state.values.name}
           isRequired
-          validate={validate(name)}
         />
         <TextField
           label="Target amount"
           name="target"
           defaultValue={state.values.target}
           isRequired
-          validate={validate(target)}
         />
       </div>
       <div

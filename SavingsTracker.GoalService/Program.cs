@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
+using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SavingsTracker.GoalDb;
-using SavingsTracker.GoalService;
 using SavingsTracker.GoalService.Helpers;
 using SavingsTracker.GoalService.Models;
 using SavingsTracker.GoalService.Services;
@@ -22,7 +22,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddValidation();
+builder.Services
+    .AddScoped<IValidator<AddDepositRequest>, AddDepositRequestValidator>();
 
 // Apply JSON naming policy to `HttpValidationProblemDetails.Errors`
 // https://github.com/captainsafia/minapi-validation-support/blob/d2aa17b79fc620b36c5a777f8da3508216852217/api/Program.cs#L34
@@ -215,31 +216,37 @@ app
     .RequireAuthorization();
 
 app
-    .MapPost("/goals/{id}/deposits", async Task<Results<NoContent, UnauthorizedHttpResult, NotFound>> (
-        int id,
-        AddDepositRequest deposit,
-        ClaimsPrincipal principal,
-        UserManager<User> userManager,
-        GoalDbContext ctx) =>
-    {
-        var user = await userManager.GetUserAsync(principal);
-        if (user is null) return TypedResults.Unauthorized();
-
-        var goal = await ctx.Goals.FindAsync(id);
-        if (goal is null) return TypedResults.NotFound();
-
-        if (goal.UserId != user.Id) return TypedResults.Unauthorized();
-
-        await ctx.Deposits.AddAsync(new SavingsTracker.GoalDb.Deposit
+    .MapPost("/goals/{id}/deposits",
+        async Task<Results<NoContent, ValidationProblem, UnauthorizedHttpResult, NotFound>> (
+            int id,
+            AddDepositRequest deposit,
+            IValidator<AddDepositRequest> validator,
+            ClaimsPrincipal principal,
+            UserManager<User> userManager,
+            GoalDbContext ctx) =>
         {
-            Amount = deposit.ParsedAmount,
-            Note = deposit.Note,
-            Goal = goal
-        });
-        await ctx.SaveChangesAsync();
+            var result = validator.Validate(deposit);
+            if (!result.IsValid)
+                return TypedResults.ValidationProblem(result.ToDictionary());
 
-        return TypedResults.NoContent();
-    })
+            var user = await userManager.GetUserAsync(principal);
+            if (user is null) return TypedResults.Unauthorized();
+
+            var goal = await ctx.Goals.FindAsync(id);
+            if (goal is null) return TypedResults.NotFound();
+
+            if (goal.UserId != user.Id) return TypedResults.Unauthorized();
+
+            await ctx.Deposits.AddAsync(new SavingsTracker.GoalDb.Deposit
+            {
+                Amount = deposit.ParsedAmount,
+                Note = deposit.ParsedNote,
+                Goal = goal
+            });
+            await ctx.SaveChangesAsync();
+
+            return TypedResults.NoContent();
+        })
     .RequireAuthorization();
 
 var accountGroup = app.MapGroup("/accounts");

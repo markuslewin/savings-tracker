@@ -160,8 +160,8 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                   icon={DollarIcon}
                   name="amount"
                   placeholder="0.00"
-                  isRequired
                   defaultValue={state.values.amount}
+                  isRequired
                 />
                 <TextField
                   label="Note (optional)"
@@ -346,7 +346,11 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                   <h3 data-testid="note">
                     {deposit.note.length <= 0 ? nbsp : deposit.note}
                   </h3>
-                  <p>
+                  <p
+                    className={sprinkles({
+                      color: "neutral-300",
+                    })}
+                  >
                     <span className={srOnly}>Created at: </span>
                     {formatDate(deposit.createdAt)}
                   </p>

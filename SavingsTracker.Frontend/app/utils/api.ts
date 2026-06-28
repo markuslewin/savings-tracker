@@ -333,5 +333,18 @@ export const addDeposit = async ({
       body: JSON.stringify({ amount, note }),
     },
   );
+  if (response.status === 400) {
+    const json = z
+      .object({
+        errors: z
+          .object({
+            amount: z.array(z.string()),
+            note: z.array(z.string()),
+          })
+          .partial(),
+      })
+      .parse(await response.json());
+    return { status: response.status, json } as const;
+  }
   if (!response.ok) throw new Error(`Status code ${response.status}`);
 };

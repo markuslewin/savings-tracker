@@ -140,10 +140,12 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
               errors: z.flattenError(parsing.error).fieldErrors,
             };
 
-          await addDeposit({
+          const response = await addDeposit({
             cookie,
             data: { ...parsing.data, goalId: goal.id },
           });
+          if (response?.status === 400)
+            return { values, errors: response.json.errors };
           redirect(`/goals/${goal.id}`);
         }}
       />

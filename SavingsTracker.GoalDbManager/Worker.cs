@@ -21,18 +21,42 @@ public class Worker(
 
         try
         {
+            var data = SeedDataReader.Read();
+
             using var scope = serviceProvider.CreateScope();
             var ctx = scope.ServiceProvider.GetRequiredService<GoalDbContext>();
             ctx.Database.Migrate();
 
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+            var userManager =
+                scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+            var name = "Demo";
             var user = new User
             {
+                UserName = name,
                 IsDemo = true,
-                FullName = "Demo"
+                FullName = name,
+                Goals = [..data is null || data.Goals is null
+                    ? []
+                    : data.Goals.Select(g => new GoalDb.Goal
+                    {
+                        Name = g.Name
+                            ?? throw new NullReferenceException(nameof(g.Name)),
+                        Target = g.Target,
+                        Deadline = g.Deadline,
+                        CreatedAt = g.CreatedAt,
+                        Deposits = g.Deposits is null
+                            ? throw new NullReferenceException(nameof(g.Deposits))
+                            : [..g.Deposits.Select(d => new GoalDb.Deposit
+                            {
+                                Amount = d.Amount,
+                                Note = d.Note
+                                    ?? throw new NullReferenceException(nameof(d.Note)),
+                                CreatedAt = d.CreatedAt
+                            })]
+                    })]
             };
-            await userManager.CreateAsync(user);
-            Seeder.Seed(ctx, user);
+            var result = await userManager.CreateAsync(user);
+            if (!result.Succeeded) throw new Exception(result.ToString());
         }
         catch (Exception ex)
         {

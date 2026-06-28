@@ -93,7 +93,7 @@ app
 
             query = user switch
             {
-                null => query.Where(g => g.User.IsDemo),
+                null => query.Where(g => g.User!.IsDemo),
                 User => query.Where(g => g.UserId == user.Id)
             };
 
@@ -129,7 +129,7 @@ app
             .FirstOrDefaultAsync(g => g.Id == id);
         if (goal is null) return TypedResults.NotFound();
 
-        if (goal.User.IsDemo) return TypedResults.Ok(new Goal(goal));
+        if (goal.User!.IsDemo) return TypedResults.Ok(new Goal(goal));
 
         var user = await userManager.GetUserAsync(principal);
         if (user is null) return TypedResults.Unauthorized();
@@ -153,7 +153,8 @@ app
         {
             Name = goal.Name,
             Target = goal.ParsedTarget,
-            User = user
+            User = user,
+            Deposits = []
         });
         await ctx.SaveChangesAsync();
 

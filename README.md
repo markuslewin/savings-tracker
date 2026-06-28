@@ -34,3 +34,19 @@ Launch via `.vscode/launch.json`.
 ```sh
 dotnet ef migrations add InitialCreate --project SavingsTracker.GoalDbManager/SavingsTracker.GoalDbManager.csproj
 ```
+
+## Tests
+
+### `Frontend`
+
+```sh
+cd SavingsTracker.Frontend
+npm run test # Unit
+npm run test:e2e # E2E
+```
+
+### `GoalService`
+
+```sh
+dotnet test
+```

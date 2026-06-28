@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SavingsTracker.GoalDb", "Sa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SavingsTracker.GoalDbManager", "SavingsTracker.GoalDbManager\SavingsTracker.GoalDbManager.csproj", "{249E58D0-F9DE-4B0F-A05B-E9B6E3D46039}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SavingsTracker.GoalService.UnitTests", "SavingsTracker.GoalService.UnitTests\SavingsTracker.GoalService.UnitTests.csproj", "{76F6A7A7-BE29-4A38-B629-6D947172CD90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,18 @@ Global
 		{249E58D0-F9DE-4B0F-A05B-E9B6E3D46039}.Release|x64.Build.0 = Release|Any CPU
 		{249E58D0-F9DE-4B0F-A05B-E9B6E3D46039}.Release|x86.ActiveCfg = Release|Any CPU
 		{249E58D0-F9DE-4B0F-A05B-E9B6E3D46039}.Release|x86.Build.0 = Release|Any CPU
+		{76F6A7A7-BE29-4A38-B629-6D947172CD90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76F6A7A7-BE29-4A38-B629-6D947172CD90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76F6A7A7-BE29-4A38-B629-6D947172CD90}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{76F6A7A7-BE29-4A38-B629-6D947172CD90}.Debug|x64.Build.0 = Debug|Any CPU
+		{76F6A7A7-BE29-4A38-B629-6D947172CD90}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{76F6A7A7-BE29-4A38-B629-6D947172CD90}.Debug|x86.Build.0 = Debug|Any CPU
+		{76F6A7A7-BE29-4A38-B629-6D947172CD90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76F6A7A7-BE29-4A38-B629-6D947172CD90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76F6A7A7-BE29-4A38-B629-6D947172CD90}.Release|x64.ActiveCfg = Release|Any CPU
+		{76F6A7A7-BE29-4A38-B629-6D947172CD90}.Release|x64.Build.0 = Release|Any CPU
+		{76F6A7A7-BE29-4A38-B629-6D947172CD90}.Release|x86.ActiveCfg = Release|Any CPU
+		{76F6A7A7-BE29-4A38-B629-6D947172CD90}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

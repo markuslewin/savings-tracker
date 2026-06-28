@@ -12,8 +12,7 @@ import {
   updateGoal,
 } from "@/app/utils/api";
 import { formatDate } from "@/app/utils/locale";
-import { schema as depositSchema } from "@/app/utils/schema/deposit";
-import { schema as goalSchema } from "@/app/utils/schema/goal";
+import { depositSchema, goalSchema } from "@/app/utils/schema";
 import { notFound, redirect, unauthorized } from "next/navigation";
 import * as z from "zod";
 

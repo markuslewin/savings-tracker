@@ -2,7 +2,7 @@
 
 import { createGoal as _createGoal, ensureAuthCookie } from "@/app/utils/api";
 import { FormAction } from "@/app/utils/form";
-import { schema } from "@/app/utils/schema/goal";
+import { goalSchema } from "@/app/utils/schema";
 import { redirect } from "next/navigation";
 import * as z from "zod";
 
@@ -11,7 +11,7 @@ export const createGoal: FormAction<"name" | "target"> = async (
   formData,
 ) => {
   const values = Object.fromEntries(formData) as Record<string, string>;
-  const parsed = schema.safeParse(values);
+  const parsed = goalSchema.safeParse(values);
   if (!parsed.success)
     return {
       values,

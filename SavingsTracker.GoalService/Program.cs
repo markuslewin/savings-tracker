@@ -151,7 +151,7 @@ app
         var result = await ctx.Goals.AddAsync(new SavingsTracker.GoalDb.Goal
         {
             Name = goal.Name,
-            Target = goal.Target,
+            Target = goal.ParsedTarget,
             User = user
         });
         await ctx.SaveChangesAsync();
@@ -232,7 +232,7 @@ app
 
         await ctx.Deposits.AddAsync(new SavingsTracker.GoalDb.Deposit
         {
-            Amount = deposit.Amount,
+            Amount = deposit.ParsedAmount,
             Note = deposit.Note,
             Goal = goal
         });
@@ -252,15 +252,6 @@ accountGroup.MapPost("/register", async Task<Results<Ok, ValidationProblem>> (
     LinkGenerator linkGenerator,
     HttpContext httpContext) =>
 {
-    if (!IdentityHelper.ValidateEmail(registration.Email))
-    {
-        var error = userManager.ErrorDescriber.InvalidEmail(registration.Email);
-        return TypedResults.ValidationProblem(new Dictionary<string, string[]>
-        {
-            [error.Code] = [error.Description]
-        });
-    }
-
     var user = new User
     {
         FullName = registration.FullName,
@@ -359,15 +350,6 @@ accountGroup
         {
             var user = await userManager.GetUserAsync(principal);
             if (user is null) return TypedResults.Unauthorized();
-
-            if (!IdentityHelper.ValidateEmail(postUserRequest.Email))
-            {
-                var error = userManager.ErrorDescriber.InvalidEmail(postUserRequest.Email);
-                return TypedResults.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    [error.Code] = [error.Description]
-                });
-            }
 
             if (user.FullName != postUserRequest.FullName)
             {

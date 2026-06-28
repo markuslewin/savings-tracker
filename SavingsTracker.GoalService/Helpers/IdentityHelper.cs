@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using SavingsTracker.GoalDb;
 
@@ -6,12 +5,6 @@ namespace SavingsTracker.GoalService.Helpers;
 
 public static class IdentityHelper
 {
-  public static bool ValidateEmail(string email)
-  {
-    return !string.IsNullOrEmpty(email)
-      && new EmailAddressAttribute().IsValid(email);
-  }
-
   public static async Task<IdentityResult> ValidatePassword(
     UserManager<User> userManager, User user, string password)
   {

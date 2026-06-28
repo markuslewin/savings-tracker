@@ -5,9 +5,7 @@ import { CancelButton, Dialog } from "@/app/components/dialog";
 import { TextField } from "@/app/components/text-field";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { User } from "@/app/utils/api";
-import { validate } from "@/app/utils/form";
 import { createGoal } from "@/app/utils/new-goal-dialog/action";
-import { name, target } from "@/app/utils/schema/goal";
 import { useActionState } from "react";
 import { Form } from "react-aria-components/Form";
 
@@ -42,14 +40,12 @@ export const NewGoalDialog = ({ user }: NewGoalDialogProps) => {
             name="name"
             defaultValue={state.values.name}
             isRequired
-            validate={validate(name)}
           />
           <TextField
             label="Target amount"
             name="target"
             defaultValue={state.values.target}
             isRequired
-            validate={validate(target)}
           />
         </div>
         <div

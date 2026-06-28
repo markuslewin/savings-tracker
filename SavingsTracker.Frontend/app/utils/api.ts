@@ -82,9 +82,21 @@ export const register = async ({
     },
     body: JSON.stringify({ fullName, email, password }),
   });
-  if (!response.ok) {
-    throw new Error("Failed to register account.");
+  if (response.status === 400) {
+    const json = z
+      .object({
+        errors: z
+          .object({
+            fullName: z.array(z.string()),
+            email: z.array(z.string()),
+            password: z.array(z.string()),
+          })
+          .partial(),
+      })
+      .parse(await response.json());
+    return { status: response.status, json } as const;
   }
+  if (!response.ok) throw new Error(`Status code ${response.status}`);
 };
 
 export const logIn = async ({
@@ -308,7 +320,7 @@ export const addDeposit = async ({
   data: { amount, goalId, note },
 }: {
   cookie: string;
-  data: { goalId: number; amount: number; note: string };
+  data: { goalId: number; amount: string; note: string };
 }) => {
   const response = await fetch(
     new URL(`/goals/${goalId}/deposits`, getBase()),

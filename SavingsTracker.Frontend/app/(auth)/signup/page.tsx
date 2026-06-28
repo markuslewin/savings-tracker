@@ -19,17 +19,31 @@ const Signup = () => {
         </p>
       </div>
       <SignUpForm
-        action={async (formData) => {
+        action={async (_, formData) => {
           "use server";
-          const values = Object.fromEntries(formData);
+          const values = Object.fromEntries(formData) as Record<
+            "fullName" | "email" | "password",
+            string
+          >;
           const parsed = z
             .object({
               fullName: z.string(),
               email: z.string(),
               password: z.string(),
             })
-            .parse(values);
-          await register(parsed);
+            .safeParse(values);
+          if (!parsed.success)
+            return {
+              values: { ...values, password: "" },
+              errors: z.flattenError(parsed.error).fieldErrors,
+            };
+
+          const response = await register(parsed.data);
+          if (response?.status === 400)
+            return {
+              values: { ...values, password: "" },
+              errors: response.json.errors,
+            };
           redirect("/signin");
         }}
       />

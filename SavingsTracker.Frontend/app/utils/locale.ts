@@ -36,3 +36,7 @@ const centsFormatter = Intl.NumberFormat(locale, {
 export const formatDollars = (value: number) => {
   return centsFormatter.format(value);
 };
+
+export const formatDollarsInput = (value: number) => {
+  return value.toFixed(2);
+};

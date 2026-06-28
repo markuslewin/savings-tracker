@@ -1,7 +1,15 @@
+using SavingsTracker.GoalService.Validation;
+
 namespace SavingsTracker.GoalService.Models;
 
 public class AddDepositRequest
 {
-  public int Amount { get; set; }
-  public string Note { get; set; }
+  [Dollars]
+  public required string Amount { get; set; }
+  public required string Note { get; set; }
+
+  public decimal ParsedAmount
+  {
+    get => decimal.Parse(Amount);
+  }
 }

@@ -1,11 +1,24 @@
 namespace SavingsTracker.GoalService.Models;
 
-public class Goal(GoalDb.Goal goal)
+public class Goal
 {
-  public int Id { get; set; } = goal.Id;
-  public string Name { get; set; } = goal.Name;
-  public decimal Target { get; set; } = goal.Target;
-  public DateOnly? Deadline { get; set; } = goal.Deadline;
-  public DateTimeOffset CreatedAt { get; set; } = goal.CreatedAt;
-  public IEnumerable<Deposit> Deposits { get; set; } = goal.Deposits?.Select(d => new Deposit(d)) ?? [];
+  public int Id { get; set; }
+  public string Name { get; set; }
+  public decimal Target { get; set; }
+  public DateOnly? Deadline { get; set; }
+  public DateTimeOffset CreatedAt { get; set; }
+  public IEnumerable<Deposit> Deposits { get; set; }
+
+  public Goal() { }
+
+  // todo: Use helper
+  public Goal(GoalDb.Goal goal)
+  {
+    Id = goal.Id;
+    Name = goal.Name;
+    Target = goal.Target;
+    Deadline = goal.Deadline;
+    CreatedAt = goal.CreatedAt;
+    Deposits = goal.Deposits?.Select(d => new Deposit(d)) ?? [];
+  }
 }

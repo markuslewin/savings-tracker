@@ -1,8 +1,7 @@
+import { validPassword } from "@/tests/utils";
 import AxeBuilder from "@axe-core/playwright";
 import { faker } from "@faker-js/faker";
 import { expect, Page, test } from "@playwright/test";
-
-const validPassword = "P@ssw0rd";
 
 test("has title", async ({ page }) => {
   await page.goto("/");

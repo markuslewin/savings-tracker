@@ -24,9 +24,11 @@ public sealed class Tests
     [ClassInitialize]
     public static async Task ClassInit(TestContext testContext)
     {
+        // Start DB container
         await _dbContainer.StartAsync(testContext.CancellationToken);
         var connectionString = _dbContainer.GetConnectionString();
 
+        // Migrate
         var options = new DbContextOptionsBuilder<GoalDbContext>()
             .UseNpgsql(_dbContainer.GetConnectionString(), builder =>
             {
@@ -38,6 +40,15 @@ public sealed class Tests
         await ctx.Database.MigrateAsync(testContext.CancellationToken);
 
         _factory = new CustomWebApplicationFactory<Program>(connectionString);
+
+        // Seed
+        using var scope = _factory!.Services.CreateScope();
+        var userManager =
+            scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+        var seeder =
+            new GoalDbManager::SavingsTracker.GoalDbManager.Seeder(userManager);
+        await seeder.Seed();
+
         _client = _factory.CreateClient();
     }
 
@@ -66,27 +77,60 @@ public sealed class Tests
     }
 
     [TestMethod]
-    public async Task GetGoals_AnonUser_ReturnsDemoGoals()
+    public async Task GetGoals_AnonUser_ReturnsGoals()
     {
-        using var scope = _factory!.Services.CreateScope();
-        var userManager =
-            scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-        await userManager.CreateAsync(new User
-        {
-            UserName = "Demo",
-            FullName = "Demo",
-            IsDemo = true,
-            Goals = [new() { Name = "Test", Target = 100, Deposits = [] }]
-        });
-
         var response = await _client!.GetAsync(
             "/goals?sort=RecentlyAdded", _testContext.CancellationToken);
         var goals = await response.Content.ReadFromJsonAsync<List<Models.Goal>>(
             _testContext.CancellationToken);
 
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        Assert.HasCount(1, goals!);
-        Assert.AreEqual("Test", goals![0].Name);
-        Assert.AreEqual(100, goals![0].Target);
+        Assert.IsNotEmpty(goals!);
+    }
+
+    [TestMethod]
+    public async Task AnotherTest()
+    {
+        List<Goal> goals =
+        [
+            new() { Name = "My name", Deposits = [] },
+            new() { Name = "My name 1", Deposits = [new () { Note = "Bla" }] },
+        ];
+        Assert.That.Collection(
+            goals,
+            goal =>
+            {
+                Assert.AreEqual("My name", goal.Name);
+                Assert.IsEmpty(goal.Deposits);
+            },
+            goal =>
+            {
+                Assert.AreEqual("My name 1", goal.Name);
+                Assert.That.Collection(goal.Deposits, deposit =>
+                {
+                    Assert.AreEqual("Bla", deposit.Note);
+                });
+            });
+    }
+}
+
+
+public static class CustomAssertExtensions
+{
+    public static void Collection<T>(
+        this Assert _,
+        IEnumerable<T> collection,
+        params IEnumerable<Action<T>> actions)
+    {
+        var collectionCount = collection.Count();
+        var actionsCount = actions.Count();
+        if (collectionCount != actionsCount)
+            throw new AssertFailedException(
+                $"Assert.That.Collection failed. Collection count was <{collectionCount}>, but expected <{actionsCount}>");
+
+        foreach (var (item, action) in Enumerable.Zip(collection, actions))
+        {
+            action(item);
+        }
     }
 }

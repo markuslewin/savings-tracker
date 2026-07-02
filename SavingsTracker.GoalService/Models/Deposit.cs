@@ -1,9 +1,19 @@
 namespace SavingsTracker.GoalService.Models;
 
-public class Deposit(SavingsTracker.GoalDb.Deposit deposit)
+public class Deposit
 {
-  public int Id { get; set; } = deposit.Id;
-  public decimal Amount { get; set; } = deposit.Amount;
-  public string Note { get; set; } = deposit.Note;
-  public DateTimeOffset CreatedAt { get; set; } = deposit.CreatedAt;
+  public int Id { get; set; }
+  public decimal Amount { get; set; }
+  public string Note { get; set; }
+  public DateTimeOffset CreatedAt { get; set; }
+
+  public Deposit() { }
+
+  public Deposit(GoalDb.Deposit deposit)
+  {
+    Id = deposit.Id;
+    Amount = deposit.Amount;
+    Note = deposit.Note;
+    CreatedAt = deposit.CreatedAt;
+  }
 }

@@ -12,6 +12,8 @@ builder
     .AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<GoalDbContext>();
 
+builder.Services.AddScoped<Seeder>();
+
 // builder.Services.AddOpenTelemetry().WithTracing(tracing =>
 // {
 //   // tracing.AddSource();

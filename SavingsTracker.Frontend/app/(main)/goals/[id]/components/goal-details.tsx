@@ -295,7 +295,8 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
               color: "neutral-300",
             })}
           >
-            {goal.deposits.length} deposits
+            <span data-testid="deposits-count">{goal.deposits.length}</span>{" "}
+            deposits
           </p>
         </div>
         <ul

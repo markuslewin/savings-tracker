@@ -1,7 +1,9 @@
-import { validPassword } from "@/tests/utils";
+import { apiAuthCookieName, frontendAuthCookieName } from "@/app/utils/cookie";
+import { apiBase, validPassword } from "@/tests/utils";
 import AxeBuilder from "@axe-core/playwright";
 import { faker } from "@faker-js/faker";
-import { expect, Page, test } from "@playwright/test";
+import { expect, Page, request, test } from "@playwright/test";
+import * as z from "zod";
 
 test("has title", async ({ page }) => {
   await page.goto("/");
@@ -74,7 +76,7 @@ test("sign up", async ({ page }) => {
 });
 
 test("sign in", async ({ page }) => {
-  const { email } = await register(page);
+  const { email } = await register();
   await page.goto("/signin");
   await page.getByRole("textbox", { name: "email" }).fill(email);
   await page.getByRole("textbox", { name: "password" }).fill(validPassword);
@@ -88,6 +90,7 @@ test("sign in", async ({ page }) => {
 
 test("sign out", async ({ page }) => {
   await signIn(page);
+  await page.goto("/");
   await page.getByRole("button", { name: "signed in as" }).click();
   await page.getByRole("button", { name: "sign out" }).click();
 
@@ -111,6 +114,7 @@ test("user can edit profile", async ({ page }) => {
   const email = faker.internet.email();
 
   await signIn(page);
+  await page.goto("/");
   await page.getByRole("button", { name: "signed in as" }).click();
   await page.getByRole("link", { name: "edit profile" }).click();
   await page.getByRole("textbox", { name: "full name" }).fill(fullName);
@@ -214,10 +218,16 @@ test("user can create goal", async ({ page }) => {
 
 test("filter goals", async ({ page }) => {
   await signIn(page);
-  await createGoal(page, { name: "In progress", target: "10" });
-  await addDeposit(page, { amount: 5 });
-  await createGoal(page, { name: "Completed", target: "10" });
-  await addDeposit(page, { amount: 10 });
+  const inProgressGoal = await createGoal(page, {
+    name: "In progress",
+    target: "10",
+  });
+  await addDeposit(page, { goalId: inProgressGoal.id, amount: 5 });
+  const completedGoal = await createGoal(page, {
+    name: "Completed",
+    target: "10",
+  });
+  await addDeposit(page, { goalId: completedGoal.id, amount: 10 });
   await createGoal(page, { name: "Not started", target: "10" });
 
   await page.goto("/");
@@ -255,10 +265,10 @@ test("filter goals", async ({ page }) => {
 test("always aggregate on total goals", async ({ page }) => {
   await signIn(page);
   // 2 goals in progress
-  await createGoal(page, { name: "One", target: "10" });
-  await addDeposit(page, { amount: 1 });
-  await createGoal(page, { name: "Two", target: "10" });
-  await addDeposit(page, { amount: 1 });
+  const oneGoal = await createGoal(page, { name: "One", target: "10" });
+  await addDeposit(page, { goalId: oneGoal.id, amount: 1 });
+  const twoGoal = await createGoal(page, { name: "Two", target: "10" });
+  await addDeposit(page, { goalId: twoGoal.id, amount: 1 });
 
   await page.goto("/");
 
@@ -288,12 +298,12 @@ test("always aggregate on total goals", async ({ page }) => {
 
 test("sort goals", async ({ page }) => {
   await signIn(page);
-  await createGoal(page, { name: "A", target: "100" });
-  await addDeposit(page, { amount: 50 }); // Progress: 0.5
-  await createGoal(page, { name: "B", target: "5" });
-  await addDeposit(page, { amount: 4 }); // Progress: 0.8
-  await createGoal(page, { name: "C", target: "100" });
-  await addDeposit(page, { amount: 10 }); // Progress: 0.1
+  const aGoal = await createGoal(page, { name: "A", target: "100" });
+  await addDeposit(page, { goalId: aGoal.id, amount: 50 }); // Progress: 0.5
+  const bGoal = await createGoal(page, { name: "B", target: "5" });
+  await addDeposit(page, { goalId: bGoal.id, amount: 4 }); // Progress: 0.8
+  const cGoal = await createGoal(page, { name: "C", target: "100" });
+  await addDeposit(page, { goalId: cGoal.id, amount: 10 }); // Progress: 0.1
 
   await page.goto("/");
 
@@ -380,6 +390,7 @@ test("can edit goal", async ({ page }) => {
 
   await signIn(page);
   const goal = await createGoal(page);
+  await page.goto(`/goals/${goal.id}`);
   await page.getByRole("button", { name: "edit" }).click();
 
   const dialog = page.getByRole("dialog", { name: "edit goal" });
@@ -414,7 +425,8 @@ test("anonymous user gets redirected when trying to delete a goal", async ({
 
 test("can delete goal", async ({ page }) => {
   await signIn(page);
-  await createGoal(page);
+  const goal = await createGoal(page);
+  await page.goto(`/goals/${goal.id}`);
   await page.getByRole("button", { name: "delete goal" }).click();
 
   const dialog = page.getByRole("alertdialog", { name: "delete" });
@@ -447,7 +459,8 @@ test("can add deposits", async ({ page }) => {
   const note = faker.lorem.sentence();
 
   await signIn(page);
-  await createGoal(page, { target: "100" });
+  const goal = await createGoal(page, { target: "100" });
+  page.goto(`/goals/${goal.id}`);
 
   await expect(page.getByTestId("progress")).toHaveText("0%");
   await expect(page.getByTestId("remaining")).toHaveText(/\$100/);
@@ -488,7 +501,7 @@ test("can add deposits", async ({ page }) => {
     page.getByRole("heading", { name: "goal complete" }),
   ).toBeAttached();
   await expect(page.getByTestId("saved")).toHaveText(["$100", "$100"]);
-  await expect(page.getByTestId("deposits-count")).toHaveText(["3", "3"]);
+  await expect(page.getByTestId("deposits-count")).toHaveText(["3", "3", "3"]);
   await expect(
     page.getByRole("list", { name: "deposits" }).getByTestId("amount"),
   ).toHaveText([
@@ -499,29 +512,40 @@ test("can add deposits", async ({ page }) => {
 });
 
 const signIn = async (page: Page) => {
-  const user = await register(page);
-  await page.goto("/signin");
-  await page.getByRole("textbox", { name: "email" }).fill(user.email);
-  await page.getByRole("textbox", { name: "password" }).fill(validPassword);
-  await page.getByRole("button", { name: "sign in" }).click();
-  // Wait for cookie
-  await page.waitForURL("/");
+  const user = await register();
+
+  const context = await createApiContext();
+  await context.post("/accounts/login", {
+    data: {
+      email: user.email,
+      password: user.password,
+    },
+  });
+  const cookie = (await context.storageState()).cookies.find(
+    (c) => c.name === apiAuthCookieName,
+  );
+  if (cookie === undefined) throw new Error("No auth cookie");
+
+  page.context().addCookies([{ ...cookie, name: frontendAuthCookieName }]);
 
   return user;
 };
 
-const register = async (page: Page) => {
+const register = async () => {
   const fullName = faker.person.fullName();
   const email = faker.internet.email();
+  const password = validPassword;
 
-  await page.goto("/signup");
-  await page.getByRole("textbox", { name: "name" }).fill(fullName);
-  await page.getByRole("textbox", { name: "email" }).fill(email);
-  await page.getByRole("textbox", { name: "password" }).fill(validPassword);
-  await page.getByRole("button", { name: "create" }).click();
-  await page.waitForURL("/signin");
+  const context = await request.newContext({ baseURL: apiBase });
+  await context.post("/accounts/register", {
+    data: {
+      fullName,
+      email,
+      password,
+    },
+  });
 
-  return { fullName, email };
+  return { fullName, email, password };
 };
 
 const createGoal = async (
@@ -531,18 +555,57 @@ const createGoal = async (
   const name = options?.name ?? faker.food.dish();
   const target = options?.target ?? faker.finance.amount();
 
-  await page.goto("/?dialog=new-goal");
+  const context = await createApiContext(page);
+  const response = await context.post("/goals", {
+    data: {
+      name,
+      target,
+    },
+  });
+  const { id } = z.object({ id: z.number() }).parse(await response.json());
 
-  const dialog = page.getByRole("dialog", { name: "new goal" });
-  await dialog.getByRole("textbox", { name: "name" }).fill(name);
-  await dialog.getByRole("textbox", { name: "target" }).fill(target);
-  await dialog.getByRole("button", { name: "create" }).click();
-  await page.waitForURL(new URLPattern({ pathname: "/goals/*" }));
-
-  return { name, target };
+  return { id, name, target };
 };
 
-const addDeposit = async (page: Page, { amount }: { amount: number }) => {
-  await page.getByRole("textbox", { name: "amount" }).fill(amount.toString());
-  await page.getByRole("button", { name: "add" }).click();
+const addDeposit = async (
+  page: Page,
+  { goalId, amount }: { goalId: number; amount: number },
+) => {
+  const context = await createApiContext(page);
+  await context.post(`/goals/${goalId}/deposits`, {
+    data: {
+      amount: amount.toString(),
+      note: "",
+    },
+  });
+};
+
+type StorageState =
+  Exclude<
+    Parameters<typeof request.newContext>[0],
+    "string" | undefined
+  > extends {
+    storageState?: infer T;
+  }
+    ? T
+    : never;
+
+const createApiContext = async (page?: Page) => {
+  let storageState: StorageState | undefined = undefined;
+  if (page !== undefined) {
+    const cookie = (await page.context().cookies()).find(
+      (c) => c.name === frontendAuthCookieName,
+    );
+    if (cookie === undefined) throw new Error("No auth cookie");
+
+    storageState = {
+      cookies: [{ ...cookie, name: apiAuthCookieName }],
+      origins: [],
+    };
+  }
+
+  return await request.newContext({
+    baseURL: apiBase,
+    storageState,
+  });
 };

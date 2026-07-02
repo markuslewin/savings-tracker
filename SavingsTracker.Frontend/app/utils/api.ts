@@ -1,12 +1,10 @@
+import { apiAuthCookieName, frontendAuthCookieName } from "@/app/utils/cookie";
 import { error, success } from "@/app/utils/result";
 import { Sort } from "@/app/utils/sort";
 import { parseSetCookie, serialize } from "cookie";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import * as z from "zod";
-
-const frontendAuthCookieName = "SavingsTracker.Auth";
-const apiAuthCookieName = ".AspNetCore.Identity.Application";
 
 const userSchema = z.object({
   fullName: z.string(),

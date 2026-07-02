@@ -2,10 +2,13 @@
 
 using System.Net;
 using System.Net.Http.Json;
+using Bogus;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SavingsTracker.GoalDb;
+using SavingsTracker.GoalService.Models;
 using Testcontainers.PostgreSql;
 
 namespace SavingsTracker.GoalService.IntegrationTests;
@@ -15,6 +18,8 @@ public sealed class Tests
 {
     private static readonly PostgreSqlContainer _dbContainer =
         new PostgreSqlBuilder("postgres:18.3").Build();
+    private static readonly Faker _faker = new();
+    private static readonly string _validPassword = "P@ssw0rd";
 
     private static CustomWebApplicationFactory<Program>? _factory;
     private static HttpClient? _client;
@@ -88,32 +93,51 @@ public sealed class Tests
         Assert.IsNotEmpty(goals!);
     }
 
-    [TestMethod]
-    public async Task AnotherTest()
+    private async Task SignIn(
+        HttpClient client,
+        string email,
+        string password)
     {
-        List<Goal> goals =
-        [
-            new() { Name = "My name", Deposits = [] },
-            new() { Name = "My name 1", Deposits = [new () { Note = "Bla" }] },
-        ];
+        await client.PostAsJsonAsync("/accounts/register", new RegisterRequest
+        {
+            FullName = _faker.Person.FullName,
+            Email = email,
+            Password = password
+        }, _testContext.CancellationToken);
+        await client.PostAsJsonAsync("/accounts/login", new LoginRequest
+        {
+            Email = email,
+            Password = password
+        }, _testContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task PostDeposit_InvalidData_ReturnsValidationProblem()
+    {
+        var email = _faker.Person.Email;
+        using var client = _factory!.CreateClient();
+        await SignIn(client, email, _validPassword);
+
+        var response = await client.PostAsJsonAsync(
+            "/goals/1/deposits",
+            new AddDepositRequest { Amount = "100.101", Note = "" },
+            _testContext.CancellationToken);
+
+        var details = await response.Content
+            .ReadFromJsonAsync<HttpValidationProblemDetails>(
+                _testContext.CancellationToken);
+        details!.Errors.TryGetValue("amount", out var amountErrors);
+
+        Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.IsNotNull(amountErrors);
         Assert.That.Collection(
-            goals,
-            goal =>
+            amountErrors,
+            e =>
             {
-                Assert.AreEqual("My name", goal.Name);
-                Assert.IsEmpty(goal.Deposits);
-            },
-            goal =>
-            {
-                Assert.AreEqual("My name 1", goal.Name);
-                Assert.That.Collection(goal.Deposits, deposit =>
-                {
-                    Assert.AreEqual("Bla", deposit.Note);
-                });
+                Assert.AreEqual("Invalid decimals", e);
             });
     }
 }
-
 
 public static class CustomAssertExtensions
 {

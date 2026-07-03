@@ -1,4 +1,6 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
+using SavingsTracker.GoalDb;
 
 namespace SavingsTracker.GoalService.Validation;
 
@@ -34,6 +36,25 @@ public static class CustomValidators
         {
           ctx.AddFailure("Invalid decimals");
           return;
+        }
+      });
+  }
+
+  public static IRuleBuilderOptionsConditions<T, string?> Password<T>(
+    this IRuleBuilder<T, string?> builder,
+    UserManager<User> userManager)
+  {
+    return builder.CustomAsync(async (password, ctx, cancellationToken) =>
+      {
+        foreach (var validator in userManager.PasswordValidators)
+        {
+          // `user` isn't used in default validators
+          var result = await validator.ValidateAsync(userManager, null!, password);
+          if (!result.Succeeded)
+          {
+            ctx.AddFailure(result.Errors.First().Description);
+            return;
+          }
         }
       });
   }

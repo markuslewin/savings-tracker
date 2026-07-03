@@ -39,6 +39,7 @@ builder.Services
     .AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>()
     .AddScoped<IValidator<LoginRequest>, LoginRequestValidator>()
     .AddScoped<IValidator<PostUserRequest>, PostUserRequestValidator>()
+    .AddScoped<IValidator<ChangePasswordRequest>, ChangePasswordRequestValidator>()
     ;
 
 // Apply JSON naming policy to `HttpValidationProblemDetails.Errors`
@@ -420,12 +421,17 @@ accountGroup
 
 accountGroup
     .MapPost("/changePassword",
-        async Task<Results<EmptyHttpResult, NotFound, UnauthorizedHttpResult>> (
+        async Task<Results<EmptyHttpResult, ValidationProblem, NotFound, UnauthorizedHttpResult>> (
             ChangePasswordRequest changePasswordRequest,
+            IValidator<ChangePasswordRequest> validator,
             ClaimsPrincipal principal,
             UserManager<User> userManager,
             IUserStore<User> userStore) =>
         {
+            var validation = await validator.ValidateAsync(changePasswordRequest);
+            if (!validation.IsValid)
+                return TypedResults.ValidationProblem(validation.ToDictionary());
+
             var user = await userManager.GetUserAsync(principal);
             if (user is null) return TypedResults.NotFound();
 
@@ -436,7 +442,7 @@ accountGroup
 
             var result =
                 await IdentityHelper.ValidatePassword(
-                    userManager, user, changePasswordRequest.Password);
+                    userManager, user, changePasswordRequest.ValidPassword);
             if (!result.Succeeded)
             {
                 throw new NotImplementedException();
@@ -444,7 +450,7 @@ accountGroup
 
             var hash =
                 userManager.PasswordHasher.HashPassword(
-                    user, changePasswordRequest.Password);
+                    user, changePasswordRequest.ValidPassword);
             await passwordStore.SetPasswordHashAsync(
                 user, hash, CancellationToken.None);
             await userManager.UpdateSecurityStampAsync(user);

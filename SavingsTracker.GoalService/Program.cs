@@ -34,6 +34,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
 builder.Services
     .AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>()
+    .AddScoped<IValidator<AddGoalRequest>, AddGoalRequestValidator>()
     .AddScoped<IValidator<AddDepositRequest>, AddDepositRequestValidator>()
     ;
 
@@ -152,19 +153,24 @@ app
     });
 
 app
-    .MapPost("/goals", async Task<Results<Created<Goal>, UnauthorizedHttpResult>> (
+    .MapPost("/goals", async Task<Results<Created<Goal>, ValidationProblem, UnauthorizedHttpResult>> (
         ClaimsPrincipal principal,
         UserManager<User> userManager,
         GoalDbContext ctx,
-        AddGoalRequest goal) =>
+        AddGoalRequest goal,
+        IValidator<AddGoalRequest> validator) =>
     {
+        var validation = await validator.ValidateAsync(goal);
+        if (!validation.IsValid)
+            return TypedResults.ValidationProblem(validation.ToDictionary());
+
         var user = await userManager.GetUserAsync(principal);
         if (user is null) return TypedResults.Unauthorized();
 
         var result = await ctx.Goals.AddAsync(new SavingsTracker.GoalDb.Goal
         {
             Name = goal.Name,
-            Target = goal.ParsedTarget,
+            Target = goal.ValidTarget,
             User = user,
             Deposits = []
         });

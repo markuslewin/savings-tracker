@@ -1,6 +1,6 @@
-import { validPassword } from "@/tests/utils";
+import { register } from "@/tests/utils";
 import { faker } from "@faker-js/faker";
-import { expect, test } from "@playwright/test";
+import { APIRequestContext, expect, test } from "@playwright/test";
 
 test("register validation", async ({ request }) => {
   const response = await request.post("/accounts/register", {
@@ -20,23 +20,25 @@ test("register validation", async ({ request }) => {
   });
 });
 
-test("add deposit validation", async ({ request }) => {
-  const email = faker.internet.email();
-  const password = validPassword;
+test("add goal validation", async ({ request }) => {
+  await signIn(request);
+  const response = await request.post("/goals", {
+    data: {
+      name: "",
+      target: "",
+    },
+  });
+  const { errors } = await response.json();
 
-  await request.post("/accounts/register", {
-    data: {
-      fullName: faker.person.fullName(),
-      email,
-      password,
-    },
+  expect(response.status()).toBe(400);
+  expect(errors).toStrictEqual({
+    name: ["Required"],
+    target: ["Required"],
   });
-  await request.post("/accounts/login", {
-    data: {
-      email,
-      password,
-    },
-  });
+});
+
+test("add deposit validation", async ({ request }) => {
+  await signIn(request);
   const { id } = await (
     await request.post("/goals", {
       data: {
@@ -59,3 +61,15 @@ test("add deposit validation", async ({ request }) => {
     amount: ["Required"],
   });
 });
+
+const signIn = async (request: APIRequestContext) => {
+  const user = await register();
+  await request.post("/accounts/login", {
+    data: {
+      email: user.email,
+      password: user.password,
+    },
+  });
+
+  return user;
+};

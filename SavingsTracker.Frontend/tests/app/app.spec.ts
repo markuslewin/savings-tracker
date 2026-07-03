@@ -1,5 +1,5 @@
 import { apiAuthCookieName, frontendAuthCookieName } from "@/app/utils/cookie";
-import { apiBase, validPassword } from "@/tests/utils";
+import { apiBase, register, validPassword } from "@/tests/utils";
 import AxeBuilder from "@axe-core/playwright";
 import { faker } from "@faker-js/faker";
 import { expect, Page, request, test } from "@playwright/test";
@@ -529,23 +529,6 @@ const signIn = async (page: Page) => {
   page.context().addCookies([{ ...cookie, name: frontendAuthCookieName }]);
 
   return user;
-};
-
-const register = async () => {
-  const fullName = faker.person.fullName();
-  const email = faker.internet.email();
-  const password = validPassword;
-
-  const context = await request.newContext({ baseURL: apiBase });
-  await context.post("/accounts/register", {
-    data: {
-      fullName,
-      email,
-      password,
-    },
-  });
-
-  return { fullName, email, password };
 };
 
 const createGoal = async (

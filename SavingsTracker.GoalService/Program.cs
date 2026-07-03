@@ -33,10 +33,11 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
 builder.Services
-    .AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>()
     .AddScoped<IValidator<AddGoalRequest>, AddGoalRequestValidator>()
     .AddScoped<IValidator<PatchGoalRequest>, PatchGoalRequestValidator>()
     .AddScoped<IValidator<AddDepositRequest>, AddDepositRequestValidator>()
+    .AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>()
+    .AddScoped<IValidator<LoginRequest>, LoginRequestValidator>()
     ;
 
 // Apply JSON naming policy to `HttpValidationProblemDetails.Errors`
@@ -334,12 +335,18 @@ accountGroup
     .WithName(confirmEmailEndpointName);
 
 accountGroup.MapPost("/login",
-    async Task<Results<EmptyHttpResult, ProblemHttpResult>> (
-        LoginRequest login, SignInManager<User> signInManager) =>
+    async Task<Results<EmptyHttpResult, ValidationProblem, ProblemHttpResult>> (
+        LoginRequest login,
+        IValidator<LoginRequest> validator,
+        SignInManager<User> signInManager) =>
     {
+        var validation = await validator.ValidateAsync(login);
+        if (!validation.IsValid)
+            return TypedResults.ValidationProblem(validation.ToDictionary());
+
         var result = await signInManager.PasswordSignInAsync(
-            login.Email,
-            login.Password,
+            login.ValidEmail,
+            login.ValidPassword,
             isPersistent: true,
             lockoutOnFailure: true);
         if (!result.Succeeded)

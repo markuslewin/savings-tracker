@@ -20,6 +20,34 @@ test("register validation", async ({ request }) => {
   });
 });
 
+test("login validation", async ({ request }) => {
+  const response = await request.post("/accounts/login", {
+    data: {
+      email: "",
+      password: "",
+    },
+  });
+  const { errors } = await response.json();
+
+  expect(response.status()).toBe(400);
+  expect(errors).toStrictEqual({
+    email: ["Required"],
+    password: ["Required"],
+  });
+});
+
+test("login incorrect password", async ({ request }) => {
+  const { email } = await register();
+  const response = await request.post("/accounts/login", {
+    data: {
+      email,
+      password: "incorrect",
+    },
+  });
+
+  expect(response.status()).toBe(401);
+});
+
 test("add goal validation", async ({ request }) => {
   await signIn(request);
   const response = await request.post("/goals", {

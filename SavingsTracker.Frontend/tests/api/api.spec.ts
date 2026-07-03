@@ -48,6 +48,23 @@ test("login incorrect password", async ({ request }) => {
   expect(response.status()).toBe(401);
 });
 
+test("post user info", async ({ request }) => {
+  await signIn(request);
+  const response = await request.post("/accounts/info", {
+    data: {
+      fullName: "",
+      email: "",
+    },
+  });
+  const { errors } = await response.json();
+
+  expect(response.status()).toBe(400);
+  expect(errors).toStrictEqual({
+    fullName: ["Required"],
+    email: ["Required"],
+  });
+});
+
 test("add goal validation", async ({ request }) => {
   await signIn(request);
   const response = await request.post("/goals", {

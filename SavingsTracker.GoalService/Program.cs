@@ -38,6 +38,7 @@ builder.Services
     .AddScoped<IValidator<AddDepositRequest>, AddDepositRequestValidator>()
     .AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>()
     .AddScoped<IValidator<LoginRequest>, LoginRequestValidator>()
+    .AddScoped<IValidator<PostUserRequest>, PostUserRequestValidator>()
     ;
 
 // Apply JSON naming policy to `HttpValidationProblemDetails.Errors`
@@ -389,21 +390,26 @@ accountGroup
             Results<EmptyHttpResult, UnauthorizedHttpResult, ValidationProblem>
         > (
             PostUserRequest postUserRequest,
+            IValidator<PostUserRequest> validator,
             ClaimsPrincipal principal,
             UserManager<User> userManager) =>
         {
+            var validation = await validator.ValidateAsync(postUserRequest);
+            if (!validation.IsValid)
+                return TypedResults.ValidationProblem(validation.ToDictionary());
+
             var user = await userManager.GetUserAsync(principal);
             if (user is null) return TypedResults.Unauthorized();
 
-            if (user.FullName != postUserRequest.FullName)
+            if (user.FullName != postUserRequest.ValidFullName)
             {
-                user.FullName = postUserRequest.FullName;
+                user.FullName = postUserRequest.ValidFullName;
             }
 
-            if (user.Email != postUserRequest.Email)
+            if (user.Email != postUserRequest.ValidEmail)
             {
-                await userManager.SetEmailAsync(user, postUserRequest.Email);
-                await userManager.SetUserNameAsync(user, postUserRequest.Email);
+                await userManager.SetEmailAsync(user, postUserRequest.ValidEmail);
+                await userManager.SetUserNameAsync(user, postUserRequest.ValidEmail);
             }
 
             await userManager.UpdateAsync(user);

@@ -37,6 +37,32 @@ test("add goal validation", async ({ request }) => {
   });
 });
 
+test("patch goal validation", async ({ request }) => {
+  await signIn(request);
+  const { id } = await (
+    await request.post("/goals", {
+      data: {
+        name: faker.food.dish(),
+        target: faker.finance.amount(),
+      },
+    })
+  ).json();
+
+  const response = await request.patch(`/goals/${id}`, {
+    data: {
+      name: "",
+      target: "",
+    },
+  });
+  const { errors } = await response.json();
+
+  expect(response.status()).toBe(400);
+  expect(errors).toStrictEqual({
+    name: ["Required"],
+    target: ["Required"],
+  });
+});
+
 test("add deposit validation", async ({ request }) => {
   await signIn(request);
   const { id } = await (

@@ -35,6 +35,7 @@ ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
 builder.Services
     .AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>()
     .AddScoped<IValidator<AddGoalRequest>, AddGoalRequestValidator>()
+    .AddScoped<IValidator<PatchGoalRequest>, PatchGoalRequestValidator>()
     .AddScoped<IValidator<AddDepositRequest>, AddDepositRequestValidator>()
     ;
 
@@ -183,13 +184,18 @@ app
     .RequireAuthorization();
 
 app
-    .MapPatch("/goals/{id}", async Task<Results<NoContent, UnauthorizedHttpResult, NotFound>> (
+    .MapPatch("/goals/{id}", async Task<Results<NoContent, ValidationProblem, UnauthorizedHttpResult, NotFound>> (
         int id,
         PatchGoalRequest patch,
+        IValidator<PatchGoalRequest> validator,
         GoalDbContext ctx,
         ClaimsPrincipal principal,
         UserManager<User> userManager) =>
     {
+        var validation = await validator.ValidateAsync(patch);
+        if (!validation.IsValid)
+            return TypedResults.ValidationProblem(validation.ToDictionary());
+
         var user = await userManager.GetUserAsync(principal);
         if (user is null) return TypedResults.Unauthorized();
 
@@ -202,7 +208,7 @@ app
         {
             goal.Name = patch.Name;
         }
-        if (patch.ParsedTarget is decimal { } target)
+        if (patch.ValidTarget is decimal target)
         {
             goal.Target = target;
         }

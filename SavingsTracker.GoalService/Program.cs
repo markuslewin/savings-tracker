@@ -21,9 +21,21 @@ const string confirmEmailEndpointName = "ConfirmEmail";
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthorization();
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 1;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+});
 
+ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
 builder.Services
-    .AddScoped<IValidator<AddDepositRequest>, AddDepositRequestValidator>();
+    .AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>()
+    .AddScoped<IValidator<AddDepositRequest>, AddDepositRequestValidator>()
+    ;
 
 // Apply JSON naming policy to `HttpValidationProblemDetails.Errors`
 // https://github.com/captainsafia/minapi-validation-support/blob/d2aa17b79fc620b36c5a777f8da3508216852217/api/Program.cs#L34
@@ -226,9 +238,9 @@ app
             UserManager<User> userManager,
             GoalDbContext ctx) =>
         {
-            var result = validator.Validate(deposit);
-            if (!result.IsValid)
-                return TypedResults.ValidationProblem(result.ToDictionary());
+            var validation = await validator.ValidateAsync(deposit);
+            if (!validation.IsValid)
+                return TypedResults.ValidationProblem(validation.ToDictionary());
 
             var user = await userManager.GetUserAsync(principal);
             if (user is null) return TypedResults.Unauthorized();
@@ -240,8 +252,8 @@ app
 
             await ctx.Deposits.AddAsync(new SavingsTracker.GoalDb.Deposit
             {
-                Amount = deposit.ParsedAmount,
-                Note = deposit.ParsedNote,
+                Amount = deposit.ValidAmount,
+                Note = deposit.ValidNote,
                 Goal = goal
             });
             await ctx.SaveChangesAsync();
@@ -254,24 +266,29 @@ var accountGroup = app.MapGroup("/accounts");
 
 accountGroup.MapPost("/register", async Task<Results<Ok, ValidationProblem>> (
     RegisterRequest registration,
+    IValidator<RegisterRequest> validator,
     UserManager<User> userManager,
     IUserStore<User> userStore,
     IEmailSender<User> emailSender,
     LinkGenerator linkGenerator,
     HttpContext httpContext) =>
 {
+    var validation = await validator.ValidateAsync(registration);
+    if (!validation.IsValid)
+        return TypedResults.ValidationProblem(validation.ToDictionary());
+
     var user = new User
     {
-        FullName = registration.FullName,
+        FullName = registration.ValidFullName,
     };
-    await userStore.SetUserNameAsync(user, registration.Email, CancellationToken.None);
+    await userStore.SetUserNameAsync(user, registration.ValidEmail, CancellationToken.None);
     if (userStore is not IUserEmailStore<User> userEmailStore)
     {
         throw new Exception("User store is not a user email store.");
     }
-    await userEmailStore.SetEmailAsync(user, registration.Email, CancellationToken.None);
+    await userEmailStore.SetEmailAsync(user, registration.ValidEmail, CancellationToken.None);
 
-    var result = await userManager.CreateAsync(user, registration.Password);
+    var result = await userManager.CreateAsync(user, registration.ValidPassword);
     if (!result.Succeeded)
     {
         return TypedResults.ValidationProblem(
@@ -292,7 +309,7 @@ accountGroup.MapPost("/register", async Task<Results<Ok, ValidationProblem>> (
         ?? throw new Exception(
             $"Could not find endpoint with name '{confirmEmailEndpointName}'.");
     await emailSender.SendConfirmationLinkAsync(
-        user, registration.Email, HtmlEncoder.Default.Encode(confirmEmailUrl));
+        user, registration.ValidEmail, HtmlEncoder.Default.Encode(confirmEmailUrl));
 
     return TypedResults.Ok();
 });

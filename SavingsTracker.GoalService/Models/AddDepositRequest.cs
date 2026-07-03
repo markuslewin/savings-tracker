@@ -5,12 +5,11 @@ namespace SavingsTracker.GoalService.Models;
 
 public class AddDepositRequest
 {
-  [Dollars]
   public string? Amount { get; set; }
   public string? Note { get; set; }
 
-  public decimal ParsedAmount => decimal.Parse(Amount!);
-  public string ParsedNote => Note!;
+  public decimal ValidAmount => decimal.Parse(Amount!);
+  public string ValidNote => Note!;
 }
 
 public class AddDepositRequestValidator : AbstractValidator<AddDepositRequest>
@@ -18,21 +17,8 @@ public class AddDepositRequestValidator : AbstractValidator<AddDepositRequest>
   public AddDepositRequestValidator()
   {
     RuleFor(r => r.Amount)
-      .Cascade(CascadeMode.Stop)
-      .NotNull()
-      .Custom((a, ctx) =>
-      {
-        if (!decimal.TryParse(a, out var d))
-        {
-          ctx.AddFailure("Invalid format");
-          return;
-        }
-        if (d.Scale > 2)
-        {
-          ctx.AddFailure("Invalid decimals");
-          return;
-        }
-      });
+      .Required()
+      .Dollars();
 
     RuleFor(r => r.Note)
       .NotNull();

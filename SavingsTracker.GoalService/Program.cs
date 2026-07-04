@@ -386,7 +386,7 @@ accountGroup
 accountGroup
     .MapPost("/info",
         async Task<
-            Results<EmptyHttpResult, UnauthorizedHttpResult, ValidationProblem>
+            Results<NoContent, UnauthorizedHttpResult, ValidationProblem>
         > (
             PostUserRequest postUserRequest,
             IValidator<PostUserRequest> validator,
@@ -413,13 +413,13 @@ accountGroup
 
             await userManager.UpdateAsync(user);
 
-            return TypedResults.Empty;
+            return TypedResults.NoContent();
         })
     .RequireAuthorization();
 
 accountGroup
     .MapPost("/changePassword",
-        async Task<Results<EmptyHttpResult, ValidationProblem, UnauthorizedHttpResult>> (
+        async Task<Results<NoContent, ValidationProblem, UnauthorizedHttpResult>> (
             ChangePasswordRequest changePasswordRequest,
             IValidator<ChangePasswordRequest> validator,
             ClaimsPrincipal principal,
@@ -453,7 +453,7 @@ accountGroup
                 user, hash, CancellationToken.None);
             await userManager.UpdateSecurityStampAsync(user);
 
-            return TypedResults.Empty;
+            return TypedResults.NoContent();
         })
     .RequireAuthorization();
 

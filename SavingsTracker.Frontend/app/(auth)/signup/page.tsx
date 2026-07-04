@@ -40,7 +40,7 @@ const Signup = () => {
 
           const response = await register(parsed.data);
           switch (response.status) {
-            case 204:
+            case 200:
               redirect("/signin");
             case 400:
               return {

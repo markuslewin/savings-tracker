@@ -47,7 +47,7 @@ const Signin = () => {
 
           const response = await logIn(parsed.data);
           switch (response.status) {
-            case 204:
+            case 200:
               await setAuthCookie(response.data.setCookie);
               redirect("/");
             case 400:

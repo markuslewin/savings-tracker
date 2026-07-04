@@ -91,7 +91,7 @@ export const register = async ({
     body: JSON.stringify({ fullName, email, password }),
   });
   switch (response.status) {
-    case 204:
+    case 200:
       return { status: response.status } as const;
     case 400:
       const json = parseValidationProblem(
@@ -119,7 +119,7 @@ export const logIn = async ({
     body: JSON.stringify({ email, password }),
   });
   switch (response.status) {
-    case 204:
+    case 200:
       const setCookies = response.headers.getSetCookie();
       for (const setCookie of setCookies) {
         const parsed = parseSetCookie(setCookie);
@@ -150,7 +150,7 @@ export const logOut = async ({ cookie }: { cookie: string }) => {
     headers: { cookie },
   });
   switch (response.status) {
-    case 204:
+    case 200:
       const setCookies = response.headers.getSetCookie();
       for (const setCookie of setCookies) {
         const parsed = parseSetCookie(setCookie);
@@ -256,7 +256,7 @@ export const getGoals = async ({
     },
   );
   switch (response.status) {
-    case 204:
+    case 200:
       return {
         status: response.status,
         json: goalsSchema.parse(await response.json()),

@@ -8,36 +8,48 @@ import {
   deleteGoal,
   ensureAuthCookie,
   getAuthCookie,
-  getGoal,
+  getGoal as _getGoal,
   updateGoal,
 } from "@/app/utils/api";
 import { formatDate } from "@/app/utils/locale";
 import { depositSchema, goalSchema } from "@/app/utils/schema";
-import { notFound, redirect, unauthorized } from "next/navigation";
+import { Metadata } from "next";
+import { notFound, redirect } from "next/navigation";
+import { cache } from "react";
 import * as z from "zod";
 
-const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
-  const { id } = z
-    .object({
-      id: z.coerce.number(),
-    })
-    .parse(await params);
+const paramsSchema = z.object({
+  id: z.coerce.number(),
+});
 
-  const response = await getGoal({
+const getGoal = cache(async (id: number) => {
+  const response = await _getGoal({
     cookie: await getAuthCookie(),
     data: {
       id,
     },
   });
   switch (response.status) {
+    case 200:
+      return response.json;
     case 401:
       redirect("/signin");
     case 404:
       notFound();
   }
+});
 
-  const user = await getUser();
-  const { json: goal } = response;
+export const generateMetadata = async ({
+  params,
+}: PageProps<"/goals/[id]">): Promise<Metadata> => {
+  const { id } = paramsSchema.parse(await params);
+  const goal = await getGoal(id);
+  return { title: goal.name };
+};
+
+const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
+  const { id } = paramsSchema.parse(await params);
+  const [user, goal] = await Promise.all([getUser(), getGoal(id)]);
 
   return (
     <article

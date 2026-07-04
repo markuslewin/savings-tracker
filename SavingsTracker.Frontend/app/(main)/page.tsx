@@ -14,9 +14,14 @@ import { formatDollars } from "@/app/utils/locale";
 import { sum } from "@/app/utils/math";
 import { sortSchema } from "@/app/utils/sort";
 import clsx from "clsx";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import * as z from "zod";
+
+export const metadata: Metadata = {
+  title: "Home",
+};
 
 const Home = async ({ searchParams }: PageProps<"/">) => {
   const { filter, sort } = z

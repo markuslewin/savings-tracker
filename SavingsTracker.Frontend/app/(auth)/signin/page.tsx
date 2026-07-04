@@ -3,8 +3,13 @@ import QuoteLayout from "@/app/(auth)/utils/quote-layout";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { logIn, setAuthCookie } from "@/app/utils/api";
 import { Hr } from "@/app/utils/hr";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import * as z from "zod";
+
+export const metadata: Metadata = {
+  title: "Sign In",
+};
 
 const Signin = () => {
   return (

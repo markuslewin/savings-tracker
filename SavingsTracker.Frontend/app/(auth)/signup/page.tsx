@@ -2,8 +2,13 @@ import { SignUpForm } from "@/app/(auth)/signup/utils/sign-up-form";
 import QuoteLayout from "@/app/(auth)/utils/quote-layout";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { register } from "@/app/utils/api";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import * as z from "zod";
+
+export const metadata: Metadata = {
+  title: "Sign Up",
+};
 
 const Signup = () => {
   return (

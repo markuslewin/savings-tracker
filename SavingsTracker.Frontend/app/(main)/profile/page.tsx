@@ -5,9 +5,14 @@ import { card } from "@/app/styles/card.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { ensureAuthCookie, updateUser } from "@/app/utils/api";
 import clsx from "clsx";
+import { Metadata } from "next";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import * as z from "zod";
+
+export const metadata: Metadata = {
+  title: "Profile",
+};
 
 const ProfilePage = async () => {
   const user = await ensureUser();

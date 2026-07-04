@@ -194,7 +194,7 @@ test("new user can create their first goal", async ({ page }) => {
   await dialog.getByRole("textbox", { name: "target" }).fill("1234");
   await dialog.getByRole("button", { name: "create" }).click();
 
-  await expect(page).toHaveURL(new URLPattern({ pathname: "/goals/*" }));
+  await expect(page).toHaveTitle(new RegExp(name));
   await expect(page.getByRole("heading", { name })).toBeAttached();
   await expect(page.getByTestId("target")).toHaveText(/\$1,234/i);
 });
@@ -211,7 +211,7 @@ test("user can create goal", async ({ page }) => {
   await dialog.getByRole("textbox", { name: "target" }).fill("100");
   await dialog.getByRole("button", { name: "create" }).click();
 
-  await expect(page).toHaveURL(new URLPattern({ pathname: "/goals/*" }));
+  await expect(page).toHaveTitle(new RegExp(name));
   await expect(page.getByRole("heading", { name })).toBeAttached();
   await expect(page.getByTestId("target")).toHaveText(/\$100/i);
 });
@@ -366,7 +366,7 @@ test("can go to goal", async ({ page }) => {
     .getByRole("link", { name })
     .click();
 
-  await expect(page).toHaveURL(new URLPattern({ pathname: "/goals/*" }));
+  await expect(page).toHaveTitle(new RegExp(name));
   await expect(page.getByRole("heading", { name, level: 1 })).toBeAttached();
 });
 

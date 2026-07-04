@@ -1,8 +1,13 @@
 import { NewPassword } from "@/app/(auth)/new-password/utils/new-password";
 import QuoteLayout from "@/app/(auth)/utils/quote-layout";
 import { changePassword, ensureAuthCookie } from "@/app/utils/api";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import * as z from "zod";
+
+export const metadata: Metadata = {
+  title: "New Password",
+};
 
 const NewPasswordPage = async () => {
   await ensureAuthCookie();

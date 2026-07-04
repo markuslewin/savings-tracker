@@ -279,7 +279,7 @@ app
 
 var accountGroup = app.MapGroup("/accounts");
 
-accountGroup.MapPost("/register", async Task<Results<Ok, ValidationProblem>> (
+accountGroup.MapPost("/register", async Task<Results<EmptyHttpResult, ValidationProblem>> (
     RegisterRequest registration,
     IValidator<RegisterRequest> validator,
     UserManager<User> userManager,
@@ -326,7 +326,7 @@ accountGroup.MapPost("/register", async Task<Results<Ok, ValidationProblem>> (
     await emailSender.SendConfirmationLinkAsync(
         user, registration.ValidEmail, HtmlEncoder.Default.Encode(confirmEmailUrl));
 
-    return TypedResults.Ok();
+    return TypedResults.Empty;
 });
 
 accountGroup
@@ -337,7 +337,7 @@ accountGroup
     .WithName(confirmEmailEndpointName);
 
 accountGroup.MapPost("/login",
-    async Task<Results<EmptyHttpResult, ValidationProblem, ProblemHttpResult>> (
+    async Task<Results<EmptyHttpResult, ValidationProblem, UnauthorizedHttpResult>> (
         LoginRequest login,
         IValidator<LoginRequest> validator,
         SignInManager<User> signInManager) =>
@@ -353,9 +353,7 @@ accountGroup.MapPost("/login",
             lockoutOnFailure: true);
         if (!result.Succeeded)
         {
-            return TypedResults.Problem(
-                result.ToString(),
-                statusCode: StatusCodes.Status401Unauthorized);
+            return TypedResults.Unauthorized();
         }
         return TypedResults.Empty;
     });
@@ -421,7 +419,7 @@ accountGroup
 
 accountGroup
     .MapPost("/changePassword",
-        async Task<Results<EmptyHttpResult, ValidationProblem, NotFound, UnauthorizedHttpResult>> (
+        async Task<Results<EmptyHttpResult, ValidationProblem, UnauthorizedHttpResult>> (
             ChangePasswordRequest changePasswordRequest,
             IValidator<ChangePasswordRequest> validator,
             ClaimsPrincipal principal,
@@ -433,7 +431,7 @@ accountGroup
                 return TypedResults.ValidationProblem(validation.ToDictionary());
 
             var user = await userManager.GetUserAsync(principal);
-            if (user is null) return TypedResults.NotFound();
+            if (user is null) return TypedResults.Unauthorized();
 
             // `UserManager.ChangePasswordAsync` requires the current password.
             // The design doesn't include that text field, so we bypass the manager here.

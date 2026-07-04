@@ -3,18 +3,21 @@ import {
   ensureAuthCookie,
   getAuthCookie,
 } from "@/app/utils/api";
+import { redirect } from "next/navigation";
 import { cache } from "react";
 
 export const getUser = cache(async () => {
   const cookie = await getAuthCookie();
   const user = cookie === null ? null : await getUserCore(cookie);
-  return user;
+  return user ?? null;
 });
 
 export const ensureUser = cache(async () => {
-  return getUserCore(await ensureAuthCookie());
+  const user = await getUserCore(await ensureAuthCookie());
+  if (user === undefined) redirect("/signin");
+  return user;
 });
 
 const getUserCore = cache(async (cookie: string) => {
-  return _getUser({ cookie });
+  return (await _getUser({ cookie })).json;
 });

@@ -29,8 +29,12 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
       id,
     },
   });
-  if (response.status === 401) unauthorized();
-  if (response.status === 404) notFound();
+  switch (response.status) {
+    case 401:
+      redirect("/signin");
+    case 404:
+      notFound();
+  }
 
   const user = await getUser();
   const { json: goal } = response;
@@ -72,35 +76,45 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
                   string,
                   string
                 >;
-                const parsing = goalSchema.safeParse(values);
-                if (!parsing.success)
+                const parsed = goalSchema.safeParse(values);
+                if (!parsed.success)
                   return {
                     values,
-                    errors: z.flattenError(parsing.error).fieldErrors,
+                    errors: z.flattenError(parsed.error).fieldErrors,
                   };
 
                 const response = await updateGoal({
                   cookie,
                   data: {
-                    ...parsing.data,
+                    ...parsed.data,
                     id: goal.id,
                   },
                 });
-                if (response?.status === 400)
-                  return {
-                    values,
-                    errors: response.json.errors,
-                  };
-
-                redirect(`/goals/${goal.id}`);
+                switch (response.status) {
+                  case 204:
+                    redirect(`/goals/${goal.id}`);
+                  case 400:
+                    return { values, errors: response.json.errors };
+                  case 401:
+                    redirect("/signin");
+                  case 404:
+                    redirect("/");
+                }
               }}
               deleteAction={async () => {
                 "use server";
-                await deleteGoal({
+                const response = await deleteGoal({
                   cookie: await ensureAuthCookie(),
                   data: { id: goal.id },
                 });
-                redirect("/");
+                switch (response.status) {
+                  case 204:
+                    redirect("/");
+                  case 401:
+                    redirect("/signin");
+                  case 404:
+                    redirect("/");
+                }
               }}
             />
           </div>
@@ -133,20 +147,27 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
           const cookie = await ensureAuthCookie();
 
           const values = Object.fromEntries(formData) as Record<string, string>;
-          const parsing = depositSchema.safeParse(values);
-          if (!parsing.success)
+          const parsed = depositSchema.safeParse(values);
+          if (!parsed.success)
             return {
               values,
-              errors: z.flattenError(parsing.error).fieldErrors,
+              errors: z.flattenError(parsed.error).fieldErrors,
             };
 
           const response = await addDeposit({
             cookie,
-            data: { ...parsing.data, goalId: goal.id },
+            data: { ...parsed.data, goalId: goal.id },
           });
-          if (response?.status === 400)
-            return { values, errors: response.json.errors };
-          redirect(`/goals/${goal.id}`);
+          switch (response.status) {
+            case 204:
+              redirect(`/goals/${goal.id}`);
+            case 400:
+              return { values, errors: response.json.errors };
+            case 401:
+              redirect("/signin");
+            case 404:
+              redirect("/");
+          }
         }}
       />
     </article>

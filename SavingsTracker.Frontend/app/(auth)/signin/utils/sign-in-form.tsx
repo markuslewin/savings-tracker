@@ -3,35 +3,41 @@
 import { Button } from "@/app/components/button";
 import { TextField } from "@/app/components/text-field";
 import { sprinkles } from "@/app/styles/sprinkles.css";
+import { FormAction } from "@/app/utils/form";
 import Link from "next/link";
 import { useActionState } from "react";
+import { Form } from "react-aria-components";
 
 type SignInFormProps = {
-  action: (formData: FormData) => Promise<void>;
+  action: FormAction<"email" | "password">;
 };
 
 export const SignInForm = ({ action }: SignInFormProps) => {
-  const [state, dispatch, isPending] = useActionState<undefined, FormData>(
-    async (previousState, formData) => {
-      await action(formData);
-    },
-    undefined,
-  );
+  const [state, dispatch, isPending] = useActionState(action, {
+    values: { email: "", password: "" },
+  });
 
   return (
-    <form
+    <Form
       className={sprinkles({
         stack: "space-0250",
       })}
       action={dispatch}
+      validationErrors={state.errors}
     >
-      <TextField label="Email address" name="email" isRequired />
+      <TextField
+        label="Email address"
+        name="email"
+        isRequired
+        defaultValue={state.values.email}
+      />
       <div className={sprinkles({ stack: "space-0150" })}>
         <TextField
           label="Password"
           type="password"
           name="password"
           isRequired
+          defaultValue={state.values.password}
         />
         <Link
           className={sprinkles({
@@ -66,6 +72,6 @@ export const SignInForm = ({ action }: SignInFormProps) => {
           Create one
         </Link>
       </p>
-    </form>
+    </Form>
   );
 };

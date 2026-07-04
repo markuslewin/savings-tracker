@@ -39,12 +39,15 @@ const Signup = () => {
             };
 
           const response = await register(parsed.data);
-          if (response?.status === 400)
-            return {
-              values: { ...values, password: "" },
-              errors: response.json.errors,
-            };
-          redirect("/signin");
+          switch (response.status) {
+            case 204:
+              redirect("/signin");
+            case 400:
+              return {
+                values: { ...values, password: "" },
+                errors: response.json.errors,
+              };
+          }
         }}
       />
     </QuoteLayout>

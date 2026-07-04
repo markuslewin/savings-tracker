@@ -16,10 +16,8 @@ const MainLayout = async (props: LayoutProps<"/">) => {
         user={user}
         logOutAction={async () => {
           "use server";
-          const result = await logOut({ cookie: await ensureAuthCookie() });
-          if (!result.success) return;
-
-          await setAuthCookie(result.data.setCookie);
+          const response = await logOut({ cookie: await ensureAuthCookie() });
+          await setAuthCookie(response.data.setCookie);
           redirect("/signin");
         }}
       />

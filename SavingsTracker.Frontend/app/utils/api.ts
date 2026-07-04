@@ -64,6 +64,17 @@ const getBase = () => {
   return base;
 };
 
+const parseValidationProblem = <T extends string>(
+  keys: readonly T[],
+  data: unknown,
+) => {
+  return z
+    .object({
+      errors: z.record(z.enum(keys), z.array(z.string())),
+    })
+    .parse(data);
+};
+
 export const register = async ({
   fullName,
   email,
@@ -80,21 +91,18 @@ export const register = async ({
     },
     body: JSON.stringify({ fullName, email, password }),
   });
-  if (response.status === 400) {
-    const json = z
-      .object({
-        errors: z
-          .object({
-            fullName: z.array(z.string()),
-            email: z.array(z.string()),
-            password: z.array(z.string()),
-          })
-          .partial(),
-      })
-      .parse(await response.json());
-    return { status: response.status, json } as const;
+  switch (response.status) {
+    case 204:
+      return { status: response.status } as const;
+    case 400:
+      const json = parseValidationProblem(
+        ["fullName", "email", "password"],
+        await response.json(),
+      );
+      return { status: response.status, json } as const;
+    default:
+      throw new Error(`Unexpected status code ${response.status}`);
   }
-  if (!response.ok) throw new Error(`Status code ${response.status}`);
 };
 
 export const logIn = async ({
@@ -111,19 +119,30 @@ export const logIn = async ({
     },
     body: JSON.stringify({ email, password }),
   });
-  if (response.status === 401) {
-    return error(new Error("Invalid email or password"));
+  switch (response.status) {
+    case 204:
+      const setCookies = response.headers.getSetCookie();
+      for (const setCookie of setCookies) {
+        const parsed = parseSetCookie(setCookie);
+        if (parsed.name === apiAuthCookieName) {
+          return {
+            status: response.status,
+            data: { setCookie: parsed },
+          } as const;
+        }
+      }
+      throw new Error("No Set-Cookie");
+    case 400:
+      const json = parseValidationProblem(
+        ["email", "password"],
+        await response.json(),
+      );
+      return { status: response.status, json } as const;
+    case 401:
+      return { status: response.status } as const;
+    default:
+      throw new Error(`Unexpected status code: ${response.status}`);
   }
-  if (!response.ok) throw new Error(`Status code ${response.status}`);
-
-  const setCookies = response.headers.getSetCookie();
-  for (const setCookie of setCookies) {
-    const parsed = parseSetCookie(setCookie);
-    if (parsed.name === apiAuthCookieName) {
-      return success({ setCookie: parsed });
-    }
-  }
-  return error(new Error("No Set-Cookie found."));
 };
 
 export const logOut = async ({ cookie }: { cookie: string }) => {
@@ -131,16 +150,22 @@ export const logOut = async ({ cookie }: { cookie: string }) => {
     method: "POST",
     headers: { cookie },
   });
-  if (!response.ok) throw new Error(`Status code ${response.status}`);
-
-  const setCookies = response.headers.getSetCookie();
-  for (const setCookie of setCookies) {
-    const parsed = parseSetCookie(setCookie);
-    if (parsed.name === apiAuthCookieName) {
-      return success({ setCookie: parsed });
-    }
+  switch (response.status) {
+    case 204:
+      const setCookies = response.headers.getSetCookie();
+      for (const setCookie of setCookies) {
+        const parsed = parseSetCookie(setCookie);
+        if (parsed.name === apiAuthCookieName) {
+          return {
+            status: response.status,
+            data: { setCookie: parsed },
+          } as const;
+        }
+      }
+      throw new Error("No Set-Cookie");
+    default:
+      throw new Error(`Unexpected status code ${response.status}`);
   }
-  return error(new Error("No Set-Cookie found."));
 };
 
 export const getUser = async ({ cookie }: { cookie: string }) => {
@@ -149,11 +174,15 @@ export const getUser = async ({ cookie }: { cookie: string }) => {
       cookie,
     },
   });
-  if (!response.ok) throw new Error(`Status code ${response.status}`);
-
-  const json = await response.json();
-  const user = userSchema.parse(json);
-  return user;
+  switch (response.status) {
+    case 200:
+      const json = userSchema.parse(await response.json());
+      return { status: response.status, json } as const;
+    case 401:
+      return { status: response.status } as const;
+    default:
+      throw new Error(`Unexpected status code ${response.status}`);
+  }
 };
 
 export const updateUser = async ({
@@ -168,7 +197,20 @@ export const updateUser = async ({
     headers: { cookie, "content-type": "application/json" },
     body: JSON.stringify({ fullName, email }),
   });
-  if (!response.ok) throw new Error(`Status code: ${response.status}`);
+  switch (response.status) {
+    case 204:
+      return { status: response.status } as const;
+    case 400:
+      const json = parseValidationProblem(
+        ["fullName", "email"],
+        await response.json(),
+      );
+      return { status: response.status, json } as const;
+    case 401:
+      return { status: response.status } as const;
+    default:
+      throw new Error(`Unexpected status code: ${response.status}`);
+  }
 };
 
 export const changePassword = async ({
@@ -186,7 +228,17 @@ export const changePassword = async ({
     },
     body: JSON.stringify({ password }),
   });
-  if (!response.ok) throw new Error(`Status code ${response.status}`);
+  switch (response.status) {
+    case 204:
+      return { status: response.status } as const;
+    case 400:
+      const json = parseValidationProblem(["password"], await response.json());
+      return { status: response.status, json } as const;
+    case 401:
+      return { status: response.status } as const;
+    default:
+      throw new Error(`Unexpected status code ${response.status}`);
+  }
 };
 
 export const getGoals = async ({
@@ -204,11 +256,17 @@ export const getGoals = async ({
       },
     },
   );
-  if (!response.ok) throw new Error(`Status code ${response.status}`);
-
-  const json = await response.json();
-  const goals = goalsSchema.parse(json);
-  return goals;
+  switch (response.status) {
+    case 204:
+      return {
+        status: response.status,
+        json: goalsSchema.parse(await response.json()),
+      } as const;
+    case 401:
+      return { status: response.status } as const;
+    default:
+      throw new Error(`Unexpected status code ${response.status}`);
+  }
 };
 
 export const getGoal = async ({
@@ -223,13 +281,19 @@ export const getGoal = async ({
       ...(cookie === null ? {} : { cookie }),
     },
   });
-  if (response.status === 401) return { status: response.status } as const;
-  if (response.status === 404) return { status: response.status } as const;
-  if (!response.ok) throw new Error(`Status code ${response.status}`);
-
-  const json = await response.json();
-  const goal = goalSchema.parse(json);
-  return { status: 200, json: goal } as const;
+  switch (response.status) {
+    case 200:
+      return {
+        status: response.status,
+        json: goalSchema.parse(await response.json()),
+      } as const;
+    case 401:
+      return { status: response.status } as const;
+    case 404:
+      return { status: response.status } as const;
+    default:
+      throw new Error(`Unexpected status code ${response.status}`);
+  }
 };
 
 export const createGoal = async ({
@@ -250,15 +314,26 @@ export const createGoal = async ({
     },
     body: JSON.stringify({ name, target }),
   });
-  if (!response.ok) throw new Error(`Status code ${response.status}`);
-
-  const json = await response.json();
-  const data = z
-    .object({
-      id: z.number(),
-    })
-    .parse(json);
-  return success(data);
+  switch (response.status) {
+    case 201:
+      return {
+        status: response.status,
+        json: z
+          .object({
+            id: z.number(),
+          })
+          .parse(await response.json()),
+      } as const;
+    case 400:
+      return {
+        status: response.status,
+        json: parseValidationProblem(["name", "target"], await response.json()),
+      } as const;
+    case 401:
+      return { status: response.status } as const;
+    default:
+      throw new Error(`Unexpected status code ${response.status}`);
+  }
 };
 
 export const updateGoal = async ({
@@ -280,20 +355,22 @@ export const updateGoal = async ({
     },
     body: JSON.stringify({ name, target }),
   });
-  if (response.status === 400) {
-    const json = z
-      .object({
-        errors: z
-          .object({
-            name: z.array(z.string()),
-            target: z.array(z.string()),
-          })
-          .partial(),
-      })
-      .parse(await response.json());
-    return { status: response.status, json } as const;
+  switch (response.status) {
+    case 204:
+      return { status: response.status } as const;
+    case 400:
+      const json = parseValidationProblem(
+        ["name", "target"],
+        await response.json(),
+      );
+      return { status: response.status, json } as const;
+    case 401:
+      return { status: response.status } as const;
+    case 404:
+      return { status: response.status } as const;
+    default:
+      throw new Error(`Unexpected status code ${response.status}`);
   }
-  if (!response.ok) throw new Error(`Status code ${response.status}`);
 };
 
 export const deleteGoal = async ({
@@ -310,7 +387,16 @@ export const deleteGoal = async ({
       cookie,
     },
   });
-  if (!response.ok) throw new Error(`Status code ${response.status}`);
+  switch (response.status) {
+    case 204:
+      return { status: response.status } as const;
+    case 401:
+      return { status: response.status } as const;
+    case 404:
+      return { status: response.status } as const;
+    default:
+      throw new Error(`Unexpected status code ${response.status}`);
+  }
 };
 
 export const addDeposit = async ({
@@ -331,18 +417,20 @@ export const addDeposit = async ({
       body: JSON.stringify({ amount, note }),
     },
   );
-  if (response.status === 400) {
-    const json = z
-      .object({
-        errors: z
-          .object({
-            amount: z.array(z.string()),
-            note: z.array(z.string()),
-          })
-          .partial(),
-      })
-      .parse(await response.json());
-    return { status: response.status, json } as const;
+  switch (response.status) {
+    case 204:
+      return { status: response.status } as const;
+    case 400:
+      const json = parseValidationProblem(
+        ["amount", "note"],
+        await response.json(),
+      );
+      return { status: response.status, json } as const;
+    case 401:
+      return { status: response.status } as const;
+    case 404:
+      return { status: response.status } as const;
+    default:
+      throw new Error(`Unexpected status code ${response.status}`);
   }
-  if (!response.ok) throw new Error(`Status code ${response.status}`);
 };

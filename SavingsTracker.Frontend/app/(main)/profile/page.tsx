@@ -39,25 +39,34 @@ const ProfilePage = async () => {
                 string,
                 string
               >;
-              const parsing = z
+              const parsed = z
                 .object({
                   fullName: z.string(),
                   email: z.string(),
                 })
                 .safeParse(values);
-              if (!parsing.success)
+              if (!parsed.success)
                 return {
                   values,
-                  errors: z.flattenError(parsing.error).fieldErrors,
+                  errors: z.flattenError(parsed.error).fieldErrors,
                 };
 
-              await updateUser({
+              const response = await updateUser({
                 cookie,
-                data: parsing.data,
+                data: parsed.data,
               });
-
-              revalidatePath("/profile");
-              redirect("/profile");
+              switch (response.status) {
+                case 204:
+                  revalidatePath("/profile");
+                  redirect("/profile");
+                case 400:
+                  return {
+                    values,
+                    errors: response.json.errors,
+                  };
+                case 401:
+                  redirect("/signin");
+              }
             }}
             user={user}
           />

@@ -29,8 +29,12 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
       id,
     },
   });
-  if (response.status === 401) unauthorized();
-  if (response.status === 404) notFound();
+  switch (response.status) {
+    case 401:
+      redirect("/signin");
+    case 404:
+      notFound();
+  }
 
   const user = await getUser();
   const { json: goal } = response;

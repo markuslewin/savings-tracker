@@ -16,5 +16,5 @@ export const ensureUser = cache(async () => {
 });
 
 const getUserCore = cache(async (cookie: string) => {
-  return _getUser({ cookie });
+  return (await _getUser({ cookie })).json;
 });

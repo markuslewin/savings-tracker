@@ -421,7 +421,7 @@ accountGroup
 
 accountGroup
     .MapPost("/changePassword",
-        async Task<Results<EmptyHttpResult, ValidationProblem, NotFound, UnauthorizedHttpResult>> (
+        async Task<Results<EmptyHttpResult, ValidationProblem, UnauthorizedHttpResult>> (
             ChangePasswordRequest changePasswordRequest,
             IValidator<ChangePasswordRequest> validator,
             ClaimsPrincipal principal,
@@ -433,7 +433,7 @@ accountGroup
                 return TypedResults.ValidationProblem(validation.ToDictionary());
 
             var user = await userManager.GetUserAsync(principal);
-            if (user is null) return TypedResults.NotFound();
+            if (user is null) return TypedResults.Unauthorized();
 
             // `UserManager.ChangePasswordAsync` requires the current password.
             // The design doesn't include that text field, so we bypass the manager here.

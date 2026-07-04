@@ -14,6 +14,7 @@ import { formatDollars } from "@/app/utils/locale";
 import { sum } from "@/app/utils/math";
 import { sortSchema } from "@/app/utils/sort";
 import clsx from "clsx";
+import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import * as z from "zod";
 
@@ -27,10 +28,13 @@ const Home = async ({ searchParams }: PageProps<"/">) => {
 
   const now = getNow();
   const user = await getUser();
-  const goals = await getGoals({
+  const response = await getGoals({
     cookie: await getAuthCookie(),
     data: { sort },
   });
+  if (response.status === 401) redirect("/signin");
+
+  const { json: goals } = response;
   const goalsWithSaved = addSaved(goals);
   const filteredGoals = goalsWithSaved.filter(getFilterFn(filter));
   const deposits = goals.flatMap((g) => g.deposits);

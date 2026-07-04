@@ -27,22 +27,35 @@ const Signin = () => {
       </div>
       <Hr color="neutral-700" />
       <SignInForm
-        action={async (formData) => {
+        action={async (_, formData) => {
           "use server";
-          const values = Object.fromEntries(formData);
+          const values = Object.fromEntries(formData) as Record<
+            "email" | "password",
+            string
+          >;
           const parsed = z
             .object({
               email: z.string(),
               password: z.string(),
             })
-            .parse(values);
-          const result = await logIn(parsed);
-          if (!result.success) {
-            console.log("todo: Feedback");
-            return;
-          }
+            .safeParse(values);
+          if (!parsed.success)
+            return {
+              values: { ...values, password: "" },
+              errors: z.flattenError(parsed.error).fieldErrors,
+            };
 
-          await setAuthCookie(result.data.setCookie);
+          const response = await logIn(parsed.data);
+          if (response.status === 400)
+            return {
+              values: { ...values, password: "" },
+              errors: response.json.errors,
+            };
+          // todo: Sign in failed
+          if (response.status === 401)
+            return { values: { ...values, password: "" } };
+
+          await setAuthCookie(response.data.setCookie);
           redirect("/");
         }}
       />

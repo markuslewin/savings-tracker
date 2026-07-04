@@ -18,9 +18,16 @@ export const createGoal: FormAction<"name" | "target"> = async (
       errors: z.flattenError(parsed.error).fieldErrors,
     };
 
-  const result = await _createGoal({
+  const response = await _createGoal({
     cookie: await ensureAuthCookie(),
     data: parsed.data,
   });
-  redirect(`/goals/${result.data.id}`);
+  switch (response.status) {
+    case 201:
+      redirect(`/goals/${encodeURIComponent(response.json.id)}`);
+    case 400:
+      return { values, errors: response.json.errors };
+    case 401:
+      redirect("/signin");
+  }
 };

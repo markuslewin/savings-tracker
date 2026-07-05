@@ -56,12 +56,6 @@ export const button = styleVariants({
       color: "neutral-0",
     }),
   ],
-  text: [
-    sprinkles({
-      background: "transparent",
-      color: "inherit",
-    }),
-  ],
 });
 
 const contentBase: ComplexStyleRule = [

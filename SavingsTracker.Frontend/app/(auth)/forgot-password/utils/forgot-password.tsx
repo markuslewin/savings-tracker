@@ -8,6 +8,7 @@ import { sprinkles } from "@/app/styles/sprinkles.css";
 import { FormState } from "@/app/utils/form";
 import Link from "next/link";
 import { startTransition, useActionState } from "react";
+import { Button as AriaButton } from "react-aria-components/Button";
 import { Form } from "react-aria-components/Form";
 
 type Payload = FormData | { type: "reset" };
@@ -131,12 +132,12 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
           })}
         >
           Didn&apos;t receive it?{" "}
-          <Button
+          <AriaButton
             className={sprinkles({
               line: "underline",
+              background: "transparent",
               color: "neutral-0",
             })}
-            variant="text"
             onPress={() => {
               startTransition(() => {
                 dispatch({ type: "reset" });
@@ -144,7 +145,7 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
             }}
           >
             Resend email
-          </Button>
+          </AriaButton>
         </p>
         <Back to={"/signin"}>Back to sign in</Back>
       </div>

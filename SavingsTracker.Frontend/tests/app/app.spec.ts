@@ -8,7 +8,7 @@ import * as z from "zod";
 test("has title", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page).toHaveTitle(/next app/i);
+  await expect(page).toHaveTitle(/home/i);
 });
 
 test("/ a11y", async ({ page }) => {

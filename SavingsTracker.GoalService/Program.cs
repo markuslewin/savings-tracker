@@ -40,6 +40,7 @@ builder.Services
     .AddScoped<IValidator<LoginRequest>, LoginRequestValidator>()
     .AddScoped<IValidator<PostUserRequest>, PostUserRequestValidator>()
     .AddScoped<IValidator<ChangePasswordRequest>, ChangePasswordRequestValidator>()
+    .AddScoped<IValidator<ForgotPasswordRequest>, ForgotPasswordRequestValidator>()
     ;
 
 // Apply JSON naming policy to `HttpValidationProblemDetails.Errors`
@@ -456,5 +457,33 @@ accountGroup
             return TypedResults.NoContent();
         })
     .RequireAuthorization();
+
+accountGroup
+    .MapPost("/forgotPassword", async Task<Results<EmptyHttpResult, ValidationProblem>> (
+        ForgotPasswordRequest forgotPasswordRequest,
+        IValidator<ForgotPasswordRequest> validator,
+        UserManager<User> userManager,
+        IEmailSender<User> emailSender) =>
+    {
+        var validation = await validator.ValidateAsync(forgotPasswordRequest);
+        if (!validation.IsValid)
+            return TypedResults.ValidationProblem(validation.ToDictionary());
+
+        var user =
+            await userManager.FindByEmailAsync(forgotPasswordRequest.ValidEmail);
+        if (user is not null && await userManager.IsEmailConfirmedAsync(user))
+        {
+            var code = await userManager.GeneratePasswordResetTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            // Avoid timing attacks. No `await`
+            _ = emailSender.SendPasswordResetCodeAsync(
+                user,
+                forgotPasswordRequest.ValidEmail,
+                HtmlEncoder.Default.Encode(code));
+        }
+
+        // Don't leak info. Always return OK
+        return TypedResults.Empty;
+    });
 
 app.Run();

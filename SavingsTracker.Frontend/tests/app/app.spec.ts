@@ -511,6 +511,23 @@ test("can add deposits", async ({ page }) => {
   ]);
 });
 
+test("forgot password", async ({ page }) => {
+  const email = faker.internet.email();
+
+  await page.goto("/signin");
+  await page.getByRole("link", { name: "forgot password" }).click();
+
+  await expect(page).toHaveTitle(/forgot password/i);
+
+  await page.getByRole("textbox", { name: "email" }).fill(email);
+  await page.getByRole("button", { name: "reset" }).click();
+
+  await expect(
+    page.getByRole("heading", { name: "check your inbox" }),
+  ).toBeAttached();
+  await expect(page.getByTestId("email")).toHaveText(email);
+});
+
 const signIn = async (page: Page) => {
   const user = await register();
 

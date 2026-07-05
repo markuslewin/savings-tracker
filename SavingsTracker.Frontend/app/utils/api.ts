@@ -240,6 +240,29 @@ export const changePassword = async ({
   }
 };
 
+export const forgotPassword = async ({
+  data: { email },
+}: {
+  data: { email: string };
+}) => {
+  const response = await fetch(new URL("accounts/forgotPassword", getBase()), {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+  switch (response.status) {
+    case 200:
+      return { status: response.status };
+    case 400:
+      const json = parseValidationProblem(["email"], await response.json());
+      return { status: response.status, json };
+    default:
+      throw new Error(`Unexpected status code ${response.status}`);
+  }
+};
+
 export const getGoals = async ({
   cookie,
   data: { sort },

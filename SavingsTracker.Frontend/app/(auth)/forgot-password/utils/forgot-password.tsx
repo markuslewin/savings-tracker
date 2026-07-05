@@ -5,37 +5,42 @@ import { Back } from "@/app/components/back";
 import { Button } from "@/app/components/button";
 import { TextField } from "@/app/components/text-field";
 import { sprinkles } from "@/app/styles/sprinkles.css";
+import { FormState } from "@/app/utils/form";
 import Link from "next/link";
 import { startTransition, useActionState } from "react";
+import { Form } from "react-aria-components/Form";
+
+type Payload = FormData | { type: "reset" };
+type State =
+  | ({ view: "initial" } & FormState<"email">)
+  | { view: "success"; email: string };
+
+const initialState: State = {
+  view: "initial",
+  values: {
+    email: "",
+  },
+};
 
 type ForgotPasswordProps = {
-  resetAction: () => Promise<void>;
+  resetAction: (previousState: State, formData: FormData) => Promise<State>;
 };
 
 export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
-  const [{ sentTo }, dispatch, isPending] = useActionState<
-    {
-      sentTo: string | null;
-    },
-    FormData | { type: "reset" }
-  >(
+  const [state, dispatch, isPending] = useActionState<State, Payload>(
     async (previousState, payload) => {
       if (payload instanceof FormData) {
-        // todo: Implement
-        await resetAction();
-        return { sentTo: "user@example.com" };
+        return await resetAction(previousState, payload);
       }
       switch (payload.type) {
         case "reset":
-          return { sentTo: null };
+          return initialState;
       }
     },
-    {
-      sentTo: null,
-    },
+    initialState,
   );
 
-  return sentTo === null ? (
+  return state.view === "initial" ? (
     <>
       <div
         className={sprinkles({
@@ -53,13 +58,19 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
           Enter your email address and we&apos;ll send you a link to reset it.
         </p>
       </div>
-      <form
+      <Form
         className={sprinkles({
           stack: "space-0250",
         })}
         action={dispatch}
+        validationErrors={state.errors}
       >
-        <TextField label="Email address" name="email" isRequired />
+        <TextField
+          label="Email address"
+          name="email"
+          defaultValue={state.values.email}
+          isRequired
+        />
         <Button
           className={sprinkles({
             marginBlockStart: "space-0150",
@@ -79,7 +90,7 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
         >
           Back to sign in
         </Link>
-      </form>
+      </Form>
     </>
   ) : (
     <>
@@ -100,8 +111,9 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
               fontWeight: "inherit",
               color: "neutral-0",
             })}
+            data-testid="email"
           >
-            {sentTo}
+            {state.email}
           </b>
         </p>
       </div>

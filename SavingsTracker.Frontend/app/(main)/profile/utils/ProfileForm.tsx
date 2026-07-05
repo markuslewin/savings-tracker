@@ -43,7 +43,9 @@ export const ProfileForm = ({ user, action }: ProfileForm) => {
           isRequired
         />
       </div>
-      <Button type="submit">Edit profile</Button>
+      <Button type="submit" isPending={isPending}>
+        Edit profile
+      </Button>
     </Form>
   );
 };

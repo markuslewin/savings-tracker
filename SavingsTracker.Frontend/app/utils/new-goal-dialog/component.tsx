@@ -56,7 +56,9 @@ export const NewGoalDialog = ({ user }: NewGoalDialogProps) => {
           })}
         >
           <CancelButton />
-          <Button type="submit">Create goal</Button>
+          <Button type="submit" isPending={isPending}>
+            Create goal
+          </Button>
         </div>
       </Form>
     </Dialog>

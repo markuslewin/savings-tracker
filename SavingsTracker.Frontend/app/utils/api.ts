@@ -63,13 +63,13 @@ const getBase = () => {
   return base;
 };
 
-const parseValidationProblem = <T extends string>(
+export const parseValidationProblem = <T extends string>(
   keys: readonly T[],
   data: unknown,
 ) => {
   return z
     .object({
-      errors: z.record(z.enum(keys), z.array(z.string())),
+      errors: z.partialRecord(z.enum(keys), z.array(z.string())),
     })
     .parse(data);
 };

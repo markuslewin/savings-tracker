@@ -58,6 +58,7 @@ export const SignInForm = ({ action }: SignInFormProps) => {
       <Button
         className={sprinkles({ marginBlockStart: "space-0150" })}
         type="submit"
+        isPending={isPending}
       >
         Sign in
       </Button>

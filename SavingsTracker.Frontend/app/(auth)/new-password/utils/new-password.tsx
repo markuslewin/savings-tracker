@@ -84,6 +84,7 @@ export const NewPassword = ({ action }: NewPasswordProps) => {
             marginBlockStart: "space-0150",
           })}
           type="submit"
+          isPending={isPending}
         >
           Reset password
         </Button>

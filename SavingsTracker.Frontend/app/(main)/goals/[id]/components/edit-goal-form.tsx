@@ -55,7 +55,9 @@ export const EditGoalForm = ({ goal, submitAction }: EditGoalFormProps) => {
         })}
       >
         <CancelButton />
-        <Button type="submit">Save changes</Button>
+        <Button type="submit" isPending={isPending}>
+          Save changes
+        </Button>
       </div>
     </Form>
   );

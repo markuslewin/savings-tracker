@@ -47,6 +47,7 @@ export const SignUpForm = ({ action }: SignUpFormProps) => {
           marginBlockStart: "space-0150",
         })}
         type="submit"
+        isPending={isPending}
       >
         Create account
       </Button>

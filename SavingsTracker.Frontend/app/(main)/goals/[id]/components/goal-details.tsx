@@ -170,7 +170,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                   defaultValue={state.values.note}
                 />
               </div>
-              <Button type="submit" variant="primary">
+              <Button type="submit" variant="primary" isPending={isPending}>
                 Add funds
               </Button>
             </Form>

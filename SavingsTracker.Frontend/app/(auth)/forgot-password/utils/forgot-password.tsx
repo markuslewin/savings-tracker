@@ -65,7 +65,6 @@ export const ForgotPassword = ({ resetAction }: ForgotPasswordProps) => {
             marginBlockStart: "space-0150",
           })}
           type="submit"
-          // todo: Pending state
           isPending={isPending}
         >
           Send reset link

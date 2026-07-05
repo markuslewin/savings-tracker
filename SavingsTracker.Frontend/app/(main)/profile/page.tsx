@@ -62,8 +62,7 @@ const ProfilePage = async () => {
               });
               switch (response.status) {
                 case 204:
-                  revalidatePath("/profile");
-                  redirect("/profile");
+                  return { values };
                 case 400:
                   return {
                     values,

@@ -4,11 +4,11 @@ import { getUser } from "@/app/(main)/utils/user";
 import { Back } from "@/app/components/back";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import {
+  getGoal as _getGoal,
   addDeposit,
   deleteGoal,
   ensureAuthCookie,
   getAuthCookie,
-  getGoal as _getGoal,
   updateGoal,
 } from "@/app/utils/api";
 import { formatDate } from "@/app/utils/locale";
@@ -172,7 +172,7 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
           });
           switch (response.status) {
             case 204:
-              redirect(`/goals/${goal.id}`);
+              return { values: { amount: "", note: "" } };
             case 400:
               return { values, errors: response.json.errors };
             case 401:

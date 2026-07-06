@@ -1,5 +1,5 @@
 import { SignUpForm } from "@/app/(auth)/signup/utils/sign-up-form";
-import QuoteLayout from "@/app/(auth)/utils/quote-layout";
+import { QuoteLayout } from "@/app/(auth)/utils/quote-layout";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { register } from "@/app/utils/api";
 import { Metadata } from "next";

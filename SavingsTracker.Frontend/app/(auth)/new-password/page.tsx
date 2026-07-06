@@ -1,8 +1,9 @@
 import { NewPassword } from "@/app/(auth)/new-password/utils/new-password";
-import QuoteLayout from "@/app/(auth)/utils/quote-layout";
+import { QuoteLayout } from "@/app/(auth)/utils/quote-layout";
 import { changePassword, ensureAuthCookie } from "@/app/utils/api";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import * as z from "zod";
 
 export const metadata: Metadata = {
@@ -10,6 +11,16 @@ export const metadata: Metadata = {
 };
 
 const NewPasswordPage = async () => {
+  return (
+    <Suspense>
+      <NewPasswordPageCore />
+    </Suspense>
+  );
+};
+
+export default NewPasswordPage;
+
+const NewPasswordPageCore = async () => {
   await ensureAuthCookie();
 
   return (
@@ -52,5 +63,3 @@ const NewPasswordPage = async () => {
     </QuoteLayout>
   );
 };
-
-export default NewPasswordPage;

@@ -1,5 +1,5 @@
 import { ForgotPassword } from "@/app/(auth)/forgot-password/utils/forgot-password";
-import QuoteLayout from "@/app/(auth)/utils/quote-layout";
+import { QuoteLayout } from "@/app/(auth)/utils/quote-layout";
 import { forgotPassword } from "@/app/utils/api";
 import { Metadata } from "next";
 import * as z from "zod";

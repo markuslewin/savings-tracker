@@ -1,5 +1,5 @@
 import { SignInForm } from "@/app/(auth)/signin/utils/sign-in-form";
-import QuoteLayout from "@/app/(auth)/utils/quote-layout";
+import { QuoteLayout } from "@/app/(auth)/utils/quote-layout";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { logIn, setAuthCookie } from "@/app/utils/api";
 import { Hr } from "@/app/utils/hr";

@@ -15,18 +15,15 @@ export const ActionButton = ({
   const [isPending, transition] = useTransition();
   return (
     <Button
-      {...props}
       onPress={() => {
         transition(() => {
           action();
         });
       }}
+      isPending={isPending}
+      {...props}
     >
-      <>
-        {children}
-        {/* todo */}
-        {isPending ? " pending" : null}
-      </>
+      <>{children}</>
     </Button>
   );
 };

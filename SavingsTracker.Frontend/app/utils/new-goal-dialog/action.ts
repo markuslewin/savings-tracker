@@ -24,7 +24,7 @@ export const createGoal: FormAction<"name" | "target"> = async (
   });
   switch (response.status) {
     case 201:
-      redirect(`/goals/${encodeURIComponent(response.json.id)}`);
+      redirect(`/goals/${encodeURIComponent(response.json.id)}`, "replace");
     case 400:
       return { values, errors: response.json.errors };
     case 401:

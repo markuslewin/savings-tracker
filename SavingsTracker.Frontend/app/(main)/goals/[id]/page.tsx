@@ -14,6 +14,7 @@ import {
 import { formatDate } from "@/app/utils/locale";
 import { depositSchema, goalSchema } from "@/app/utils/schema";
 import { Metadata } from "next";
+import { refresh } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import * as z from "zod";
@@ -104,7 +105,10 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
                 });
                 switch (response.status) {
                   case 204:
-                    redirect(`/goals/${goal.id}`);
+                    redirect(
+                      `/goals/${encodeURIComponent(goal.id)}`,
+                      "replace",
+                    );
                   case 400:
                     return { values, errors: response.json.errors };
                   case 401:
@@ -172,6 +176,7 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
           });
           switch (response.status) {
             case 204:
+              refresh();
               return { values: { amount: "", note: "" } };
             case 400:
               return { values, errors: response.json.errors };

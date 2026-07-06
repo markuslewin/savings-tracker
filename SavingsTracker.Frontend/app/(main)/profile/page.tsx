@@ -6,7 +6,7 @@ import { sprinkles } from "@/app/styles/sprinkles.css";
 import { ensureAuthCookie, updateUser } from "@/app/utils/api";
 import clsx from "clsx";
 import { Metadata } from "next";
-import { revalidatePath } from "next/cache";
+import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import * as z from "zod";
 
@@ -62,6 +62,7 @@ const ProfilePage = async () => {
               });
               switch (response.status) {
                 case 204:
+                  refresh();
                   return { values };
                 case 400:
                   return {

@@ -1,7 +1,11 @@
 "use client";
 
 import { FinishedStat } from "@/app/(main)/goals/[id]/components/finished-stat";
-import { depositLayout } from "@/app/(main)/goals/[id]/components/goal-details.css";
+import {
+  depositLayout,
+  glassCircle,
+  glassCircleInner,
+} from "@/app/(main)/goals/[id]/components/goal-details.css";
 import { split } from "@/app/(main)/goals/[id]/page.css";
 import { Button } from "@/app/components/button";
 import { Progress } from "@/app/components/progress";
@@ -190,6 +194,7 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
           <div
             className={clsx(
               box,
+              glassCircle,
               sprinkles({
                 borderRadius: "radius-full",
                 borderColor: "transparent",
@@ -199,18 +204,17 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
                 boxSpaceBlock: "space-0",
                 boxSpaceInline: "space-0",
                 display: "grid",
-                placeItems: "center",
-                background: "white-alpha-30",
-                color: "neutral-0",
               }),
             )}
           >
-            <CheckmarkIcon
-              className={sprinkles({
-                width: "size-0400",
-                height: "size-0400",
-              })}
-            />
+            <div className={glassCircleInner}>
+              <CheckmarkIcon
+                className={sprinkles({
+                  width: "size-0400",
+                  height: "size-0400",
+                })}
+              />
+            </div>
           </div>
           <div
             className={sprinkles({

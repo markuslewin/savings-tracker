@@ -8,7 +8,6 @@ const withVanillaExtract = createVanillaExtractPlugin({
 });
 
 const nextConfig: NextConfig = {
-  cacheComponents: true,
   typedRoutes: true,
   turbopack: {
     rules: {

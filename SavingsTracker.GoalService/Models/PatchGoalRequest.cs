@@ -6,8 +6,8 @@ namespace SavingsTracker.GoalService.Models;
 public class PatchGoalRequest
 {
   public string? Name { get; set; }
-
   public string? Target { get; set; }
+  public string? Deadline { get; set; }
 
   public decimal? ValidTarget
   {
@@ -17,6 +17,9 @@ public class PatchGoalRequest
       _ => null
     };
   }
+  public DateOnly? ValidDeadline => string.IsNullOrWhiteSpace(Deadline)
+    ? null
+    : DateOnly.Parse(Deadline);
 }
 
 public class PatchGoalRequestValidator : AbstractValidator<PatchGoalRequest>
@@ -31,5 +34,10 @@ public class PatchGoalRequestValidator : AbstractValidator<PatchGoalRequest>
       .Required()
       .Dollars()
       .When(r => r.Target is not null);
+
+    RuleFor(r => r.Deadline)
+      .NotNull()
+      .NullableDateTime()
+      .When(r => r.Deadline is not null);
   }
 }

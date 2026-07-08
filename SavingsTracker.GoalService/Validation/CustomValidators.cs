@@ -58,4 +58,18 @@ public static class CustomValidators
         }
       });
   }
+
+  public static IRuleBuilderOptionsConditions<T, string?> NullableDateTime<T>(
+    this IRuleBuilder<T, string?> builder)
+  {
+    return builder.Custom((val, ctx) =>
+      {
+        if (!string.IsNullOrWhiteSpace(val)
+          && !DateOnly.TryParse(val, out var dateOnly))
+        {
+          ctx.AddFailure("Invalid format");
+          return;
+        }
+      });
+  }
 }

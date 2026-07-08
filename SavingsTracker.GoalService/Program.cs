@@ -174,8 +174,9 @@ app
 
         var result = await ctx.Goals.AddAsync(new SavingsTracker.GoalDb.Goal
         {
-            Name = goal.Name,
+            Name = goal.ValidName,
             Target = goal.ValidTarget,
+            Deadline = goal.ValidDeadline,
             User = user,
             Deposits = []
         });
@@ -215,6 +216,10 @@ app
         if (patch.ValidTarget is decimal target)
         {
             goal.Target = target;
+        }
+        if (patch.Deadline is not null)
+        {
+            goal.Deadline = patch.ValidDeadline;
         }
         await ctx.SaveChangesAsync();
 

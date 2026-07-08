@@ -13,6 +13,7 @@ import { srOnly } from "@/app/styles/srOnly.css";
 import { User } from "@/app/utils/api";
 import { Hr } from "@/app/utils/hr";
 import { NewGoalDialog } from "@/app/utils/new-goal-dialog/component";
+import { useDialog } from "@/app/utils/new-goal-dialog/hook";
 import { OptimisticSearchParams } from "@/app/utils/optimistic-search-params/component";
 import Link from "next/link";
 import { useState } from "react";
@@ -148,8 +149,15 @@ export const LayoutImpl = ({
         >
           <div className={container}>{children}</div>
         </main>
-        <NewGoalDialog user={user} />
+        <KeyedNewGoalDialog user={user} />
       </div>
     </OptimisticSearchParams>
   );
+};
+
+const KeyedNewGoalDialog = ({ user }: Pick<LayoutImplProps, "user">) => {
+  const dialog = useDialog({ dialogId: "new-goal", user });
+
+  // Reset the form on open/close
+  return <NewGoalDialog key={`${dialog.open}`} user={user} />;
 };

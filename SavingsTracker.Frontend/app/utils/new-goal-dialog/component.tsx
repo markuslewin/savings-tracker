@@ -1,8 +1,8 @@
-"use client";
-
 import { Button } from "@/app/components/button";
+import { DateField } from "@/app/components/date-field";
 import { CancelButton, Dialog } from "@/app/components/dialog";
 import { TextField } from "@/app/components/text-field";
+import DollarIcon from "@/app/icons/icon-dollar.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { User } from "@/app/utils/api";
 import { createGoal } from "@/app/utils/new-goal-dialog/action";
@@ -38,15 +38,19 @@ export const NewGoalDialog = ({ user }: NewGoalDialogProps) => {
           <TextField
             label="Goal name"
             name="name"
+            placeholder="e.g. MacBook Pro M4"
             defaultValue={state.values.name}
             isRequired
           />
           <TextField
             label="Target amount"
+            icon={DollarIcon}
             name="target"
+            placeholder="0.00"
             defaultValue={state.values.target}
             isRequired
           />
+          <DateField label="Deadline (optional)" name="deadline" />
         </div>
         <div
           className={sprinkles({

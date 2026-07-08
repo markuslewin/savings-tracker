@@ -1,11 +1,12 @@
 import { FieldError } from "@/app/components/field-error";
 import * as inputStyles from "@/app/components/input.css";
+import { Label } from "@/app/components/label";
+import { field } from "@/app/styles/field.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { IconProp } from "@/app/utils/_icon";
 import {
   TextField as AriaTextField,
   Input,
-  Label,
   Text,
   type TextFieldProps as AriaTextFieldProps,
 } from "react-aria-components/TextField";
@@ -25,15 +26,10 @@ export const TextField = ({
   ...props
 }: TextFieldProps) => {
   return (
-    <AriaTextField
-      className={sprinkles({
-        stack: "space-0125",
-      })}
-      {...props}
-    >
+    <AriaTextField className={field} {...props}>
       {({ isInvalid }) => (
         <>
-          <Label className={sprinkles({ text: "5" })}>{label}</Label>
+          <Label>{label}</Label>
           <span className={inputStyles.root}>
             {Icon === undefined ? null : <Icon className={inputStyles.icon} />}
             <Input

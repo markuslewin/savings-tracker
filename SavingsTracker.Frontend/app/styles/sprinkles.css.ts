@@ -222,7 +222,7 @@ const colorProperties = defineProperties({
       selector: "&:hover",
     },
     placeholder: {
-      selector: "&:placeholder",
+      selector: "&::placeholder",
     },
   },
   defaultCondition: "default",

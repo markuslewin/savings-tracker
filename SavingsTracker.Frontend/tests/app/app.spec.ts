@@ -1,8 +1,8 @@
 import { apiAuthCookieName, frontendAuthCookieName } from "@/app/utils/cookie";
-import { getDatePart } from "@/app/utils/date";
 import { apiBase, register, validPassword } from "@/tests/utils";
 import AxeBuilder from "@axe-core/playwright";
 import { faker } from "@faker-js/faker";
+import { CalendarDate } from "@internationalized/date";
 import { expect, Page, request, test } from "@playwright/test";
 import * as z from "zod";
 
@@ -551,6 +551,48 @@ test("can add deposits", async ({ page }) => {
   ]);
 });
 
+test("can complete goal in due time", async ({ page }) => {
+  const now = new Date();
+  const deadline = utcToCalendarDate(now).add({ months: 1 });
+
+  await signIn(page);
+  const goal = await createGoal(page, {
+    target: "100",
+    deadline: deadline.toString(),
+  });
+  page.goto(`/goals/${goal.id}`);
+  await page.getByRole("textbox", { name: "amount" }).fill("100");
+  await page.getByRole("button", { name: "add funds" }).click();
+
+  await expect(
+    page.getByRole("heading", { name: "goal complete" }),
+  ).toBeAttached();
+  await expect(page.getByTestId("complete-body")).toHaveText(
+    /finished before.*deadline/i,
+  );
+});
+
+test("can complete goal late", async ({ page }) => {
+  const now = new Date();
+  const deadline = utcToCalendarDate(now).subtract({ months: 1 });
+
+  await signIn(page);
+  const goal = await createGoal(page, {
+    target: "100",
+    deadline: deadline.toString(),
+  });
+  page.goto(`/goals/${goal.id}`);
+  await page.getByRole("textbox", { name: "amount" }).fill("100");
+  await page.getByRole("button", { name: "add funds" }).click();
+
+  await expect(
+    page.getByRole("heading", { name: "goal complete" }),
+  ).toBeAttached();
+  await expect(page.getByTestId("complete-body")).not.toHaveText(
+    /finished before.*deadline/i,
+  );
+});
+
 test("forgot password", async ({ page }) => {
   const email = faker.internet.email();
 
@@ -594,7 +636,8 @@ const createGoal = async (
 ) => {
   const name = options?.name ?? faker.food.dish();
   const target = options?.target ?? faker.finance.amount();
-  const deadline = options?.deadline ?? getDatePart(faker.date.recent());
+  const deadline =
+    options?.deadline ?? utcToCalendarDate(faker.date.recent()).toString();
 
   const context = await createApiContext(page);
   const response = await context.post("/goals", {
@@ -650,4 +693,12 @@ const createApiContext = async (page?: Page) => {
     baseURL: apiBase,
     storageState,
   });
+};
+
+const utcToCalendarDate = (date: Date) => {
+  return new CalendarDate(
+    date.getUTCFullYear(),
+    date.getUTCMonth() + 1,
+    date.getUTCDate(),
+  );
 };

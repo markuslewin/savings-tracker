@@ -38,6 +38,7 @@ import { box } from "@/app/styles/box.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { IconProp } from "@/app/utils/_icon";
 import { User } from "@/app/utils/api";
+import { DateOnly, newCalendarDate } from "@/app/utils/date";
 import {
   Filter,
   filters,
@@ -47,6 +48,7 @@ import {
 import { getProgress } from "@/app/utils/goal";
 import { formatDate, formatDollars, formatPercent } from "@/app/utils/locale";
 import { getSortLabel, Sort, sorts, sortSchema } from "@/app/utils/sort";
+import { getLocalTimeZone } from "@internationalized/date";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useCallback, useOptimistic, useTransition } from "react";
@@ -72,7 +74,7 @@ type GoalsSectionProps = {
           name: string;
           target: number;
           saved: number;
-          deadline: Date | null;
+          deadline: DateOnly | null;
         }[];
       };
 };
@@ -311,7 +313,7 @@ export const GoalsSection = ({ filter, sort, view }: GoalsSectionProps) => {
                     <p className={goalCardDeadline}>
                       {goal.deadline === null
                         ? "No deadline"
-                        : `Due ${formatDate(goal.deadline)}`}
+                        : `Due ${formatDate(newCalendarDate(goal.deadline).toDate(getLocalTimeZone()))}`}
                     </p>
                   </div>
                 </li>

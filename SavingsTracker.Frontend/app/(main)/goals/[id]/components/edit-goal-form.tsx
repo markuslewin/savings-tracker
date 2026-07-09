@@ -4,15 +4,19 @@ import { CancelButton } from "@/app/components/dialog";
 import { TextField } from "@/app/components/text-field";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { Goal } from "@/app/utils/api";
-import { getDatePart } from "@/app/utils/date";
-import { FormAction } from "@/app/utils/form";
+import { DateOnly, newCalendarDate } from "@/app/utils/date";
+import { FormState } from "@/app/utils/form";
 import { formatDollarsInput } from "@/app/utils/locale";
 import { useActionState } from "react";
 import { Form } from "react-aria-components/Form";
 
+type State = FormState<"name" | "target"> & {
+  values: { deadline?: DateOnly };
+};
+
 export type EditGoalFormProps = {
   goal: Goal;
-  submitAction: FormAction<"name" | "target" | "deadline">;
+  submitAction: (previousState: State, formData: FormData) => Promise<State>;
 };
 
 export const EditGoalForm = ({ goal, submitAction }: EditGoalFormProps) => {
@@ -20,7 +24,7 @@ export const EditGoalForm = ({ goal, submitAction }: EditGoalFormProps) => {
     values: {
       name: goal.name,
       target: formatDollarsInput(goal.target),
-      deadline: goal.deadline === null ? undefined : getDatePart(goal.deadline),
+      deadline: goal.deadline === null ? undefined : goal.deadline,
     },
   });
 
@@ -52,7 +56,11 @@ export const EditGoalForm = ({ goal, submitAction }: EditGoalFormProps) => {
         <DateField
           label="Deadline (optional)"
           name="deadline"
-          defaultValue={state.values.deadline}
+          defaultValue={
+            state.values.deadline === undefined
+              ? undefined
+              : newCalendarDate(state.values.deadline)
+          }
         />
       </div>
       <div

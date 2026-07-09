@@ -14,7 +14,7 @@ import { Button, DateValue } from "react-aria-components/DatePicker";
 type DateFieldProps = {
   label: string;
   name: string;
-  defaultValue?: string;
+  defaultValue?: CalendarDate;
 };
 
 export const DateField = ({ label, name, defaultValue }: DateFieldProps) => {
@@ -24,16 +24,7 @@ export const DateField = ({ label, name, defaultValue }: DateFieldProps) => {
     "aria-labelledby": valueId,
   });
   const [value, setValue] = useState<DateValue | null>(() => {
-    if (defaultValue === undefined) return null;
-
-    const date = new Date(defaultValue);
-    if (isNaN(+date)) return null;
-
-    return new CalendarDate(
-      date.getFullYear(),
-      date.getMonth() + 1,
-      date.getDate(),
-    );
+    return defaultValue === undefined ? null : defaultValue;
   });
   const [isOpen, setIsOpen] = useState(false);
 
@@ -45,9 +36,7 @@ export const DateField = ({ label, name, defaultValue }: DateFieldProps) => {
           "data-placeholder": true,
         }
       : {
-          children: formatDate(
-            new Date(value.year, value.month - 1, value.day),
-          ),
+          children: formatDate(value.toDate(getLocalTimeZone())),
         }),
   };
 

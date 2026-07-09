@@ -19,11 +19,15 @@ import { card } from "@/app/styles/card.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
 import { Goal } from "@/app/utils/api";
+import { newCalendarDate } from "@/app/utils/date";
 import { FormAction } from "@/app/utils/form";
 import { getProgress, getRemaining, getSaved } from "@/app/utils/goal";
+import { isCompletedInDueTime } from "@/app/utils/goal.client";
 import { formatDate, formatDollars, formatPercent } from "@/app/utils/locale";
 import { nbsp } from "@/app/utils/unicode";
+import { getLocalTimeZone } from "@internationalized/date";
 import clsx from "clsx";
+import dynamic from "next/dynamic";
 import { useActionState } from "react";
 import { Form } from "react-aria-components";
 
@@ -241,15 +245,11 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
               >
                 Goal Complete
               </h3>
-              <p>
+              <p data-testid="complete-body">
                 You saved{" "}
                 <span data-testid="saved">{formatDollars(saved)}</span> across{" "}
                 <span data-testid="deposits-count">{goal.deposits.length}</span>{" "}
-                deposits.
-                {/* todo: Fix */}
-                {goal.deadline !== null && true
-                  ? ` Finished before your ${formatDate(goal.deadline)} deadline.`
-                  : null}
+                deposits. <InDueTimeMessage goal={goal} />
               </p>
             </div>
           </div>
@@ -378,3 +378,16 @@ export const GoalDetails = ({ goal, addDepositAction }: GoalProps) => {
     </div>
   );
 };
+
+const InDueTimeMessage = dynamic(
+  async () =>
+    ({ goal }: { goal: Goal }) => {
+      if (goal.deadline === null) return null;
+
+      const deadline = newCalendarDate(goal.deadline);
+      return isCompletedInDueTime({ ...goal, deadline })
+        ? `Finished before your ${formatDate(deadline.toDate(getLocalTimeZone()))} deadline.`
+        : null;
+    },
+  { loading: () => null, ssr: false },
+);

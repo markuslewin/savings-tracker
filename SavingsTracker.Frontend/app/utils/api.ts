@@ -1,4 +1,5 @@
 import { apiAuthCookieName, frontendAuthCookieName } from "@/app/utils/cookie";
+import { isoDateToDateOnly } from "@/app/utils/date";
 import { Sort } from "@/app/utils/sort";
 import { parseSetCookie, serialize } from "cookie";
 import { cookies } from "next/headers";
@@ -15,7 +16,20 @@ const goalSchema = z.object({
   id: z.number(),
   name: z.string(),
   target: z.number(),
-  deadline: z.nullable(z.coerce.date()),
+  deadline: z.nullable(
+    z.string().transform((val, ctx) => {
+      const result = isoDateToDateOnly(val);
+      if (result === null) {
+        ctx.issues.push({
+          code: "custom",
+          input: val,
+          message: "Invalid format",
+        });
+        return z.NEVER;
+      }
+      return result;
+    }),
+  ),
   createdAt: z.coerce.date(),
   deposits: z.array(
     z.object({

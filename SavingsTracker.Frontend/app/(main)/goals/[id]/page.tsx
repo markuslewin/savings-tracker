@@ -11,8 +11,10 @@ import {
   getAuthCookie,
   updateGoal,
 } from "@/app/utils/api";
+import { newCalendarDate } from "@/app/utils/date";
 import { formatDate } from "@/app/utils/locale";
 import { depositSchema, goalSchema } from "@/app/utils/schema";
+import { getLocalTimeZone } from "@internationalized/date";
 import { Metadata } from "next";
 import { refresh } from "next/cache";
 import { notFound, redirect } from "next/navigation";
@@ -86,7 +88,7 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
                 const cookie = await ensureAuthCookie();
 
                 const values = Object.fromEntries(formData) as Record<
-                  string,
+                  "name" | "target",
                   string
                 >;
                 const parsed = goalSchema.safeParse(values);
@@ -150,7 +152,13 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
         >
           {goal.deadline === null ? null : (
             <>
-              <p data-testid="deadline">Due {formatDate(goal.deadline)}</p>•
+              <p data-testid="deadline">
+                Due{" "}
+                {formatDate(
+                  newCalendarDate(goal.deadline).toDate(getLocalTimeZone()),
+                )}
+              </p>
+              •
             </>
           )}
           <p>Created {formatDate(goal.createdAt)}</p>

@@ -6,7 +6,7 @@ type ValidationError =
     : never;
 
 export type FormState<K extends string> = {
-  values: Record<K, string>;
+  values: Record<K, string | undefined>;
   errors?: Partial<Record<K, ValidationError>>;
 };
 

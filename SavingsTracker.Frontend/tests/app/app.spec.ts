@@ -1,4 +1,5 @@
 import { apiAuthCookieName, frontendAuthCookieName } from "@/app/utils/cookie";
+import { getDatePart } from "@/app/utils/date";
 import { apiBase, register, validPassword } from "@/tests/utils";
 import AxeBuilder from "@axe-core/playwright";
 import { faker } from "@faker-js/faker";
@@ -216,6 +217,27 @@ test("user can create goal", async ({ page }) => {
   await expect(page.getByTestId("target")).toHaveText(/\$100/i);
 });
 
+test("user can create goal with deadline", async ({ page }) => {
+  const name = faker.food.dish();
+
+  await page.clock.setFixedTime(new Date("2024-02-02T10:30:00"));
+  await signIn(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: "new goal" }).click();
+
+  const dialog = page.getByRole("dialog", { name: "new goal" });
+  await dialog.getByRole("textbox", { name: "name" }).fill(name);
+  await dialog.getByRole("textbox", { name: "target" }).fill("100");
+  await dialog.getByRole("button", { name: "deadline" }).click();
+  await page.getByRole("button", { name: "18" }).click();
+  await dialog.getByRole("button", { name: "create" }).click();
+
+  await expect(page).toHaveTitle(new RegExp(name));
+  await expect(page.getByRole("heading", { name })).toBeAttached();
+  await expect(page.getByTestId("target")).toHaveText(/\$100/i);
+  await expect(page.getByTestId("deadline")).toHaveText(/18 feb 2024/i);
+});
+
 test("filter goals", async ({ page }) => {
   await signIn(page);
   const inProgressGoal = await createGoal(page, {
@@ -409,6 +431,24 @@ test("can edit goal", async ({ page }) => {
   await expect(page.getByTestId("target")).toHaveText(new RegExp(target));
 });
 
+test("can edit goal deadline", async ({ page }) => {
+  await page.clock.setFixedTime(new Date("2026-08-10T10:30:00"));
+  await signIn(page);
+  const goal = await createGoal(page, { deadline: "2025-01-01" });
+  await page.goto(`/goals/${goal.id}`);
+  await page.getByRole("button", { name: "edit" }).click();
+
+  const dialog = page.getByRole("dialog", { name: "edit goal" });
+  await dialog.getByRole("button", { name: "1 jan 2025" }).click();
+  await page.getByRole("button", { name: "11" }).click();
+  await dialog.getByRole("button", { name: "save" }).click();
+
+  await expect(
+    page.getByRole("heading", { name: goal.name, level: 1 }),
+  ).toBeAttached();
+  await expect(page.getByTestId("deadline")).toHaveText(/11 aug 2026/i);
+});
+
 test("anonymous user gets redirected when trying to delete a goal", async ({
   page,
 }) => {
@@ -550,21 +590,23 @@ const signIn = async (page: Page) => {
 
 const createGoal = async (
   page: Page,
-  options?: { name?: string; target?: string },
+  options?: { name?: string; target?: string; deadline?: string },
 ) => {
   const name = options?.name ?? faker.food.dish();
   const target = options?.target ?? faker.finance.amount();
+  const deadline = options?.deadline ?? getDatePart(faker.date.recent());
 
   const context = await createApiContext(page);
   const response = await context.post("/goals", {
     data: {
       name,
       target,
+      deadline,
     },
   });
   const { id } = z.object({ id: z.number() }).parse(await response.json());
 
-  return { id, name, target };
+  return { id, name, target, deadline };
 };
 
 const addDeposit = async (

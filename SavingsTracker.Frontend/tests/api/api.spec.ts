@@ -86,6 +86,7 @@ test("add goal validation", async ({ request }) => {
     data: {
       name: "",
       target: "",
+      deadline: "",
     },
   });
   const { errors } = await response.json();
@@ -146,6 +147,7 @@ test("patch goal validation", async ({ request }) => {
       data: {
         name: faker.food.dish(),
         target: faker.finance.amount(),
+        deadline: "",
       },
     })
   ).json();
@@ -235,6 +237,7 @@ test("add deposit validation", async ({ request }) => {
       data: {
         name: faker.food.dish(),
         target: faker.finance.amount(),
+        deadline: "",
       },
     })
   ).json();

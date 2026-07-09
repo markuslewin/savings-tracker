@@ -320,12 +320,13 @@ export const getGoal = async ({
 
 export const createGoal = async ({
   cookie,
-  data: { name, target },
+  data: { name, target, deadline },
 }: {
   cookie: string;
   data: {
     name: string;
     target: string;
+    deadline: string;
   };
 }) => {
   const response = await fetch(new URL("goals", getBase()), {
@@ -334,7 +335,7 @@ export const createGoal = async ({
       "content-type": "application/json",
       cookie,
     },
-    body: JSON.stringify({ name, target }),
+    body: JSON.stringify({ name, target, deadline }),
   });
   switch (response.status) {
     case 201:
@@ -360,13 +361,14 @@ export const createGoal = async ({
 
 export const updateGoal = async ({
   cookie,
-  data: { id, name, target },
+  data: { id, name, target, deadline },
 }: {
   cookie: string;
   data: {
     id: number;
     name: string;
     target: string;
+    deadline: string;
   };
 }) => {
   const response = await fetch(new URL(`/goals/${id}`, getBase()), {
@@ -375,7 +377,7 @@ export const updateGoal = async ({
       "content-type": "application/json",
       cookie,
     },
-    body: JSON.stringify({ name, target }),
+    body: JSON.stringify({ name, target, deadline }),
   });
   switch (response.status) {
     case 204:

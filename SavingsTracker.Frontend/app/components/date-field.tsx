@@ -4,7 +4,7 @@ import * as dateFieldStyles from "@/app/components/date-field.css";
 import CalendarIcon from "@/app/icons/icon-calendar.svg";
 import * as fieldStyles from "@/app/styles/field.css";
 import { formatDate } from "@/app/utils/locale";
-import { getLocalTimeZone, today } from "@internationalized/date";
+import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
 import clsx from "clsx";
 import { ComponentProps, useId, useState } from "react";
 import { useLabel } from "react-aria";
@@ -14,15 +14,27 @@ import { Button, DateValue } from "react-aria-components/DatePicker";
 type DateFieldProps = {
   label: string;
   name: string;
+  defaultValue?: string;
 };
 
-export const DateField = ({ label, name }: DateFieldProps) => {
+export const DateField = ({ label, name, defaultValue }: DateFieldProps) => {
   const valueId = useId();
   const { labelProps, fieldProps } = useLabel({
     label,
     "aria-labelledby": valueId,
   });
-  const [value, setValue] = useState<DateValue | null>(null);
+  const [value, setValue] = useState<DateValue | null>(() => {
+    if (defaultValue === undefined) return null;
+
+    const date = new Date(defaultValue);
+    if (isNaN(+date)) return null;
+
+    return new CalendarDate(
+      date.getFullYear(),
+      date.getMonth() + 1,
+      date.getDate(),
+    );
+  });
   const [isOpen, setIsOpen] = useState(false);
 
   const valueProps: ComponentProps<"span"> = {

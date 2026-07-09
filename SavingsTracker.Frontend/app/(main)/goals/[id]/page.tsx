@@ -150,7 +150,7 @@ const GoalPage = async ({ params }: PageProps<"/goals/[id]">) => {
         >
           {goal.deadline === null ? null : (
             <>
-              <p>Due {formatDate(goal.deadline)}</p>•
+              <p data-testid="deadline">Due {formatDate(goal.deadline)}</p>•
             </>
           )}
           <p>Created {formatDate(goal.createdAt)}</p>

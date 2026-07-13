@@ -1,12 +1,12 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
+#pragma warning disable ASPIREPIPELINES001
+builder.Pipeline.AddNetlifyDeployPipeline();
+#pragma warning restore ASPIREPIPELINES001
+
 var postgres = builder
   .AddPostgres("postgres")
   .WithPgWeb(pgWeb => pgWeb.WithHostPort(5050));
-// if (builder.ExecutionContext.IsRunMode)
-// {
-//   postgres.WithDataVolume();
-// }
 
 var goalDb = postgres.AddDatabase("goaldb");
 
@@ -22,6 +22,12 @@ var goalService = builder
 builder
   .AddJavaScriptApp("frontend", "../SavingsTracker.Frontend")
   .WithHttpEndpoint(port: 3000, env: "PORT")
-  .WithReference(goalService);
+// .WithReference(goalService)
+  .PublishAsNetlifySite(new NetlifyDeployOptions
+  {
+    Dir = ".next",
+    NoBuild = false,
+    Prod = true,
+  });
 
 builder.Build().Run();

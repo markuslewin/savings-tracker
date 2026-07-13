@@ -1,0 +1,4 @@
+[submodule "Aspire.Hosting.Netlify"]
+	path = Aspire.Hosting.Netlify
+	url = https://github.com/markuslewin/netlify-aspire-integration.git
+	branch = required-by

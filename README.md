@@ -34,3 +34,13 @@ Launch via `.vscode/launch.json`.
 ```sh
 dotnet ef migrations add InitialCreate --project SavingsTracker.GoalDbManager/SavingsTracker.GoalDbManager.csproj
 ```
+
+## Deployment
+
+The web app deploys to Netlify.
+
+- `NETLIFY_AUTH_TOKEN`
+
+```sh
+aspire deploy --non-interactive
+```

@@ -27,10 +27,14 @@ public class Worker(
             var ctx = scope.ServiceProvider.GetRequiredService<GoalDbContext>();
             ctx.Database.Migrate();
 
+            var user = await ctx.Users.FirstOrDefaultAsync(u => u.IsDemo,
+                cancellationToken);
+            if (user is not null) return;
+
             var userManager =
                 scope.ServiceProvider.GetRequiredService<UserManager<User>>();
             var name = "Demo";
-            var user = new User
+            var newUser = new User
             {
                 UserName = name,
                 IsDemo = true,
@@ -55,7 +59,7 @@ public class Worker(
                             })]
                     })]
             };
-            var result = await userManager.CreateAsync(user);
+            var result = await userManager.CreateAsync(newUser);
             if (!result.Succeeded) throw new Exception(result.ToString());
         }
         catch (Exception ex)

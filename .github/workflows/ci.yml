@@ -97,6 +97,7 @@ jobs:
         env:
           ConnectionStrings__goaldb: ${{ secrets.NEON_CONNECTION_STRING }}
   deploy-api:
+    needs: [lint, typecheck, vitest, playwright]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -119,6 +120,7 @@ jobs:
           app-name: savings-tracker-api
           package: ./bin/Release/net10.0/publish
   deploy-web:
+    needs: [lint, typecheck, vitest, playwright]
     runs-on: ubuntu-latest
     defaults:
       run:

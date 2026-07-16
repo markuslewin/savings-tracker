@@ -4,6 +4,12 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  id-token: write
+  contents: read
 env:
   FRONTEND_PATH: ./SavingsTracker.Frontend
   GOAL_DB_MANAGER_PATH: ./SavingsTracker.GoalDbManager
@@ -81,21 +87,21 @@ jobs:
   #         name: playwright-report
   #         path: ${{ env.FRONTEND_PATH }}/playwright-report/
   #         retention-days: 30
-  deploy-db:
-    # needs: [lint, typecheck, vitest, playwright]
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ env.GOAL_DB_MANAGER_PATH }}
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: 10.0.x
-      - name: Migrate and seed
-        run: dotnet run --configuration Release
-        env:
-          ConnectionStrings__goaldb: ${{ secrets.NEON_CONNECTION_STRING }}
+  # deploy-db:
+  #   needs: [lint, typecheck, vitest, playwright]
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ${{ env.GOAL_DB_MANAGER_PATH }}
+  #   steps:
+  #     - uses: actions/checkout@v6
+  #     - uses: actions/setup-dotnet@v5
+  #       with:
+  #         dotnet-version: 10.0.x
+  #     - name: Migrate and seed
+  #       run: dotnet run --configuration Release
+  #       env:
+  #         ConnectionStrings__goaldb: ${{ secrets.NEON_CONNECTION_STRING }}
   deploy-api:
     # needs: [lint, typecheck, vitest, playwright]
     runs-on: ubuntu-latest
@@ -109,7 +115,6 @@ jobs:
           dotnet-version: 10.0.x
       - uses: azure/login@v3
         with:
-          auth-type: IDENTITY
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -120,21 +125,21 @@ jobs:
         with:
           app-name: savings-tracker-api
           package: ./bin/Release/net10.0/publish
-  deploy-web:
-    # needs: [lint, typecheck, vitest, playwright]
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ env.FRONTEND_PATH }}
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
-        with:
-          node-version: lts/*
-      - name: Install dependencies
-        run: npm ci
-      - name: Deploy
-        run: npx netlify deploy --prod
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+  # deploy-web:
+  #   needs: [lint, typecheck, vitest, playwright]
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ${{ env.FRONTEND_PATH }}
+  #   steps:
+  #     - uses: actions/checkout@v6
+  #     - uses: actions/setup-node@v6
+  #       with:
+  #         node-version: lts/*
+  #     - name: Install dependencies
+  #       run: npm ci
+  #     - name: Deploy
+  #       run: npx netlify deploy --prod
+  #       env:
+  #         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  #         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

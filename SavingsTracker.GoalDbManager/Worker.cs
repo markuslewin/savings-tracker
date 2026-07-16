@@ -29,17 +29,17 @@ public class Worker(
 
             var user = await ctx.Users.FirstOrDefaultAsync(u => u.IsDemo,
                 cancellationToken);
-            if (user is not null) return;
-
-            var userManager =
-                scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-            var name = "Demo";
-            var newUser = new User
+            if (user is null)
             {
-                UserName = name,
-                IsDemo = true,
-                FullName = name,
-                Goals = [..data is null || data.Goals is null
+                var userManager =
+                    scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                var name = "Demo";
+                var newUser = new User
+                {
+                    UserName = name,
+                    IsDemo = true,
+                    FullName = name,
+                    Goals = [..data is null || data.Goals is null
                     ? []
                     : data.Goals.Select(g => new GoalDb.Goal
                     {
@@ -58,9 +58,10 @@ public class Worker(
                                 CreatedAt = d.CreatedAt
                             })]
                     })]
-            };
-            var result = await userManager.CreateAsync(newUser);
-            if (!result.Succeeded) throw new Exception(result.ToString());
+                };
+                var result = await userManager.CreateAsync(newUser);
+                if (!result.Succeeded) throw new Exception(result.ToString());
+            }
         }
         catch (Exception ex)
         {

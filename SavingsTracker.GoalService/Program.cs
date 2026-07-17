@@ -118,7 +118,7 @@ app
             query = sort switch
             {
                 Sort.RecentlyAdded => query.OrderByDescending(g => g.CreatedAt),
-                Sort.DeadlineAscending => throw new NotImplementedException(),
+                Sort.DeadlineAscending => query.OrderBy(g => g.Deadline),
                 Sort.ProgressDescending =>
                     query.OrderByDescending(g =>
                         g.Deposits.Sum(d => d.Amount) / g.Target),

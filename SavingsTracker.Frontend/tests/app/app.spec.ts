@@ -320,11 +320,23 @@ test("always aggregate on total goals", async ({ page }) => {
 
 test("sort goals", async ({ page }) => {
   await signIn(page);
-  const aGoal = await createGoal(page, { name: "A", target: "100" });
+  const aGoal = await createGoal(page, {
+    name: "A",
+    target: "100",
+    deadline: "2025-12-01",
+  });
   await addDeposit(page, { goalId: aGoal.id, amount: 50 }); // Progress: 0.5
-  const bGoal = await createGoal(page, { name: "B", target: "5" });
+  const bGoal = await createGoal(page, {
+    name: "B",
+    target: "5",
+    deadline: "2026-01-01",
+  });
   await addDeposit(page, { goalId: bGoal.id, amount: 4 }); // Progress: 0.8
-  const cGoal = await createGoal(page, { name: "C", target: "100" });
+  const cGoal = await createGoal(page, {
+    name: "C",
+    target: "100",
+    deadline: null,
+  });
   await addDeposit(page, { goalId: cGoal.id, amount: 10 }); // Progress: 0.1
 
   await page.goto("/");
@@ -334,7 +346,13 @@ test("sort goals", async ({ page }) => {
     .getByRole("heading");
   await expect(goals).toHaveText(["C", "B", "A"]);
 
-  // todo: Deadline
+  await page.getByRole("button", { name: "sort" }).click();
+  await page
+    .getByRole("radio", { name: "deadline (soonest first)" })
+    .click({ force: true });
+  await page.keyboard.press("Escape");
+
+  await expect(goals).toHaveText(["A", "B", "C"]);
 
   await page.getByRole("button", { name: "sort" }).click();
   await page
@@ -632,12 +650,16 @@ const signIn = async (page: Page) => {
 
 const createGoal = async (
   page: Page,
-  options?: { name?: string; target?: string; deadline?: string },
+  options?: { name?: string; target?: string; deadline?: string | null },
 ) => {
   const name = options?.name ?? faker.food.dish();
   const target = options?.target ?? faker.finance.amount();
   const deadline =
-    options?.deadline ?? utcToCalendarDate(faker.date.recent()).toString();
+    options?.deadline === undefined
+      ? utcToCalendarDate(faker.date.recent()).toString()
+      : options.deadline === null
+        ? ""
+        : options.deadline;
 
   const context = await createApiContext(page);
   const response = await context.post("/goals", {

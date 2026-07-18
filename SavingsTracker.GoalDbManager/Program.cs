@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SavingsTracker.GoalDb;
 using SavingsTracker.GoalDbManager;
@@ -11,6 +12,17 @@ builder
     .Services
     .AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<GoalDbContext>();
+
+// todo: Common service
+builder.Services.Configure<IdentityOptions>(options =>
+{
+  options.Password.RequireDigit = false;
+  options.Password.RequiredLength = 8;
+  options.Password.RequiredUniqueChars = 1;
+  options.Password.RequireLowercase = false;
+  options.Password.RequireNonAlphanumeric = false;
+  options.Password.RequireUppercase = false;
+});
 
 // builder.Services.AddOpenTelemetry().WithTracing(tracing =>
 // {

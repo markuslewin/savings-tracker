@@ -15,80 +15,80 @@ env:
   GOAL_DB_MANAGER_PATH: ./SavingsTracker.GoalDbManager
   GOAL_SERVICE_PATH: ./SavingsTracker.GoalService
 jobs:
-  # lint:
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: ${{ env.FRONTEND_PATH }}
-  #   steps:
-  #     - uses: actions/checkout@v6
-  #     - uses: actions/setup-node@v6
-  #       with:
-  #         node-version: lts/*
-  #     - name: Install dependencies
-  #       run: npm ci
-  #     - name: Run ESLint
-  #       run: npm run lint
-  # typecheck:
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: ${{ env.FRONTEND_PATH }}
-  #   steps:
-  #     - uses: actions/checkout@v6
-  #     - uses: actions/setup-node@v6
-  #       with:
-  #         node-version: lts/*
-  #     - name: Install dependencies
-  #       run: npm ci
-  #     - name: Generate route types
-  #       run: npm run build
-  #     - name: Typecheck
-  #       run: npm run typecheck
-  # vitest:
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: ${{ env.FRONTEND_PATH }}
-  #   steps:
-  #     - uses: actions/checkout@v6
-  #     - uses: actions/setup-node@v6
-  #       with:
-  #         node-version: lts/*
-  #     - name: Install dependencies
-  #       run: npm ci
-  #     - name: Run Vitest tests
-  #       run: npm run test
-  # playwright:
-  #   timeout-minutes: 60
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: ${{ env.FRONTEND_PATH }}
-  #   steps:
-  #     - uses: actions/checkout@v6
-  #     - uses: actions/setup-node@v6
-  #       with:
-  #         node-version: lts/*
-  #     - uses: actions/setup-dotnet@v5
-  #       with:
-  #         dotnet-version: 10.0.x
-  #     - name: Install Aspire CLI
-  #       run: dotnet tool install --global Aspire.Cli
-  #     - name: Install dependencies
-  #       run: npm ci
-  #     - name: Install Playwright Browsers
-  #       run: npx playwright install --with-deps
-  #     - name: Run Playwright tests
-  #       run: npx playwright test --project=app --project=api
-  #     - uses: actions/upload-artifact@v7
-  #       if: ${{ !cancelled() }}
-  #       with:
-  #         name: playwright-report
-  #         path: ${{ env.FRONTEND_PATH }}/playwright-report/
-  #         retention-days: 30
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.FRONTEND_PATH }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Run ESLint
+        run: npm run lint
+  typecheck:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.FRONTEND_PATH }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Generate route types
+        run: npm run build
+      - name: Typecheck
+        run: npm run typecheck
+  vitest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.FRONTEND_PATH }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Vitest tests
+        run: npm run test
+  playwright:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.FRONTEND_PATH }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - name: Install Aspire CLI
+        run: dotnet tool install --global Aspire.Cli
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: npx playwright test --project=app --project=api
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: ${{ env.FRONTEND_PATH }}/playwright-report/
+          retention-days: 30
   deploy-db:
-    # needs: [lint, typecheck, vitest, playwright]
+    needs: [lint, typecheck, vitest, playwright]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -105,7 +105,7 @@ jobs:
           Frontend__TestUser__Email: ${{ secrets.FRONTEND_TESTUSER_EMAIL }}
           Frontend__TestUser__Password: ${{ secrets.FRONTEND_TESTUSER_PASSWORD }}
   deploy-api:
-    # needs: [lint, typecheck, vitest, playwright]
+    needs: [lint, typecheck, vitest, playwright]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -128,7 +128,7 @@ jobs:
           app-name: savings-tracker
           package: ${{ env.GOAL_SERVICE_PATH }}/bin/Release/net10.0/publish
   deploy-web:
-    # needs: [lint, typecheck, vitest, playwright]
+    needs: [lint, typecheck, vitest, playwright]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -145,32 +145,32 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-  # smoke:
-  #   needs: [deploy-api, deploy-db, deploy-web]
-  #   timeout-minutes: 60
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: ${{ env.FRONTEND_PATH }}
-  #   steps:
-  #     - uses: actions/checkout@v6
-  #     - uses: actions/setup-node@v6
-  #       with:
-  #         node-version: lts/*
-  #     - name: Install dependencies
-  #       run: npm ci
-  #     - name: Install Playwright Browsers
-  #       run: npx playwright install --with-deps
-  #     - name: Run smoke tests
-  #       run: npx playwright test --project=smoke
-  #       env:
-  #         PLAYWRIGHT_BASE_URL: ${{ vars.FRONTEND_BASE }}
-  #         PLAYWRIGHT_DISABLE_WEB_SERVER: true
-  #         PLAYWRIGHT_TESTUSER_EMAIL: ${{ secrets.FRONTEND_TESTUSER_EMAIL }}
-  #         PLAYWRIGHT_TESTUSER_PASSWORD: ${{ secrets.FRONTEND_TESTUSER_PASSWORD }}
-  #     - uses: actions/upload-artifact@v7
-  #       if: ${{ !cancelled() }}
-  #       with:
-  #         name: playwright-report
-  #         path: ${{ env.FRONTEND_PATH }}/playwright-report/
-  #         retention-days: 30
+  smoke:
+    needs: [deploy-api, deploy-db, deploy-web]
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.FRONTEND_PATH }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run smoke tests
+        run: npx playwright test --project=smoke
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ vars.FRONTEND_BASE }}
+          PLAYWRIGHT_DISABLE_WEB_SERVER: true
+          PLAYWRIGHT_TESTUSER_EMAIL: ${{ secrets.FRONTEND_TESTUSER_EMAIL }}
+          PLAYWRIGHT_TESTUSER_PASSWORD: ${{ secrets.FRONTEND_TESTUSER_PASSWORD }}
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: ${{ env.FRONTEND_PATH }}/playwright-report/
+          retention-days: 30

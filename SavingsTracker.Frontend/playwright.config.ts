@@ -37,7 +37,7 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "chromium",
+      name: "app",
       testDir: "./tests/app",
       use: {
         ...devices["Desktop Chrome"],
@@ -51,7 +51,14 @@ export default defineConfig({
         baseURL: apiBase,
       },
     },
-
+    {
+      name: "smoke",
+      testDir: "./tests/smoke",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: process.env.PLAYWRIGHT_BASE_URL,
+      },
+    },
     // {
     //   name: "firefox",
     //   use: { ...devices["Desktop Firefox"] },
@@ -84,11 +91,14 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: "aspire run",
-    url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
-    stdout: "pipe",
-    timeout: 240_000,
-  },
+  webServer:
+    process.env.PLAYWRIGHT_DISABLE_WEB_SERVER === "true"
+      ? undefined
+      : {
+          command: "aspire run",
+          url: "http://localhost:3000",
+          reuseExistingServer: !process.env.CI,
+          stdout: "pipe",
+          timeout: 240_000,
+        },
 });

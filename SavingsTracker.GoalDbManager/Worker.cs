@@ -8,7 +8,8 @@ namespace SavingsTracker.GoalDbManager;
 public class Worker(
     IServiceProvider serviceProvider,
     IHostApplicationLifetime hostApplicationLifetime,
-    ILogger<Worker> logger
+    ILogger<Worker> logger,
+    IConfiguration configuration
 ) : BackgroundService
 {
     public const string ActivitySourceName = "Migrations";
@@ -61,6 +62,28 @@ public class Worker(
                 };
                 var result = await userManager.CreateAsync(newUser);
                 if (!result.Succeeded) throw new Exception(result.ToString());
+            }
+
+            var testEmail = configuration.GetValue<string?>("Frontend:TestUser:Email");
+            var testPassword = configuration.GetValue<string?>("Frontend:TestUser:Password");
+            if (!string.IsNullOrWhiteSpace(testEmail)
+                && !string.IsNullOrWhiteSpace(testPassword))
+            {
+                var testUser = await ctx.Users.FirstOrDefaultAsync(
+                    u => u.Email == testEmail, cancellationToken);
+                if (testUser is null)
+                {
+                    var userManager =
+                        scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                    var newUser = new User
+                    {
+                        UserName = testEmail,
+                        Email = testEmail,
+                        FullName = "Test",
+                    };
+                    var result = await userManager.CreateAsync(newUser, testPassword);
+                    if (!result.Succeeded) throw new Exception(result.ToString());
+                }
             }
         }
         catch (Exception ex)

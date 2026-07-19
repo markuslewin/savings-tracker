@@ -1,4 +1,5 @@
 import { gap, placeholderColor } from "@/app/styles/field.css";
+import { colors, space } from "@/app/styles/tokens";
 import { style } from "@vanilla-extract/css";
 
 export const button = style({
@@ -15,4 +16,11 @@ export const value = style({
       color: placeholderColor,
     },
   },
+});
+
+export const clear = style({
+  justifySelf: "start",
+  marginInlineStart: space["space-0100"],
+  background: "transparent",
+  color: colors["neutral-0"],
 });

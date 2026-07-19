@@ -3,6 +3,7 @@ import { Calendar } from "@/app/components/calendar";
 import * as dateFieldStyles from "@/app/components/date-field.css";
 import CalendarIcon from "@/app/icons/icon-calendar.svg";
 import * as fieldStyles from "@/app/styles/field.css";
+import { sprinkles } from "@/app/styles/sprinkles.css";
 import { formatDate } from "@/app/utils/locale";
 import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
 import clsx from "clsx";
@@ -57,7 +58,10 @@ export const DateField = ({ label, name, defaultValue }: DateFieldProps) => {
         name={name}
         value={value === null ? "" : value.toString()}
       />
-      <Popover placement="bottom start">
+      <Popover
+        className={sprinkles({ stack: "space-0200" })}
+        placement="bottom start"
+      >
         <Calendar
           minValue={today(getLocalTimeZone())}
           value={value}
@@ -66,6 +70,15 @@ export const DateField = ({ label, name, defaultValue }: DateFieldProps) => {
             setIsOpen(false);
           }}
         />
+        <Button
+          className={dateFieldStyles.clear}
+          onPress={() => {
+            setValue(null);
+            setIsOpen(false);
+          }}
+        >
+          Clear
+        </Button>
       </Popover>
     </DialogTrigger>
   );

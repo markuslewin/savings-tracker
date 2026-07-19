@@ -628,6 +628,23 @@ test("forgot password", async ({ page }) => {
   await expect(page.getByTestId("email")).toHaveText(email);
 });
 
+test("can clear date field", async ({ page }) => {
+  await page.clock.setFixedTime(new Date("2024-02-02T10:30:00"));
+  await signIn(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: "new goal" }).click();
+
+  const dialog = page.getByRole("dialog", { name: "new goal" });
+  await dialog.getByRole("button", { name: "deadline" }).click();
+  await page.getByRole("button", { name: "18" }).click();
+  await dialog.getByRole("button", { name: "18 feb 2024" }).click();
+  await page.getByRole("button", { name: "clear" }).click();
+
+  await expect(
+    dialog.getByRole("button", { name: "18 feb 2024" }),
+  ).not.toBeAttached();
+});
+
 const signIn = async (page: Page) => {
   const user = await register();
 

@@ -135,7 +135,7 @@ test("anonymous user gets redirected from new password", async ({ page }) => {
 });
 
 test("user can change password", async ({ page }) => {
-  // const oldPassword = validPassword;
+  const oldPassword = validPassword;
   const newPassword = "P@ssw0rd1";
 
   const { email } = await signIn(page);
@@ -157,10 +157,12 @@ test("user can change password", async ({ page }) => {
 
   await page.getByRole("link", { name: "sign in" }).click();
   await page.getByRole("textbox", { name: "email" }).fill(email);
-  // await page.getByRole("textbox", { name: "password" }).fill(oldPassword);
-  // await page.getByRole("button", { name: "sign in" }).click();
+  await page.getByRole("textbox", { name: "password" }).fill(oldPassword);
+  await page.getByRole("button", { name: "sign in" }).click();
 
-  // todo: Expect error message
+  await expect(
+    page.getByRole("textbox", { name: "password" }),
+  ).toHaveAccessibleDescription(/sign in fail/i);
 
   await page.getByRole("textbox", { name: "password" }).fill(newPassword);
   await page.getByRole("button", { name: "sign in" }).click();

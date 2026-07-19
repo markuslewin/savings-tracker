@@ -61,8 +61,10 @@ const Signin = () => {
                 errors: response.json.errors,
               };
             case 401:
-              // todo: Sign in failed
-              return { values: { ...values, password: "" } };
+              return {
+                values: { ...values, password: "" },
+                errors: { password: "Sign in failed" },
+              };
           }
         }}
       />

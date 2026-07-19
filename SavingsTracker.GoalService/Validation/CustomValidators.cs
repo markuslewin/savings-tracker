@@ -32,6 +32,11 @@ public static class CustomValidators
           ctx.AddFailure("Invalid format");
           return;
         }
+        if (d <= 0)
+        {
+          ctx.AddFailure("Must be greater than 0");
+          return;
+        }
         if (d.Scale > 2)
         {
           ctx.AddFailure("Invalid decimals");

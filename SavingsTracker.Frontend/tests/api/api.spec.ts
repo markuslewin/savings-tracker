@@ -98,6 +98,23 @@ test("add goal validation", async ({ request }) => {
   });
 });
 
+test("add goal: target must be greater than 0", async ({ request }) => {
+  await signIn(request);
+  const response = await request.post("/goals", {
+    data: {
+      name: "",
+      target: "0",
+      deadline: "",
+    },
+  });
+
+  expect(response.json()).resolves.toMatchObject({
+    errors: {
+      target: [/greater than 0/i],
+    },
+  });
+});
+
 test("add goal without deadline", async ({ request }) => {
   await signIn(request);
   const { id } = await (
@@ -164,6 +181,32 @@ test("patch goal validation", async ({ request }) => {
   expect(errors).toStrictEqual({
     name: ["Required"],
     target: ["Required"],
+  });
+});
+
+test("patch goal: target must be greater than 0", async ({ request }) => {
+  await signIn(request);
+  const { id } = await (
+    await request.post("/goals", {
+      data: {
+        name: faker.food.dish(),
+        target: faker.finance.amount(),
+        deadline: "",
+      },
+    })
+  ).json();
+
+  const response = await request.patch(`/goals/${id}`, {
+    data: {
+      name: "",
+      target: "0",
+    },
+  });
+
+  expect(response.json()).resolves.toMatchObject({
+    errors: {
+      target: [/greater than 0/i],
+    },
   });
 });
 
@@ -253,6 +296,32 @@ test("add deposit validation", async ({ request }) => {
   expect(response.status()).toBe(400);
   expect(errors).toStrictEqual({
     amount: ["Required"],
+  });
+});
+
+test("add deposit: amount must be greater than 0", async ({ request }) => {
+  await signIn(request);
+  const { id } = await (
+    await request.post("/goals", {
+      data: {
+        name: faker.food.dish(),
+        target: faker.finance.amount(),
+        deadline: "",
+      },
+    })
+  ).json();
+
+  const response = await request.post(`/goals/${id}/deposits`, {
+    data: {
+      amount: "0",
+      note: "",
+    },
+  });
+
+  expect(response.json()).resolves.toMatchObject({
+    errors: {
+      amount: [/greater than 0/i],
+    },
   });
 });
 

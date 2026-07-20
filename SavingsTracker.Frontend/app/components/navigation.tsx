@@ -70,14 +70,26 @@ export type LinkProps<RouteInferType extends string> = Omit<
   href: Route<RouteInferType>;
 };
 
-export const Link = <RouteType extends string>(props: LinkProps<RouteType>) => {
+export const Link = <RouteType extends string>({
+  onNavigate,
+  ...props
+}: LinkProps<RouteType>) => {
   const router = useRouter();
   const { start } = useProgress();
 
   return (
     <NextLink
       {...props}
-      onNavigate={() => {
+      onNavigate={(e) => {
+        let isDefaultPrevented = false;
+        onNavigate?.({
+          preventDefault: () => {
+            isDefaultPrevented = true;
+            e.preventDefault();
+          },
+        });
+        if (isDefaultPrevented) return;
+
         startTransition(() => {
           start();
           if (props.replace) {

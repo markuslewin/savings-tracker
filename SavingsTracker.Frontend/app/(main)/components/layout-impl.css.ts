@@ -8,6 +8,11 @@ const userOptionBase = style([
     textDecoration: "none",
     background: "transparent",
   }),
+  {
+    display: "grid",
+    gridTemplateColumns: "1fr auto",
+    alignItems: "center",
+  },
 ]);
 
 export const userOption = styleVariants({
@@ -15,5 +20,8 @@ export const userOption = styleVariants({
     userOptionBase,
     sprinkles({ color: { default: "neutral-300", hover: "neutral-0" } }),
   ],
-  red: [userOptionBase, sprinkles({ color: "red-500" })],
+  red: [
+    userOptionBase,
+    sprinkles({ color: { default: "red-500", hover: "neutral-0" } }),
+  ],
 });

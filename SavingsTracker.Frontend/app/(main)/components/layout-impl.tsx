@@ -8,6 +8,7 @@ import { getInitial } from "@/app/(main)/utils/avatar";
 import { avatar } from "@/app/(main)/utils/avatar.css";
 import { LogoLink } from "@/app/components/logo-link";
 import { Link } from "@/app/components/navigation";
+import { ProgressCircle } from "@/app/components/progress-circle";
 import PlusIcon from "@/app/icons/icon-plus.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
@@ -18,6 +19,7 @@ import { useDialog } from "@/app/utils/new-goal-dialog/hook";
 import { OptimisticSearchParams } from "@/app/utils/optimistic-search-params/component";
 import { useState } from "react";
 import { Button, DialogTrigger } from "react-aria-components";
+import { useFormStatus } from "react-dom";
 
 type LayoutImplProps = LayoutProps<"/"> & {
   user: User | null;
@@ -127,9 +129,7 @@ export const LayoutImpl = ({
                         className={sprinkles({ display: "grid" })}
                         action={logOutAction}
                       >
-                        <Button className={userOption.red} type="submit">
-                          Sign out
-                        </Button>
+                        <SignOutButton />
                       </form>
                     </Popover>
                   </DialogTrigger>
@@ -160,4 +160,18 @@ const KeyedNewGoalDialog = ({ user }: Pick<LayoutImplProps, "user">) => {
 
   // Reset the form on open/close
   return <NewGoalDialog key={`${dialog.open}`} user={user} />;
+};
+
+const SignOutButton = () => {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button className={userOption.red} type="submit" isPending={pending}>
+      Sign out
+      <ProgressCircle
+        className={sprinkles({ color: "neutral-0" })}
+        state={pending ? "visible" : "hidden"}
+      />
+    </Button>
+  );
 };

@@ -7,7 +7,7 @@ import {
   gap as columnsGap,
   number as columnsNumber,
 } from "@/app/styles/columns.css";
-import { breakpoints, forcedColors } from "@/app/styles/media";
+import { breakpoints, forcedColors, hover } from "@/app/styles/media";
 import {
   border,
   colors,
@@ -218,7 +218,7 @@ const colorProperties = defineProperties({
   conditions: {
     default: {},
     hover: {
-      "@media": "(hover: hover)",
+      "@media": hover,
       selector: "&:hover",
     },
     placeholder: {

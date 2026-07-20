@@ -82,14 +82,6 @@ export const icon = sprinkles({
   flexShrink: 0,
 });
 
-const spinnerBase: ComplexStyleRule = [
-  sprinkles({ display: "block", width: "size-0200", height: "size-0200" }),
-  {
-    gridArea: area,
-  },
-];
-
-export const spinner = styleVariants({
-  visible: [...spinnerBase],
-  hidden: [...spinnerBase, { visibility: "hidden" }],
+export const spinner = style({
+  gridArea: area,
 });

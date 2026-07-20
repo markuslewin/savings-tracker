@@ -4,3 +4,5 @@ export const breakpoints = {
 };
 
 export const forcedColors = "(forced-colors: active)";
+
+export const hover = "(hover: hover)";

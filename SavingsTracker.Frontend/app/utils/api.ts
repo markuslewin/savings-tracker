@@ -118,6 +118,29 @@ export const register = async ({
   }
 };
 
+export const confirmEmail = async ({
+  userId,
+  code,
+}: {
+  userId: string;
+  code: string;
+}) => {
+  const response = await fetch(
+    new URL(
+      `accounts/confirmEmail?${new URLSearchParams({ userId, code })}`,
+      getBase(),
+    ),
+  );
+  switch (response.status) {
+    case 200:
+      return { status: response.status } as const;
+    case 401:
+      return { status: response.status } as const;
+    default:
+      throw new Error(`Unexpected status code ${response.status}`);
+  }
+};
+
 export const logIn = async ({
   email,
   password,

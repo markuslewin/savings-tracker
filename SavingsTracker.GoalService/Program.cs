@@ -306,8 +306,7 @@ accountGroup.MapPost("/register", async Task<Results<EmptyHttpResult, Validation
     UserManager<User> userManager,
     IUserStore<User> userStore,
     IEmailSender<User> emailSender,
-    LinkGenerator linkGenerator,
-    HttpContext httpContext) =>
+    IConfiguration configuration) =>
 {
     var validation = await validator.ValidateAsync(registration);
     if (!validation.IsValid)
@@ -333,17 +332,18 @@ accountGroup.MapPost("/register", async Task<Results<EmptyHttpResult, Validation
                 .ToDictionary(g => g.Key, g => g.ToArray()));
     }
 
+    var frontendUrl = configuration.GetValue<string?>("FRONTEND_URL")
+        ?? throw new NullReferenceException("FRONTEND_URL");
     var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
     var encodedCode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
     var userId = await userManager.GetUserIdAsync(user);
-    var confirmEmailUrl = linkGenerator.GetUriByName(
-        httpContext, confirmEmailEndpointName, new RouteValueDictionary
+    var confirmEmailUrl = QueryHelpers.AddQueryString(
+        new Uri(new Uri(frontendUrl), "confirm-email").ToString(),
+        new Dictionary<string, string?>
         {
             ["userId"] = userId,
             ["code"] = encodedCode
-        })
-        ?? throw new Exception(
-            $"Could not find endpoint with name '{confirmEmailEndpointName}'.");
+        });
     await emailSender.SendConfirmationLinkAsync(
         user, registration.ValidEmail, HtmlEncoder.Default.Encode(confirmEmailUrl));
 
@@ -351,9 +351,29 @@ accountGroup.MapPost("/register", async Task<Results<EmptyHttpResult, Validation
 });
 
 accountGroup
-    .MapGet("/confirmEmail", async Task () =>
+    .MapGet("/confirmEmail", async Task<Results<UnauthorizedHttpResult, EmptyHttpResult>> (
+        string userId, string code, UserManager<User> userManager) =>
     {
-        throw new NotImplementedException();
+        var user = await userManager.FindByIdAsync(userId);
+        if (user is null) return TypedResults.Unauthorized();
+
+        string decodedCode;
+        try
+        {
+            decodedCode =
+                Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+        }
+        catch (FormatException)
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        // todo: Change email
+        var result = await userManager.ConfirmEmailAsync(user, decodedCode);
+        if (!result.Succeeded)
+            return TypedResults.Unauthorized();
+
+        return TypedResults.Empty;
     })
     .WithName(confirmEmailEndpointName);
 

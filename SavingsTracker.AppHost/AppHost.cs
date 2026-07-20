@@ -19,9 +19,12 @@ var goalService = builder
   .AddProject<Projects.SavingsTracker_GoalService>("goalservice")
   .WithReference(goalDb);
 
-builder
+var frontend = builder
   .AddJavaScriptApp("frontend", "../SavingsTracker.Frontend")
   .WithHttpEndpoint(port: 3000, env: "PORT")
   .WithReference(goalService);
+
+goalService
+  .WithEnvironment("FRONTEND_URL", frontend.GetEndpoint("http"));
 
 builder.Build().Run();

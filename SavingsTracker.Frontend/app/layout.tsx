@@ -1,3 +1,4 @@
+import { ProgressBar, ProgressBarProvider } from "@/app/components/navigation";
 import "@/app/reset.css";
 import "@/app/styles/base.css";
 import { sprinkles } from "@/app/styles/sprinkles.css";
@@ -26,24 +27,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={[
-        bricolageGrotesque.variable,
-        inter.variable,
-        sprinkles({
-          text: "5",
-        }),
-      ].join(" ")}
-    >
-      <body
-        className={sprinkles({
-          background: "neutral-900",
-          color: "neutral-0",
-        })}
+    <ProgressBarProvider>
+      <html
+        lang="en"
+        className={[
+          bricolageGrotesque.variable,
+          inter.variable,
+          sprinkles({
+            text: "5",
+          }),
+        ].join(" ")}
       >
-        {children}
-      </body>
-    </html>
+        <body
+          className={sprinkles({
+            background: "neutral-900",
+            color: "neutral-0",
+          })}
+        >
+          {children}
+          <ProgressBar />
+        </body>
+      </html>
+    </ProgressBarProvider>
   );
 }

@@ -1,7 +1,7 @@
+import { Link } from "@/app/components/navigation";
 import { breakpoints } from "@/app/styles/media";
-import Link from "next/link";
-import { ReactNode } from "react";
 import Image from "next/image";
+import { ReactNode } from "react";
 
 type LogoLinkProps = {
   logo?: LogoRenderProp;

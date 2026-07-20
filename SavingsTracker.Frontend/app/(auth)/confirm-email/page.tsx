@@ -1,9 +1,9 @@
 import { QuoteLayout } from "@/app/(auth)/utils/quote-layout";
 import { button } from "@/app/components/button.css";
+import { Link } from "@/app/components/navigation";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { confirmEmail } from "@/app/utils/api";
 import { Metadata } from "next";
-import Link from "next/link";
 import * as z from "zod";
 
 export const metadata: Metadata = {

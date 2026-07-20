@@ -3,10 +3,10 @@
 import { paragraph } from "@/app/(auth)/forgot-password/utils/forgot-password.css";
 import { Back } from "@/app/components/back";
 import { Button } from "@/app/components/button";
+import { Link } from "@/app/components/navigation";
 import { TextField } from "@/app/components/text-field";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { FormState } from "@/app/utils/form";
-import Link from "next/link";
 import { startTransition, useActionState } from "react";
 import { Button as AriaButton } from "react-aria-components/Button";
 import { Form } from "react-aria-components/Form";

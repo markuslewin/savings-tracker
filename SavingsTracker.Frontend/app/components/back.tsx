@@ -1,14 +1,17 @@
+import { Link, LinkProps } from "@/app/components/navigation";
 import ChevronLeftIcon from "@/app/icons/icon-chevron-left.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
-import Link, { LinkProps } from "next/link";
 import { ReactNode } from "react";
 
-type BackProps<RouteInferType> = {
+type BackProps<RouteInferType extends string> = {
   to: LinkProps<RouteInferType>["href"];
   children: ReactNode;
 };
 
-export const Back = <RouteType,>({ to, children }: BackProps<RouteType>) => {
+export const Back = <RouteType extends string>({
+  to,
+  children,
+}: BackProps<RouteType>) => {
   return (
     <Link
       className={sprinkles({

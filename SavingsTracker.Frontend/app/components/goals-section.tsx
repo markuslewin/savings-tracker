@@ -29,6 +29,7 @@ import {
   radioLabel,
   radios,
 } from "@/app/components/goals-section.css";
+import { Link } from "@/app/components/navigation";
 import { Progress } from "@/app/components/progress";
 import FilterIcon from "@/app/icons/icon-filter.svg";
 import PlusIcon from "@/app/icons/icon-plus.svg";
@@ -55,7 +56,6 @@ import { useCallback, useOptimistic, useTransition } from "react";
 import {
   DialogTrigger,
   Label,
-  Link,
   RadioButton,
   RadioField,
   RadioGroup,

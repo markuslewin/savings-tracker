@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/app/components/button";
+import { Link } from "@/app/components/navigation";
 import { TextField } from "@/app/components/text-field";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { FormAction } from "@/app/utils/form";
-import Link from "next/link";
 import { useActionState } from "react";
 import { Form } from "react-aria-components";
 

@@ -7,6 +7,7 @@ import { container, header } from "@/app/(main)/layout.css";
 import { getInitial } from "@/app/(main)/utils/avatar";
 import { avatar } from "@/app/(main)/utils/avatar.css";
 import { LogoLink } from "@/app/components/logo-link";
+import { Link } from "@/app/components/navigation";
 import PlusIcon from "@/app/icons/icon-plus.svg";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { srOnly } from "@/app/styles/srOnly.css";
@@ -15,7 +16,6 @@ import { Hr } from "@/app/utils/hr";
 import { NewGoalDialog } from "@/app/utils/new-goal-dialog/component";
 import { useDialog } from "@/app/utils/new-goal-dialog/hook";
 import { OptimisticSearchParams } from "@/app/utils/optimistic-search-params/component";
-import Link from "next/link";
 import { useState } from "react";
 import { Button, DialogTrigger } from "react-aria-components";
 

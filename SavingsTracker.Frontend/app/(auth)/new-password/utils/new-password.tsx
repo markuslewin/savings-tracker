@@ -2,10 +2,10 @@
 
 import { Button } from "@/app/components/button";
 import { button } from "@/app/components/button.css";
+import { Link } from "@/app/components/navigation";
 import { TextField } from "@/app/components/text-field";
 import { sprinkles } from "@/app/styles/sprinkles.css";
 import { FormState } from "@/app/utils/form";
-import Link from "next/link";
 import { useActionState } from "react";
 import { Form } from "react-aria-components";
 

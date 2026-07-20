@@ -7,7 +7,7 @@ import {
   gap as columnsGap,
   number as columnsNumber,
 } from "@/app/styles/columns.css";
-import { breakpoints } from "@/app/styles/media";
+import { breakpoints, forcedColors } from "@/app/styles/media";
 import {
   border,
   colors,
@@ -38,7 +38,7 @@ const responsiveProperties = defineProperties({
     tablet: { "@media": breakpoints.tablet },
     desktop: { "@media": breakpoints.desktop },
     forcedColors: {
-      "@media": "(forced-colors: active)",
+      "@media": forcedColors,
     },
     focusVisible: {
       selector: "&:focus-visible",

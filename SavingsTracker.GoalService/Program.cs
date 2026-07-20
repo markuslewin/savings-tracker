@@ -78,7 +78,22 @@ builder.AddServiceDefaults();
 
 builder.AddNpgsqlDbContext<GoalDbContext>("goaldb");
 
-builder.Services.AddTransient<IEmailSender, LoggerEmailSender>();
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddTransient<IEmailSender, LoggerEmailSender>();
+}
+else
+{
+    builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
+    builder.Services.AddOptions<SmtpClientOptions>()
+        .Bind(builder.Configuration.GetSection(SmtpClientOptions.Key))
+        .ValidateDataAnnotations()
+        .ValidateOnStart();
+    builder.Services.AddOptions<SmtpFromOptions>()
+        .Bind(builder.Configuration.GetSection(SmtpFromOptions.Key))
+        .ValidateDataAnnotations()
+        .ValidateOnStart();
+}
 
 builder
     .Services
